@@ -19,13 +19,38 @@ describe 'Rufus::Lua::State' do
     @s.close
   end
 
-  it 'should return nil when global not found' do
-    @s.unknown.should.be.nil
+  it 'should find nil when global not found' do
+    @s['unknown'].should.be.nil
+  end
+
+  it 'should find true' do
+    @s.eval('a = true')
+    @s['a'].should.be.true
+  end
+  it 'should find false' do
+    @s.eval('a = false')
+    @s['a'].should.be.false
+  end
+
+  it 'should find strings' do
+    @s.eval('a = "black adder"')
+    @s['a'].should.equal('black adder')
   end
 
   it 'should add' do
     @s.eval('a = 1 + 1')
-    @s.a.should.equal(2.0)
+    @s['a'].should.equal(2.0)
+  end
+
+  it 'should return a hash' do
+    @s.eval('h = { a = "b", c = 2, 4 }')
+    @s['h'].should.equal({ 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 })
+  end
+
+  it 'should turn a hash into an array' do
+    @s.eval('a = { "a", "b", "c" }')
+    @s['a'].should.equal({ 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' })
+    Rufus::Lua::Table.to_a(@s['a']).should.equal(%w{ a b c })
   end
 end
 

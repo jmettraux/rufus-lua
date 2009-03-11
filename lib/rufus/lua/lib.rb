@@ -71,8 +71,17 @@ module Lua
     attach_function :lua_type, [ :pointer, :int ], :int
     attach_function :lua_typename, [ :pointer, :int ], :string
 
+    attach_function :lua_gettop, [ :pointer ], :int
     attach_function :lua_settop, [ :pointer, :int ], :void
     attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
+
+    attach_function :lua_next, [ :pointer, :int ], :int
+
+    attach_function :lua_pushnil, [ :pointer ], :pointer
+    attach_function :lua_pushboolean, [ :pointer, :int ], :pointer
+    attach_function :lua_pushinteger, [ :pointer, :int ], :pointer
+    attach_function :lua_pushnumber, [ :pointer, :float ], :pointer
+    attach_function :lua_pushstring, [ :pointer, :string ], :pointer
   end
 end
 end
