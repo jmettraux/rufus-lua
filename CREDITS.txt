@@ -1,0 +1,18 @@
+
+= CREDITS.txt rufus-lua gem
+
+
+== authors
+
+John Mettraux  http://jmettraux.wordpress.com
+
+== inspiration
+
+  http://rubyluabridge.rubyforge.org/
+
+== finally
+
+many thanks to the authors of ruby-ffi
+
+  http://kenai.com/projects/ruby-ffi
+
