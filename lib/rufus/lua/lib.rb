@@ -64,9 +64,15 @@ module Lua
     attach_function :luaL_loadbuffer, [ :pointer, :string, :int, :string ], :int
     attach_function :lua_pcall, [ :pointer, :int, :int, :int ], :int
 
+    attach_function :lua_toboolean, [ :pointer, :int ], :int
+    attach_function :lua_tonumber, [ :pointer, :int ], :float
     attach_function :lua_tolstring, [ :pointer, :int, :pointer ], :string
 
+    attach_function :lua_type, [ :pointer, :int ], :int
+    attach_function :lua_typename, [ :pointer, :int ], :string
+
     attach_function :lua_settop, [ :pointer, :int ], :void
+    attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
   end
 end
 end

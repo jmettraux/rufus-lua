@@ -47,13 +47,52 @@ module Rufus::Lua
       Lib.lua_close(@state)
     end
 
+    def method_missing (m, *args)
+      get_global(m.to_s)
+      #super
+    end
+
     protected
+
+    GLOBALS_INDEX = -10002
+
+    TNONE = -1
+    TNIL = 0
+    TBOOLEAN = 1
+    TLIGHTUSERDATA = 2
+    TNUMBER = 3
+    TSTRING = 4
+    TTABLE = 5
+    TFUNCTION = 6
+    TUSERDATA = 7
+    TTHREAD = 8
 
     def raise_if_error (where, err)
       return if err < 1
       s = Lib.lua_tolstring(@state, -1, nil)
       Lib.lua_settop(@state, -2)
       raise "#{where} : '#{s}' (#{err})"
+    end
+
+    def pop
+      type = Lib.lua_type(@state, -1)
+      r = case type
+        when TNIL then nil
+        when TSTRING then Lib.lua_tolstring(@state, -1, nil)
+        when TNONE then nil
+        when TBOOLEAN then (Lib.lua_toboolean(@state, -1) == 1)
+        when TNUMBER then Lib.lua_tonumber(@state, -1)
+        #when TTABLE then 'table'
+        #when TFUNCTION then 'function'
+        else Lib.lua_typename(@state, type)
+      end
+      Lib.lua_settop(@state, -2)
+      r
+    end
+
+    def get_global (name)
+      Lib.lua_getfield(@state, GLOBALS_INDEX, name)
+      pop
     end
   end
 end
