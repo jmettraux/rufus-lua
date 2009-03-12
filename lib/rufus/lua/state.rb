@@ -52,7 +52,9 @@ module Rufus::Lua
     # all the base Lua libs are loaded in the runtime.
     #
     def initialize (include_libs=true)
+
       @state = Lib.luaL_newstate
+
       Lib.luaL_openlibs(@state) if include_libs
     end
 
@@ -85,6 +87,7 @@ module Rufus::Lua
     # done with it.
     #
     def close
+
       Lib.lua_close(@state)
     end
 
@@ -99,16 +102,11 @@ module Rufus::Lua
     #   state.eval('a = 1 + 2')
     #   puts state['k'] # => "3.0"
     #
-    # note that
-    #
-    #   puts state.k # => "3.0"
-    #
     def [] (k)
-      if k.index('.')
-        eval("_ = #{k}")
-        k = '_'
-      end
-      get_global(k)
+
+      k.index('.') ?
+        self.eval("return #{k}") :
+        get_global(k)
     end
 
     #def _G
@@ -120,6 +118,7 @@ module Rufus::Lua
     #end
 
     def stack_to_s
+
       (1..top).inject([]) { |a, i|
         type, tname = type_at(i)
         a << "#{i} : #{tname} (#{type})"
@@ -137,8 +136,14 @@ module Rufus::Lua
       [ type, tname ]
     end
 
+    #
+    # Fetches the top value on the stack (or the one specified by the optional
+    # pos parameter), but does not 'pop' it.
+    #
     def stack_fetch (pos=-1)
+
       type, tname = stack_type_at(pos)
+
       case type
         when TNIL then nil
         when TSTRING then Lib.lua_tolstring(@state, pos, nil)
@@ -150,14 +155,23 @@ module Rufus::Lua
       end
     end
 
+    #
+    # Pops the top value of lua state's stack and returns it.
+    #
     def stack_pop
+
       r = stack_fetch
       stack_unstack
       r
     end
 
+    #
+    # Makes sure the stack loses its top element (but doesn't return it).
+    #
     def stack_unstack
+
       Lib.lua_settop(@state, -2)
+      nil
     end
 
     protected
