@@ -3,6 +3,19 @@
 
 Lua embedded in Ruby, via ruby FFI
 
+== Lua
+
+from 
+
+  http://www.lua.org/
+  http://www.lua.org/about.html
+
+"""
+Lua is a powerful, fast, lightweight, embeddable scripting language.
+
+Lua combines simple procedural syntax with powerful data description constructs based on associative arrays and extensible semantics. Lua is dynamically typed, runs by interpreting bytecode for a register-based virtual machine, and has automatic memory management with incremental garbage collection, making it ideal for configuration, scripting, and rapid prototyping. 
+"""
+
 
 == other Ruby and Lua bridges / connectors
 
@@ -11,9 +24,48 @@ Lua embedded in Ruby, via ruby FFI
   http://raa.ruby-lang.org/project/ruby-lua
 
 
-== nada
+== using rufus-lua
 
-surf
+If you don't have liblua.dylib on your system, scroll until "compiling liblua.dylib" to learn how to get it.
+
+  sudo gem install rufus-lua
+
+then
+
+  require 'rubygems'
+  require 'rufus/lua'
+
+  s = Rufus::Lua::State.new
+
+  puts s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
+    #
+    # => "Hello from Lua"
+
+  s.close
+
+
+== compiling liblua.dylib
+
+original instructions by Adrian Perez at :
+
+  http://lua-users.org/lists/lua-l/2006-09/msg00894.html
+
+get the source at 
+
+  http://www.lua.org/ftp/lua-5.1.4.tar.gz
+
+then
+
+  tar xzvf lua-5.1.4.tar.gz
+  cd lua-5.1.4
+
+modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg00894.html
+
+  make 
+  make masocx # or make linux ...
+  make -C src src liblua.dylib
+
+  sudo cp src/liblua.dylib /usr/local/lib/
 
 
 == dependencies
@@ -47,9 +99,10 @@ http://github.com/jmettraux/rufus-lua
 
 == credits
 
-many thanks to the authors of Ruby FFI
+many thanks to the authors of Ruby FFI, and of Lua
 
-  http://kenai.com/projects/ruby-ffi
+  http://kenai.com/projects/ruby-ffi/
+  http://lua.org/
 
 
 == authors
@@ -65,4 +118,8 @@ http://rufus.rubyforge.org
 == license
 
 MIT
+
+Lua itself is licensed under the MIT license as well :
+
+  http://www.lua.org/license.html
 
