@@ -41,11 +41,6 @@ module Rufus::Lua
   class State
 
     #
-    # have a peek at the Lua runtime as a C thing.
-    #
-    attr_reader :state
-
-    #
     # Instantiates a Lua state (runtime).
     #
     # Accepts an 'include_libs' optional arg. When set to true (the default,
@@ -56,6 +51,14 @@ module Rufus::Lua
       @state = Lib.luaL_newstate
 
       Lib.luaL_openlibs(@state) if include_libs
+    end
+
+    #
+    # have a peek at the Lua runtime as a C thing.
+    #
+    def pointer
+
+      @state
     end
 
     #
@@ -117,6 +120,9 @@ module Rufus::Lua
     #def []= (k, v)
     #end
 
+    #
+    # Returns a string representation of the state's stack.
+    #
     def stack_to_s
 
       (1..top).inject([]) { |a, i|
@@ -126,13 +132,24 @@ module Rufus::Lua
       }.reverse.join("\n")
     end
 
+    #
+    # Returns the offset (int) of the top element of the stack.
+    #
     def stack_top
+
       Lib.lua_gettop(@state)
     end
 
+    #
+    # Returns a pair type (int) and type name (string) of the element on top
+    # of the Lua state's stack. There is an optional pos paramter to peek 
+    # at other elements of the stack.
+    #
     def stack_type_at (pos=-1)
+
       type = Lib.lua_type(@state, pos)
       tname = Lib.lua_typename(@state, type)
+
       [ type, tname ]
     end
 
@@ -145,12 +162,19 @@ module Rufus::Lua
       type, tname = stack_type_at(pos)
 
       case type
+
         when TNIL then nil
+
         when TSTRING then Lib.lua_tolstring(@state, pos, nil)
         when TBOOLEAN then (Lib.lua_toboolean(@state, pos) == 1)
         when TNUMBER then Lib.lua_tonumber(@state, pos)
+
         when TTABLE then Table.to_h(self)
         #when TTABLE then Table.new(self, parent)
+          #
+          # TODO : do not turn result into a Ruby Hash immediately, only
+          #        when requested !
+
         else tname
       end
     end
@@ -174,7 +198,7 @@ module Rufus::Lua
       nil
     end
 
-    protected
+    private
 
     GLOBALS_INDEX = -10002
 

@@ -43,6 +43,8 @@ then
 
   s.close
 
+rufus-lua's rdoc is at http://rufus.rubyforge.org/rufus-lua/
+
 
 == compiling liblua.dylib
 

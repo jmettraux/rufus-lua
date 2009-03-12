@@ -29,16 +29,19 @@ module Rufus::Lua
 
     def self.to_h (state)
 
-      h = {}
-
       table_pos = state.stack_top
 
-      Lib.lua_pushnil(state.state)
+      Lib.lua_pushnil(state.pointer)
 
-      while Lib.lua_next(state.state, table_pos) != 0 do
+      h = {}
+
+      while Lib.lua_next(state.pointer, table_pos) != 0 do
+
         value = state.stack_fetch(-1)
         key = state.stack_fetch(-2)
+
         state.stack_unstack
+
         h[key] = value
       end
 
