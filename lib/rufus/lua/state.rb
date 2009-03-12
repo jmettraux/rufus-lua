@@ -61,6 +61,8 @@ module Rufus::Lua
     #
     def eval (s)
 
+      bottom = stack_top
+
       err = Lib.luaL_loadbuffer(@state, s, Lib.strlen(s), 'line')
       raise_if_error('eval:compile', err)
 
@@ -68,7 +70,12 @@ module Rufus::Lua
       err = Lib.lua_pcall(@state, 0, LUA_MULTRET, 0)
       raise_if_error('eval:call', err)
 
-      stack_fetch
+      count = stack_top - bottom
+
+      return nil if count == 0
+      return stack_pop if count == 1
+
+      (1..count).collect { |pos| stack_pop }.reverse
     end
 
     #
