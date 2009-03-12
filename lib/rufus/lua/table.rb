@@ -31,14 +31,14 @@ module Rufus::Lua
 
       h = {}
 
-      table_pos = state.top
+      table_pos = state.stack_top
 
       Lib.lua_pushnil(state.state)
 
       while Lib.lua_next(state.state, table_pos) != 0 do
-        value = state.fetch(-1)
-        key = state.fetch(-2)
-        state.unstack
+        value = state.stack_fetch(-1)
+        key = state.stack_fetch(-2)
+        state.stack_unstack
         h[key] = value
       end
 

@@ -60,11 +60,15 @@ module Rufus::Lua
     # Evaluates a piece (string) of Lua code within the state.
     #
     def eval (s)
+
       err = Lib.luaL_loadbuffer(@state, s, Lib.strlen(s), 'line')
       raise_if_error('eval:compile', err)
-      err = Lib.lua_pcall(@state, 0, 0, 0)
+
+      #err = Lib.lua_pcall(@state, 0, 1, 0)
+      err = Lib.lua_pcall(@state, 0, LUA_MULTRET, 0)
       raise_if_error('eval:call', err)
-      nil
+
+      stack_fetch
     end
 
     #
@@ -108,7 +112,7 @@ module Rufus::Lua
     #def []= (k, v)
     #end
 
-    def dump_stack
+    def stack_to_s
       (1..top).inject([]) { |a, i|
         type, tname = type_at(i)
         a << "#{i} : #{tname} (#{type})"
@@ -116,22 +120,18 @@ module Rufus::Lua
       }.reverse.join("\n")
     end
 
-    def print_stack
-      puts "\nstack :\n#{dump_stack}"
-    end
-
-    def top
+    def stack_top
       Lib.lua_gettop(@state)
     end
 
-    def type_at (pos=-1)
+    def stack_type_at (pos=-1)
       type = Lib.lua_type(@state, pos)
       tname = Lib.lua_typename(@state, type)
       [ type, tname ]
     end
 
-    def fetch (pos=-1, parent=nil)
-      type, tname = type_at(pos)
+    def stack_fetch (pos=-1)
+      type, tname = stack_type_at(pos)
       case type
         when TNIL then nil
         when TSTRING then Lib.lua_tolstring(@state, pos, nil)
@@ -143,7 +143,13 @@ module Rufus::Lua
       end
     end
 
-    def unstack
+    def stack_pop
+      r = stack_fetch
+      stack_unstack
+      r
+    end
+
+    def stack_unstack
       Lib.lua_settop(@state, -2)
     end
 
@@ -162,6 +168,8 @@ module Rufus::Lua
     TUSERDATA = 7
     TTHREAD = 8
 
+    LUA_MULTRET = -1
+
     def raise_if_error (where, err)
       return if err < 1
       s = Lib.lua_tolstring(@state, -1, nil)
@@ -169,15 +177,9 @@ module Rufus::Lua
       raise "#{where} : '#{s}' (#{err})"
     end
 
-    def pop
-      r = fetch
-      unstack
-      r
-    end
-
     def get_global (name)
       Lib.lua_getfield(@state, GLOBALS_INDEX, name)
-      pop
+      stack_pop
     end
   end
 end

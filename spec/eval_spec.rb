@@ -10,7 +10,7 @@ require File.dirname(__FILE__) + '/spec_base'
 require 'rufus/lua'
 
 
-describe 'Rufus::Lua::State' do
+describe Rufus::Lua::State do
 
   before do
     @s = Rufus::Lua::State.new
@@ -42,7 +42,7 @@ describe 'Rufus::Lua::State' do
     @s['a'].should.equal(2.0)
   end
 
-  it 'should return a hash' do
+  it 'should find a hash' do
     @s.eval('h = { a = "b", c = 2, 4 }')
     @s['h'].should.equal({ 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 })
   end
@@ -72,5 +72,17 @@ describe 'Rufus::Lua::State' do
   #it 'should return the global environment' do
   #  @s['_G'].should.equal({})
   #end
+
+  it 'should return numbers' do
+    @s.eval('return 7').should.equal(7.0)
+  end
+
+  it 'should return hashes' do
+    @s.eval('return {}').should.equal({})
+  end
+
+  it 'should return multiple values' do
+    @s.eval('return true, false').should.equal([ true, false ])
+  end
 end
 

@@ -1,4 +1,10 @@
 
+#
+# benchmarking rufus-lua
+#
+# Thu Mar 12 15:40:26 JST 2009
+#
+
 $:.unshift('lib')
 
 require 'benchmark'
