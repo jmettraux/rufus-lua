@@ -52,5 +52,25 @@ describe 'Rufus::Lua::State' do
     @s['a'].should.equal({ 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' })
     Rufus::Lua::Table.to_a(@s['a']).should.equal(%w{ a b c })
   end
+
+  #it 'should do it' do
+  #  @s.eval('a = { b = { c = 0 } }')
+  #  @s['a.b.c'].should.equal(0)
+  #end
+    # doesn't work :|
+
+  it 'should do nested lookups' do
+    @s.eval('a = { b = { c = 0 } }')
+    @s.eval('_ = a.b.c')
+    @s['_'].should.equal(0)
+  end
+  it 'should do nested lookups (2)' do
+    @s.eval('a = { b = { c = 0 } }')
+    @s['a.b.c'].should.equal(0)
+  end
+
+  #it 'should return the global environment' do
+  #  @s['_G'].should.equal({})
+  #end
 end
 

@@ -31,7 +31,7 @@ module Rufus::Lua
 
       h = {}
 
-      table_pos = state.top()
+      table_pos = state.top
 
       Lib.lua_pushnil(state.state)
 

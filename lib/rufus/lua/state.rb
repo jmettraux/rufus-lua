@@ -93,8 +93,17 @@ module Rufus::Lua
     #   puts state.k # => "3.0"
     #
     def [] (k)
+      if k.index('.')
+        eval("_ = #{k}")
+        k = '_'
+      end
       get_global(k)
     end
+
+    #def _G
+    #  get_global('_G')
+    #end
+    #alias :global_env :_G
 
     #def []= (k, v)
     #end
@@ -121,7 +130,7 @@ module Rufus::Lua
       [ type, tname ]
     end
 
-    def fetch (pos=-1)
+    def fetch (pos=-1, parent=nil)
       type, tname = type_at(pos)
       case type
         when TNIL then nil
@@ -129,7 +138,7 @@ module Rufus::Lua
         when TBOOLEAN then (Lib.lua_toboolean(@state, pos) == 1)
         when TNUMBER then Lib.lua_tonumber(@state, pos)
         when TTABLE then Table.to_h(self)
-        #when TFUNCTION then 'function'
+        #when TTABLE then Table.new(self, parent)
         else tname
       end
     end
