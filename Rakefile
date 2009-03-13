@@ -84,7 +84,7 @@ Rake::RDocTask.new do |rd|
   rd.options << '-S' # inline source
 end
 
-task :rrdoc => [ :rdoc ] do
+task :rrdoc => :rdoc do
   FileUtils.cp('doc/rdoc-style.css', 'html/rufus-lua/')
 end
 
