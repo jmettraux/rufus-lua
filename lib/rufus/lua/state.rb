@@ -153,7 +153,7 @@ module Rufus::Lua
 
     #
     # Returns a pair type (int) and type name (string) of the element on top
-    # of the Lua state's stack. There is an optional pos paramter to peek 
+    # of the Lua state's stack. There is an optional pos paramter to peek
     # at other elements of the stack.
     #
     def stack_type_at (pos=-1)
@@ -182,6 +182,7 @@ module Rufus::Lua
 
         when TTABLE then Table.new(self)
         when TFUNCTION then Function.new(self)
+        when TTHREAD then Coroutine.new(self)
 
         else tname
       end

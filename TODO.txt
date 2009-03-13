@@ -1,5 +1,7 @@
 
 [ ] spec table.free()
 [ ] function.call()
-[ ] Table + Enumerable
+[ ] Table + Enumerable (not necessarily)
+
+[ ] State#stack_ready() maybe
 

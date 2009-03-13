@@ -38,6 +38,15 @@ module Rufus::Lua
   end
 
   class Function < Ref
+
+    def call (*args)
+    end
+  end
+
+  class Coroutine < Ref
+
+    def resume (arg)
+    end
   end
 
   class Table < Ref

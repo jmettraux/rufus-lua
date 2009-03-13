@@ -7,8 +7,6 @@
 
 require File.dirname(__FILE__) + '/spec_base'
 
-require 'rufus/lua'
-
 
 describe Rufus::Lua::State do
 
@@ -42,38 +40,10 @@ describe Rufus::Lua::State do
     @s['a'].should.equal(2.0)
   end
 
-  it 'should find a hash' do
-    @s.eval('h = { a = "b", c = 2, 4 }')
-    @s['h'].to_h.should.equal({ 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 })
-  end
-
-  it 'should turn a hash into an array' do
-    @s.eval('a = { "a", "b", "c" }')
-    @s['a'].to_h.should.equal({ 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' })
-    @s['a'].to_a.should.equal(%w{ a b c })
-  end
-
-  #it 'should do it' do
-  #  @s.eval('a = { b = { c = 0 } }')
-  #  @s['a.b.c'].should.equal(0)
-  #end
-    # doesn't work :|
-
   it 'should do nested lookups' do
     @s.eval('a = { b = { c = 0 } }')
     @s.eval('_ = a.b.c')
     @s['_'].should.equal(0)
-  end
-  it 'should do nested lookups (2)' do
-    @s.eval('a = { b = { c = 0 } }')
-    @s['a.b.c'].should.equal(0)
-  end
-
-  it 'should return Lua tables' do
-    @s.eval('return {}').class.should.equal(Rufus::Lua::Table)
-  end
-  it 'should return Lua functions' do
-    @s.eval('return function () end').class.should.equal(Rufus::Lua::Function)
   end
 
   #it 'should return the global environment' do
@@ -82,10 +52,6 @@ describe Rufus::Lua::State do
 
   it 'should return numbers' do
     @s.eval('return 7').should.equal(7.0)
-  end
-
-  it 'should return hashes' do
-    @s.eval('return {}').to_h.should.equal({})
   end
 
   it 'should return multiple values' do
