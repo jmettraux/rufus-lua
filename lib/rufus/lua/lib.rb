@@ -88,6 +88,7 @@ module Lua
     attach_function :luaL_newstate, [], :pointer
     attach_function :luaL_loadbuffer, [ :pointer, :string, :int, :string ], :int
     attach_function :luaL_ref, [ :pointer, :int ], :int
+    attach_function :luaL_unref, [ :pointer, :int, :int ], :void
   end
 end
 end

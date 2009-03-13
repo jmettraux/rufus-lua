@@ -37,8 +37,17 @@ describe 'Rufus::Lua::State (tables)' do
     @s.eval('return {}').class.should.equal(Rufus::Lua::Table)
   end
 
-  it 'should return hashes' do
+  it 'should return turn Lua tables into Ruby hashes' do
     @s.eval('return {}').to_h.should.equal({})
   end
+
+  #it 'should free tables' do
+  #  t = @s.eval('t = {}; return t')
+  #  t.free
+  #  lambda {
+  #    p :now
+  #    t.to_h
+  #  }.should.raise(Error)
+  #end
 end
 
