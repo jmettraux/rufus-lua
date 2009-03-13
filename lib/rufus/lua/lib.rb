@@ -56,12 +56,10 @@ module Lua
 
     attach_function :strlen, [ :string ], :int
 
-    attach_function :luaL_newstate, [], :pointer
     attach_function :lua_close, [ :pointer ], :void
 
     attach_function :luaL_openlibs, [ :pointer ], :void
 
-    attach_function :luaL_loadbuffer, [ :pointer, :string, :int, :string ], :int
     attach_function :lua_pcall, [ :pointer, :int, :int, :int ], :int
 
     attach_function :lua_toboolean, [ :pointer, :int ], :int
@@ -73,6 +71,8 @@ module Lua
 
     attach_function :lua_gettop, [ :pointer ], :int
     attach_function :lua_settop, [ :pointer, :int ], :void
+
+    attach_function :lua_objlen, [ :pointer, :int ], :int
     attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
 
     attach_function :lua_next, [ :pointer, :int ], :int
@@ -82,6 +82,12 @@ module Lua
     attach_function :lua_pushinteger, [ :pointer, :int ], :pointer
     attach_function :lua_pushnumber, [ :pointer, :float ], :pointer
     attach_function :lua_pushstring, [ :pointer, :string ], :pointer
+
+    attach_function :lua_rawgeti, [ :pointer, :int, :int ], :void
+
+    attach_function :luaL_newstate, [], :pointer
+    attach_function :luaL_loadbuffer, [ :pointer, :string, :int, :string ], :int
+    attach_function :luaL_ref, [ :pointer, :int ], :int
   end
 end
 end

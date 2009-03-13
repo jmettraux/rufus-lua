@@ -25,22 +25,39 @@
 
 module Rufus::Lua
 
-  module Table
+  class Ref
 
-    def self.to_h (state)
+    def initialize (state)
+      @state = state
+      @ref = Lib.luaL_ref(@state.pointer, State::LUA_REGISTRYINDEX)
+    end
 
-      table_pos = state.stack_top
+    def free
+      Lib.luaL_unref(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
+    end
+  end
 
-      Lib.lua_pushnil(state.pointer)
+  class Function < Ref
+  end
+
+  class Table < Ref
+
+    def to_h
+
+      load_onto_stack
+
+      table_pos = @state.stack_top
+
+      Lib.lua_pushnil(@state.pointer)
 
       h = {}
 
-      while Lib.lua_next(state.pointer, table_pos) != 0 do
+      while Lib.lua_next(@state.pointer, table_pos) != 0 do
 
-        value = state.stack_fetch(-1)
-        key = state.stack_fetch(-2)
+        value = @state.stack_fetch(-1)
+        key = @state.stack_fetch(-2)
 
-        state.stack_unstack
+        @state.stack_unstack
 
         h[key] = value
       end
@@ -48,7 +65,9 @@ module Rufus::Lua
       h
     end
 
-    def self.to_a (h)
+    def to_a
+
+      h = self.to_h
 
       keys = h.keys.sort
 
@@ -57,6 +76,17 @@ module Rufus::Lua
 
       keys.inject([]) { |a, k| a << h[k]; a }
     end
+
+    protected
+
+    def load_onto_stack
+
+      Lib.lua_pushnil(@state.pointer) if @state.stack_top < 1
+        # maybe refactor that to State...
+
+      Lib.lua_rawgeti(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
+    end
+
   end
 end
 

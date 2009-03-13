@@ -24,7 +24,7 @@
 
 
 require 'rufus/lua/lib'
-require 'rufus/lua/table'
+require 'rufus/lua/objects'
 
 
 module Rufus::Lua
@@ -125,11 +125,22 @@ module Rufus::Lua
     #
     def stack_to_s
 
-      (1..top).inject([]) { |a, i|
-        type, tname = type_at(i)
+      # warning : don't touch at stack[0]
+
+      s = (1..stack_top).inject([]) { |a, i|
+        type, tname = stack_type_at(i)
         a << "#{i} : #{tname} (#{type})"
         a
       }.reverse.join("\n")
+      s += "\n" if s.length > 0
+      s
+    end
+
+    #
+    # Outputs the stack to the stdout
+    #
+    def print_stack
+      puts "\n=s=\n#{stack_to_s}==="
     end
 
     #
@@ -169,11 +180,8 @@ module Rufus::Lua
         when TBOOLEAN then (Lib.lua_toboolean(@state, pos) == 1)
         when TNUMBER then Lib.lua_tonumber(@state, pos)
 
-        when TTABLE then Table.to_h(self)
-        #when TTABLE then Table.new(self, parent)
-          #
-          # TODO : do not turn result into a Ruby Hash immediately, only
-          #        when requested !
+        when TTABLE then Table.new(self)
+        when TFUNCTION then Function.new(self)
 
         else tname
       end
@@ -200,7 +208,9 @@ module Rufus::Lua
 
     private
 
-    GLOBALS_INDEX = -10002
+    LUA_GLOBALSINDEX = -10002
+    LUA_ENVIRONINDEX = -10001
+    LUA_REGISTRYINDEX = -10000
 
     TNONE = -1
     TNIL = 0
@@ -223,7 +233,7 @@ module Rufus::Lua
     end
 
     def get_global (name)
-      Lib.lua_getfield(@state, GLOBALS_INDEX, name)
+      Lib.lua_getfield(@state, LUA_GLOBALSINDEX, name)
       stack_pop
     end
   end

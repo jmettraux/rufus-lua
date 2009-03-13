@@ -1,0 +1,5 @@
+
+[ ] spec table.free()
+[ ] function.call()
+[ ] Table + Enumerable
+

@@ -44,13 +44,13 @@ describe Rufus::Lua::State do
 
   it 'should find a hash' do
     @s.eval('h = { a = "b", c = 2, 4 }')
-    @s['h'].should.equal({ 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 })
+    @s['h'].to_h.should.equal({ 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 })
   end
 
   it 'should turn a hash into an array' do
     @s.eval('a = { "a", "b", "c" }')
-    @s['a'].should.equal({ 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' })
-    Rufus::Lua::Table.to_a(@s['a']).should.equal(%w{ a b c })
+    @s['a'].to_h.should.equal({ 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' })
+    @s['a'].to_a.should.equal(%w{ a b c })
   end
 
   #it 'should do it' do
@@ -69,6 +69,13 @@ describe Rufus::Lua::State do
     @s['a.b.c'].should.equal(0)
   end
 
+  it 'should return Lua tables' do
+    @s.eval('return {}').class.should.equal(Rufus::Lua::Table)
+  end
+  it 'should return Lua functions' do
+    @s.eval('return function () end').class.should.equal(Rufus::Lua::Function)
+  end
+
   #it 'should return the global environment' do
   #  @s['_G'].should.equal({})
   #end
@@ -78,7 +85,7 @@ describe Rufus::Lua::State do
   end
 
   it 'should return hashes' do
-    @s.eval('return {}').should.equal({})
+    @s.eval('return {}').to_h.should.equal({})
   end
 
   it 'should return multiple values' do
