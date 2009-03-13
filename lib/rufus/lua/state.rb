@@ -71,11 +71,22 @@ module Rufus::Lua
       err = Lib.luaL_loadbuffer(@state, s, Lib.strlen(s), 'line')
       raise_if_error('eval:compile', err)
 
-      #err = Lib.lua_pcall(@state, 0, 1, 0)
-      err = Lib.lua_pcall(@state, 0, LUA_MULTRET, 0)
-      raise_if_error('eval:call', err)
+      pcall(bottom, 0) # arg_count is set to 0
+    end
 
-      count = stack_top - bottom
+    #
+    # Don't call me directly !
+    #
+    def pcall (stack_bottom, arg_count)
+
+      #err = Lib.lua_pcall(@state, 0, 1, 0)
+        # when there's only 1 return value, use LUA_MULTRET (-1) the
+        # rest of the time
+
+      err = Lib.lua_pcall(@state, arg_count, LUA_MULTRET, 0)
+      raise_if_error('eval:pcall', err)
+
+      count = stack_top - stack_bottom
 
       return nil if count == 0
       return stack_pop if count == 1
@@ -93,11 +104,6 @@ module Rufus::Lua
 
       Lib.lua_close(@state)
     end
-
-    #def method_missing (m, *args)
-    #  get_global(m.to_s)
-    #  #super
-    #end
 
     #
     # Returns a value set at the 'global' level in the state.
@@ -227,9 +233,19 @@ module Rufus::Lua
     LUA_MULTRET = -1
 
     def raise_if_error (where, err)
+
       return if err < 1
+
+      # TODO :
+      #
+      # LUA_ERRRUN: a runtime error.
+      # LUA_ERRMEM: memory allocation error. For such errors, Lua does not call
+      #   the error handler function.
+      # LUA_ERRERR: error while running the error handler function.
+
       s = Lib.lua_tolstring(@state, -1, nil)
       Lib.lua_settop(@state, -2)
+
       raise "#{where} : '#{s}' (#{err})"
     end
 

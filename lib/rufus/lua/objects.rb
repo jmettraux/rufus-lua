@@ -25,6 +25,10 @@
 
 module Rufus::Lua
 
+  #
+  # The parent class for Table, Function and Coroutine. Simply holds
+  # a reference to the object in the Lua registry.
+  #
   class Ref
 
     def initialize (state)
@@ -33,24 +37,95 @@ module Rufus::Lua
     end
 
     def free
+      #
+      # TODO : investigate... is it freeing both ? does the artefact get GCed ?
+      #
       Lib.luaL_unref(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
     end
-  end
 
-  class Function < Ref
+    protected
 
-    def call (*args)
+    def load_onto_stack
+
+      Lib.lua_pushnil(@state.pointer) if @state.stack_top < 1
+        # maybe refactor that to State...
+
+      Lib.lua_rawgeti(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
     end
   end
 
+  #
+  # A Lua function.
+  #
+  #   require 'rubygems'
+  #   require 'rufus/lua'
+  #
+  #   s = Rufus::Lua::State.new
+  #
+  #   f = s.eval(%{
+  #     return function (x)
+  #       return 2 * x
+  #     end
+  #   })
+  #
+  #   f.call(2) # => 4.0
+  #
+  class Function < Ref
+
+    #
+    # Calls the Lua function.
+    #
+    def call (*args)
+
+      top = @state.stack_top + 1
+
+      load_onto_stack
+        # load function on stack
+
+      args.each { |arg| push(arg) }
+        # push arguments on stack
+
+      @state.pcall(top, args.length)
+    end
+
+    protected
+
+    def push (o)
+      case o
+        when NilClass then Lib.lua_pushnil(@state.pointer)
+        when TrueClass then Lib.lua_pushboolean(@state.pointer, 1)
+        when FalseClass then Lib.lua_pushboolean(@state.pointer, 1)
+        when Fixnum then Lib.lua_pushinteger(@state.pointer, o)
+        when Float then Lib.lua_pushnumber(@state.pointer, o)
+        when String then Lib.lua_pushstring(@state.pointer, o)
+        else raise "don't know how to pass Ruby instance of #{o.class} to Lua"
+      end
+    end
+  end
+
+  #
+  # (coming soon)
+  #
   class Coroutine < Ref
 
     def resume (arg)
     end
   end
 
+  #
+  # A Lua table.
+  #
+  # For now, the only thing you can do with it is cast it into a Hash or
+  # an Array (will raise an exception if casting to an Array is not possible).
+  #
+  # Note that direct manipulation of the Lua table (inside Lua) is not possible
+  # (as of now).
+  #
   class Table < Ref
 
+    #
+    # Returns a Ruby Hash instance representing this Lua table.
+    #
     def to_h
 
       load_onto_stack
@@ -74,6 +149,11 @@ module Rufus::Lua
       h
     end
 
+    #
+    # Returns a Ruby Array instance representing this Lua table.
+    #
+    # Will raise an error if the 'rendering' is not possible.
+    #
     def to_a
 
       h = self.to_h
@@ -84,16 +164,6 @@ module Rufus::Lua
         raise("cannot turn hash into array, some keys are not numbers")
 
       keys.inject([]) { |a, k| a << h[k]; a }
-    end
-
-    protected
-
-    def load_onto_stack
-
-      Lib.lua_pushnil(@state.pointer) if @state.stack_top < 1
-        # maybe refactor that to State...
-
-      Lib.lua_rawgeti(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
     end
 
   end
