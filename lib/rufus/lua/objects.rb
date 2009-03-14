@@ -91,14 +91,22 @@ module Rufus::Lua
     protected
 
     def push (o)
+
       case o
+
         when NilClass then Lib.lua_pushnil(@state.pointer)
+
         when TrueClass then Lib.lua_pushboolean(@state.pointer, 1)
         when FalseClass then Lib.lua_pushboolean(@state.pointer, 1)
+
         when Fixnum then Lib.lua_pushinteger(@state.pointer, o)
         when Float then Lib.lua_pushnumber(@state.pointer, o)
+
         when String then Lib.lua_pushstring(@state.pointer, o)
-        else raise "don't know how to pass Ruby instance of #{o.class} to Lua"
+
+        else raise(
+          ArgumentError.new(
+            "don't know how to pass Ruby instance of #{o.class} to Lua"))
       end
     end
   end

@@ -24,6 +24,7 @@
 
 
 require 'rufus/lua/lib'
+require 'rufus/lua/utils'
 require 'rufus/lua/objects'
 
 
