@@ -23,109 +23,19 @@
 #++
 
 
-require 'rufus/lua/lib'
-require 'rufus/lua/utils'
-require 'rufus/lua/objects'
-
-
 module Rufus::Lua
 
   #
-  # A Lua state, wraps a Lua runtime.
+  # Rufus::Lua::Lib contains all the raw C API Lua methods. The methods
+  # here are shared by all the rufus-lua classes that have to deal with
+  # a Lua state. They are protected since they aren't meant to be called
+  # directly.
   #
-  #   require 'rufus/lua'
-  #   s = Rufus::Lua::State.new
-  #   s.eval "a = 1 + 2"
+  # The entry point of rufus-lua is Rufus::Lua::State, look there.
   #
-  #   p s['a'] # => 3.0
-  #
-  class State
+  module StateMixin
 
-    #
-    # Instantiates a Lua state (runtime).
-    #
-    # Accepts an 'include_libs' optional arg. When set to true (the default,
-    # all the base Lua libs are loaded in the runtime.
-    #
-    def initialize (include_libs=true)
-
-      @state = Lib.luaL_newstate
-
-      Lib.luaL_openlibs(@state) if include_libs
-    end
-
-    #
-    # have a peek at the Lua runtime as a C thing.
-    #
-    def pointer
-
-      @state
-    end
-
-    #
-    # Evaluates a piece (string) of Lua code within the state.
-    #
-    def eval (s)
-
-      bottom = stack_top
-
-      err = Lib.luaL_loadbuffer(@state, s, Lib.strlen(s), 'line')
-      raise_if_error('eval:compile', err)
-
-      pcall(bottom, 0) # arg_count is set to 0
-    end
-
-    #
-    # Don't call me directly !
-    #
-    def pcall (stack_bottom, arg_count)
-
-      #err = Lib.lua_pcall(@state, 0, 1, 0)
-        # when there's only 1 return value, use LUA_MULTRET (-1) the
-        # rest of the time
-
-      err = Lib.lua_pcall(@state, arg_count, LUA_MULTRET, 0)
-      raise_if_error('eval:pcall', err)
-
-      count = stack_top - stack_bottom
-
-      return nil if count == 0
-      return stack_pop if count == 1
-
-      (1..count).collect { |pos| stack_pop }.reverse
-    end
-
-    #
-    # Closes the state.
-    #
-    # It's probably a good idea (mem leaks) to close a Lua state once you're
-    # done with it.
-    #
-    def close
-
-      Lib.lua_close(@state)
-    end
-
-    #
-    # Returns a value set at the 'global' level in the state.
-    #
-    #   state.eval('a = 1 + 2')
-    #   puts state['k'] # => "3.0"
-    #
-    def [] (k)
-
-      k.index('.') ?
-        self.eval("return #{k}") :
-        get_global(k)
-    end
-
-    #def _G
-    #  get_global('_G')
-    #end
-    #alias :global_env :_G
-
-    #def []= (k, v)
-    #end
+    protected
 
     #
     # Returns a string representation of the state's stack.
@@ -155,7 +65,7 @@ module Rufus::Lua
     #
     def stack_top
 
-      Lib.lua_gettop(@state)
+      Lib.lua_gettop(@pointer)
     end
 
     #
@@ -165,8 +75,8 @@ module Rufus::Lua
     #
     def stack_type_at (pos=-1)
 
-      type = Lib.lua_type(@state, pos)
-      tname = Lib.lua_typename(@state, type)
+      type = Lib.lua_type(@pointer, pos)
+      tname = Lib.lua_typename(@pointer, type)
 
       [ type, tname ]
     end
@@ -183,13 +93,13 @@ module Rufus::Lua
 
         when TNIL then nil
 
-        when TSTRING then Lib.lua_tolstring(@state, pos, nil)
-        when TBOOLEAN then (Lib.lua_toboolean(@state, pos) == 1)
-        when TNUMBER then Lib.lua_tonumber(@state, pos)
+        when TSTRING then Lib.lua_tolstring(@pointer, pos, nil)
+        when TBOOLEAN then (Lib.lua_toboolean(@pointer, pos) == 1)
+        when TNUMBER then Lib.lua_tonumber(@pointer, pos)
 
-        when TTABLE then Table.new(self)
-        when TFUNCTION then Function.new(self)
-        when TTHREAD then Coroutine.new(self)
+        when TTABLE then Table.new(@pointer)
+        when TFUNCTION then Function.new(@pointer)
+        when TTHREAD then Coroutine.new(@pointer)
 
         else tname
       end
@@ -210,11 +120,33 @@ module Rufus::Lua
     #
     def stack_unstack
 
-      Lib.lua_settop(@state, -2)
+      Lib.lua_settop(@pointer, -2)
       nil
     end
 
-    private
+    #
+    # Assumes the Lua stack is loaded with a ref to a method and arg_count
+    # arguments (on top of the method), will then call that Lua method and
+    # return a result.
+    #
+    # Will raise an error in case of failure.
+    #
+    def pcall (stack_bottom, arg_count)
+
+      #err = Lib.lua_pcall(@pointer, 0, 1, 0)
+        # when there's only 1 return value, use LUA_MULTRET (-1) the
+        # rest of the time
+
+      err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, 0)
+      raise_if_error('eval:pcall', err)
+
+      count = stack_top - stack_bottom
+
+      return nil if count == 0
+      return stack_pop if count == 1
+
+      (1..count).collect { |pos| stack_pop }.reverse
+    end
 
     LUA_GLOBALSINDEX = -10002
     LUA_ENVIRONINDEX = -10001
@@ -233,6 +165,10 @@ module Rufus::Lua
 
     LUA_MULTRET = -1
 
+    #
+    # This method will raise an error with err > 0, else it will immediately
+    # return.
+    #
     def raise_if_error (where, err)
 
       return if err < 1
@@ -244,16 +180,86 @@ module Rufus::Lua
       #   the error handler function.
       # LUA_ERRERR: error while running the error handler function.
 
-      s = Lib.lua_tolstring(@state, -1, nil)
-      Lib.lua_settop(@state, -2)
+      s = Lib.lua_tolstring(@pointer, -1, nil)
+      Lib.lua_settop(@pointer, -2)
 
       raise "#{where} : '#{s}' (#{err})"
     end
 
+    #
+    # Given the name of a Lua global variable, will return its value (or nil
+    # if there is nothing bound under that name).
+    #
     def get_global (name)
-      Lib.lua_getfield(@state, LUA_GLOBALSINDEX, name)
+      Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
       stack_pop
     end
+  end
+
+  #
+  # A Lua state, wraps a Lua runtime.
+  #
+  #   require 'rufus/lua'
+  #   s = Rufus::Lua::State.new
+  #   s.eval "a = 1 + 2"
+  #
+  #   p s['a'] # => 3.0
+  #
+  class State
+    include StateMixin
+
+    #
+    # Instantiates a Lua state (runtime).
+    #
+    # Accepts an 'include_libs' optional arg. When set to true (the default,
+    # all the base Lua libs are loaded in the runtime.
+    #
+    def initialize (include_libs=true)
+
+      @pointer = Lib.luaL_newstate
+
+      Lib.luaL_openlibs(@pointer) if include_libs
+    end
+
+    #
+    # Evaluates a piece (string) of Lua code within the state.
+    #
+    def eval (s)
+
+      bottom = stack_top
+
+      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
+      raise_if_error('eval:compile', err)
+
+      pcall(bottom, 0) # arg_count is set to 0
+    end
+
+    #
+    # Returns a value set at the 'global' level in the state.
+    #
+    #   state.eval('a = 1 + 2')
+    #   puts state['k'] # => "3.0"
+    #
+    def [] (k)
+
+      k.index('.') ? self.eval("return #{k}") : get_global(k)
+    end
+
+    #
+    # Closes the state.
+    #
+    # It's probably a good idea (mem leaks) to close a Lua state once you're
+    # done with it.
+    #
+    def close
+
+      Lib.lua_close(@pointer)
+    end
+
+    #def _G
+    #  get_global('_G')
+    #end
+    #alias :global_env :_G
   end
 end
 

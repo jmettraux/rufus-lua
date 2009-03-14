@@ -22,6 +22,9 @@
 # Made in Japan.
 #++
 
+require 'rufus/lua/lib'
 
 require 'rufus/lua/state'
+require 'rufus/lua/utils'
+require 'rufus/lua/objects'
 

@@ -30,27 +30,28 @@ module Rufus::Lua
   # a reference to the object in the Lua registry.
   #
   class Ref
+    include StateMixin
 
-    def initialize (state)
-      @state = state
-      @ref = Lib.luaL_ref(@state.pointer, State::LUA_REGISTRYINDEX)
+    def initialize (pointer)
+      @pointer = pointer
+      @ref = Lib.luaL_ref(@pointer, State::LUA_REGISTRYINDEX)
     end
 
     def free
       #
       # TODO : investigate... is it freeing both ? does the artefact get GCed ?
       #
-      Lib.luaL_unref(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
+      Lib.luaL_unref(@pointer, State::LUA_REGISTRYINDEX, @ref)
     end
 
     protected
 
     def load_onto_stack
 
-      Lib.lua_pushnil(@state.pointer) if @state.stack_top < 1
+      Lib.lua_pushnil(@pointer) if stack_top < 1
         # maybe refactor that to State...
 
-      Lib.lua_rawgeti(@state.pointer, State::LUA_REGISTRYINDEX, @ref)
+      Lib.lua_rawgeti(@pointer, State::LUA_REGISTRYINDEX, @ref)
     end
   end
 
@@ -77,7 +78,7 @@ module Rufus::Lua
     #
     def call (*args)
 
-      top = @state.stack_top + 1
+      top = stack_top + 1
 
       load_onto_stack
         # load function on stack
@@ -85,7 +86,7 @@ module Rufus::Lua
       args.each { |arg| push(arg) }
         # push arguments on stack
 
-      @state.pcall(top, args.length)
+      pcall(top, args.length)
     end
 
     protected
@@ -94,15 +95,15 @@ module Rufus::Lua
 
       case o
 
-        when NilClass then Lib.lua_pushnil(@state.pointer)
+        when NilClass then Lib.lua_pushnil(@pointer)
 
-        when TrueClass then Lib.lua_pushboolean(@state.pointer, 1)
-        when FalseClass then Lib.lua_pushboolean(@state.pointer, 1)
+        when TrueClass then Lib.lua_pushboolean(@pointer, 1)
+        when FalseClass then Lib.lua_pushboolean(@pointer, 1)
 
-        when Fixnum then Lib.lua_pushinteger(@state.pointer, o)
-        when Float then Lib.lua_pushnumber(@state.pointer, o)
+        when Fixnum then Lib.lua_pushinteger(@pointer, o)
+        when Float then Lib.lua_pushnumber(@pointer, o)
 
-        when String then Lib.lua_pushstring(@state.pointer, o)
+        when String then Lib.lua_pushstring(@pointer, o)
 
         else raise(
           ArgumentError.new(
@@ -138,18 +139,18 @@ module Rufus::Lua
 
       load_onto_stack
 
-      table_pos = @state.stack_top
+      table_pos = stack_top
 
-      Lib.lua_pushnil(@state.pointer)
+      Lib.lua_pushnil(@pointer)
 
       h = {}
 
-      while Lib.lua_next(@state.pointer, table_pos) != 0 do
+      while Lib.lua_next(@pointer, table_pos) != 0 do
 
-        value = @state.stack_fetch(-1)
-        key = @state.stack_fetch(-2)
+        value = stack_fetch(-1)
+        key = stack_fetch(-2)
 
-        @state.stack_unstack
+        stack_unstack
 
         h[key] = value
       end

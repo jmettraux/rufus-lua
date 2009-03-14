@@ -23,7 +23,7 @@
 #++
 
 
-#require 'rubygems'
+#require 'rubygems' # done by the 'client' code
 require 'ffi'
 
 
