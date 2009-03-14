@@ -34,14 +34,14 @@ module Rufus::Lua
 
     def initialize (pointer)
       @pointer = pointer
-      @ref = Lib.luaL_ref(@pointer, State::LUA_REGISTRYINDEX)
+      @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
     end
 
     def free
       #
       # TODO : investigate... is it freeing both ? does the artefact get GCed ?
       #
-      Lib.luaL_unref(@pointer, State::LUA_REGISTRYINDEX, @ref)
+      Lib.luaL_unref(@pointer, LUA_REGISTRYINDEX, @ref)
     end
 
     protected
@@ -51,7 +51,7 @@ module Rufus::Lua
       Lib.lua_pushnil(@pointer) if stack_top < 1
         # maybe refactor that to State...
 
-      Lib.lua_rawgeti(@pointer, State::LUA_REGISTRYINDEX, @ref)
+      Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
   end
 
@@ -115,9 +115,24 @@ module Rufus::Lua
   #
   # (coming soon)
   #
-  class Coroutine < Ref
+  class Coroutine < Function
 
-    def resume (arg)
+    def resume (*args)
+
+      top = stack_top + 1
+
+      load_onto_stack
+        # load function on stack
+
+      args.each { |arg| push(arg) }
+        # push arguments on stack
+
+      do_resume(top, args.length)
+    end
+    alias :call :resume
+
+    def status
+      # TODO : implement me
     end
   end
 

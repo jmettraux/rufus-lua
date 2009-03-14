@@ -35,6 +35,24 @@ module Rufus::Lua
   #
   module StateMixin
 
+    LUA_GLOBALSINDEX = -10002
+    LUA_ENVIRONINDEX = -10001
+    LUA_REGISTRYINDEX = -10000
+
+    TNONE = -1
+    TNIL = 0
+    TBOOLEAN = 1
+    TLIGHTUSERDATA = 2
+    TNUMBER = 3
+    TSTRING = 4
+    TTABLE = 5
+    TFUNCTION = 6
+    TUSERDATA = 7
+    TTHREAD = 8
+
+    LUA_MULTRET = -1
+
+
     protected
 
     #
@@ -125,6 +143,19 @@ module Rufus::Lua
     end
 
     #
+    # Returns the result of a function call or a coroutine.resume().
+    #
+    def return_result (stack_bottom)
+
+      count = stack_top - stack_bottom
+
+      return nil if count == 0
+      return stack_pop if count == 1
+
+      (1..count).collect { |pos| stack_pop }.reverse
+    end
+
+    #
     # Assumes the Lua stack is loaded with a ref to a method and arg_count
     # arguments (on top of the method), will then call that Lua method and
     # return a result.
@@ -140,30 +171,20 @@ module Rufus::Lua
       err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, 0)
       raise_if_error('eval:pcall', err)
 
-      count = stack_top - stack_bottom
-
-      return nil if count == 0
-      return stack_pop if count == 1
-
-      (1..count).collect { |pos| stack_pop }.reverse
+      return_result(stack_bottom)
     end
 
-    LUA_GLOBALSINDEX = -10002
-    LUA_ENVIRONINDEX = -10001
-    LUA_REGISTRYINDEX = -10000
+    #
+    # Resumes a coroutine (that has been placed, under its arguments,
+    # on top of the stack).
+    #
+    def do_resume (stack_bottom, arg_count)
 
-    TNONE = -1
-    TNIL = 0
-    TBOOLEAN = 1
-    TLIGHTUSERDATA = 2
-    TNUMBER = 3
-    TSTRING = 4
-    TTABLE = 5
-    TFUNCTION = 6
-    TUSERDATA = 7
-    TTHREAD = 8
+      err = Lib.lua_resume(@pointer, arg_count)
+      raise_if_error('eval:resume', err)
 
-    LUA_MULTRET = -1
+      return_result(stack_bottom)
+    end
 
     #
     # This method will raise an error with err > 0, else it will immediately
@@ -238,7 +259,7 @@ module Rufus::Lua
     # Returns a value set at the 'global' level in the state.
     #
     #   state.eval('a = 1 + 2')
-    #   puts state['k'] # => "3.0"
+    #   puts state['a'] # => "3.0"
     #
     def [] (k)
 

@@ -61,6 +61,7 @@ module Lua
     attach_function :luaL_openlibs, [ :pointer ], :void
 
     attach_function :lua_pcall, [ :pointer, :int, :int, :int ], :int
+    attach_function :lua_resume, [ :pointer, :int ], :int
 
     attach_function :lua_toboolean, [ :pointer, :int ], :int
     attach_function :lua_tonumber, [ :pointer, :int ], :float
