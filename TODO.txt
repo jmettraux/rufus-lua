@@ -1,10 +1,10 @@
 
-[ ] spec table.free()
-[x] function.call()
+[o] spec table.free()
+[o] function.call()
 [ ] Table#[]
 [ ] Table + Enumerable (not necessarily)
 
-[ ] State#stack_ready() maybe
+[x] State#stack_ready() maybe : NO !
 
-[x] better protection for State methods (into lib ?)
+[o] better protection for State methods (into lib ?)
 
