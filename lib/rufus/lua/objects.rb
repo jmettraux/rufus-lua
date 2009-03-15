@@ -32,6 +32,12 @@ module Rufus::Lua
   class Ref
     include StateMixin
 
+    #
+    # The reference in the Lua registry.
+    # (You shouldn't care about this value)
+    #
+    attr_reader :ref
+
     def initialize (pointer)
       @pointer = pointer
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
@@ -48,9 +54,7 @@ module Rufus::Lua
 
     def load_onto_stack
 
-      stack_push(nil) if stack_top < 1
-
-      Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
+      stack_load_ref(@ref)
     end
   end
 
@@ -77,7 +81,7 @@ module Rufus::Lua
     #
     def call (*args)
 
-      top = stack_top + 1
+      bottom = stack_top
 
       load_onto_stack
         # load function on stack
@@ -85,7 +89,7 @@ module Rufus::Lua
       args.each { |arg| stack_push(arg) }
         # push arguments on stack
 
-      pcall(top, args.length)
+      pcall(bottom, args.length)
     end
   end
 
@@ -94,21 +98,46 @@ module Rufus::Lua
   #
   class Coroutine < Ref
 
+    #def resume (*args)
+    #  top = stack_top + 1
+    #  load_onto_stack
+    #    # load function on stack
+    #  args.each { |arg| stack_push(arg) }
+    #    # push arguments on stack
+    #  do_resume(top, args.length)
+    #end
+
     def resume (*args)
 
-      top = stack_top + 1
+      bottom = stack_top
+
+      coroutine_resume.load_onto_stack
 
       load_onto_stack
-        # load function on stack
-
       args.each { |arg| stack_push(arg) }
-        # push arguments on stack
 
-      do_resume(top, args.length)
+      pcall(bottom, args.length + 1)
     end
 
     def status
-      # TODO : implement me
+
+      bottom = stack_top
+
+      coroutine_status.load_onto_stack
+      load_onto_stack
+
+      pcall(bottom, 1)
+    end
+
+    protected
+
+    def coroutine_status
+      @coroutine_status ||= loadstring_and_call('return coroutine.status')
+        # TODO : bad !!!
+    end
+    def coroutine_resume
+      @coroutine_resume ||= loadstring_and_call('return coroutine.resume')
+        # TODO : bad !!!
     end
   end
 

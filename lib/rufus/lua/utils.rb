@@ -25,11 +25,16 @@
 
 module Rufus::Lua
 
+  #--
+  # always make sure that the methods here are usable without the need
+  # to load liblua.dylib
+  #++
+
   def self.to_lua_s (o)
 
     case o
 
-      when String then "\"#{o}\"" # TODO : refine !!!!
+      when String then o.inspect
       when Fixnum then o.to_s
       when Float then o.to_s
       when TrueClass then o.to_s

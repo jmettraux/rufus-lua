@@ -23,16 +23,24 @@ describe 'Rufus::Lua::State (coroutines)' do
     ).class.should.equal(Rufus::Lua::Coroutine)
   end
 
-  #it 'should resume coroutines' do
-  #  @s.eval(%{
-  #    co = coroutine.create(function (x)
-  #      while true do
-  #        coroutine.yield(x)
-  #      end
-  #    end)
-  #  })
-  #  @s['co'].resume(7).should.equal(7.0)
-  #end
+  it 'should give coroutine status' do
+    co = @s.eval(
+      'return coroutine.create(function (x) end)'
+    )
+    co.status.should.equal('suspended')
+  end
+
+  it 'should resume coroutines' do
+    @s.eval(%{
+      co = coroutine.create(function (x)
+        while true do
+          coroutine.yield(x)
+        end
+      end)
+    })
+    @s['co'].resume(7).should.equal([ true, 7.0 ])
+    @s['co'].resume().should.equal([ true, 7.0 ])
+  end
 
 end
 

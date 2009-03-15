@@ -26,6 +26,11 @@
 module Rufus::Lua
 
   #
+  # An error class for this gem/library.
+  #
+  class LuaError < RuntimeError; end
+
+  #
   # Rufus::Lua::Lib contains all the raw C API Lua methods. The methods
   # here are shared by all the rufus-lua classes that have to deal with
   # a Lua state. They are protected since they aren't meant to be called
@@ -52,8 +57,20 @@ module Rufus::Lua
 
     LUA_MULTRET = -1
 
-
     protected
+
+    #
+    # This method holds the 'eval' mechanism.
+    #
+    def loadstring_and_call (s)
+
+      bottom = stack_top
+
+      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
+      raise_if_error('eval:compile', err)
+
+      pcall(bottom, 0) # arg_count is set to 0
+    end
 
     #
     # Returns a string representation of the state's stack.
@@ -74,8 +91,12 @@ module Rufus::Lua
     #
     # Outputs the stack to the stdout
     #
-    def print_stack
-      puts "\n=s=\n#{stack_to_s}==="
+    def print_stack (msg=nil)
+
+      puts "\n=stack= #{msg ? "(#{msg})" : ""}"
+      puts "top : #{stack_top}"
+      print stack_to_s
+      puts "= ="
     end
 
     #
@@ -83,6 +104,9 @@ module Rufus::Lua
     #
     def stack_top
 
+      #t = Lib.lua_gettop(@pointer)
+      #t < 0 ? 0 : t
+      #t
       Lib.lua_gettop(@pointer)
     end
 
@@ -138,8 +162,9 @@ module Rufus::Lua
     #
     def stack_unstack
 
-      Lib.lua_settop(@pointer, -2)
-      nil
+      new_top = stack_top - 1
+      new_top = 0 if new_top < 0
+      Lib.lua_settop(@pointer, new_top)
     end
 
     #
@@ -163,6 +188,25 @@ module Rufus::Lua
           ArgumentError.new(
             "don't know how to pass Ruby instance of #{o.class} to Lua"))
       end
+    end
+
+    #
+    # Loads a Lua global value on top of the stack
+    #
+    def stack_load_global (name)
+
+      Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
+    end
+
+    #
+    # Loads the Lua object registered with the given ref on top of the stack
+    #
+    def stack_load_ref (ref)
+
+      #stack_push(nil) if stack_top < 0
+      #while (stack_top < 0) do stack_push(nil); end
+
+      Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
 
     #
@@ -197,17 +241,16 @@ module Rufus::Lua
       return_result(stack_bottom)
     end
 
-    #
+    #--
     # Resumes a coroutine (that has been placed, under its arguments,
     # on top of the stack).
     #
-    def do_resume (stack_bottom, arg_count)
-
-      err = Lib.lua_resume(@pointer, arg_count)
-      raise_if_error('eval:resume', err)
-
-      return_result(stack_bottom)
-    end
+    #def do_resume (stack_bottom, arg_count)
+    #  err = Lib.lua_resume(@pointer, arg_count)
+    #  raise_if_error('eval:resume', err)
+    #  return_result(stack_bottom)
+    #end
+    #++
 
     #
     # This method will raise an error with err > 0, else it will immediately
@@ -227,7 +270,7 @@ module Rufus::Lua
       s = Lib.lua_tolstring(@pointer, -1, nil)
       Lib.lua_settop(@pointer, -2)
 
-      raise "#{where} : '#{s}' (#{err})"
+      raise LuaError.new("#{where} : '#{s}' (#{err})")
     end
 
     #
@@ -235,7 +278,8 @@ module Rufus::Lua
     # if there is nothing bound under that name).
     #
     def get_global (name)
-      Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
+
+      stack_load_global(name)
       stack_pop
     end
   end
@@ -270,12 +314,7 @@ module Rufus::Lua
     #
     def eval (s)
 
-      bottom = stack_top
-
-      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
-      raise_if_error('eval:compile', err)
-
-      pcall(bottom, 0) # arg_count is set to 0
+      loadstring_and_call(s)
     end
 
     #
