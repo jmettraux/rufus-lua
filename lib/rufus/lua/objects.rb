@@ -43,6 +43,10 @@ module Rufus::Lua
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
     end
 
+    def refresh_ref
+      @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
+    end
+
     def free
       #
       # TODO : investigate... is it freeing both ? does the artefact get GCed ?
@@ -162,6 +166,8 @@ module Rufus::Lua
       table_pos = stack_top
 
       Lib.lua_pushnil(@pointer)
+
+      raise TypeError unless Lib.lua_type(@pointer, table_pos) == TTABLE
 
       h = {}
 

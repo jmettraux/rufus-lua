@@ -1,5 +1,6 @@
 
-[ ] spec table.free()
+[x] spec table.free()
+[] Read up on how Lua gc() works and write some tests verifying free() is truly safe
 [x] function.call()
 [ ] Table#[]
 [ ] Table + Enumerable (not necessarily)

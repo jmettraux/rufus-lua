@@ -43,6 +43,8 @@ module Rufus::Lua
     LUA_GLOBALSINDEX = -10002
     LUA_ENVIRONINDEX = -10001
     LUA_REGISTRYINDEX = -10000
+    LUA_NOREF = -2
+    LUA_REFNIL = -1
 
     TNONE = -1
     TNIL = 0
