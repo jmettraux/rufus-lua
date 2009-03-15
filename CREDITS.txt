@@ -5,10 +5,13 @@
 == authors
 
 John Mettraux  http://jmettraux.wordpress.com
+Alain Hoang    http://blogs.law.harvard.edu/hoanga/
+
 
 == inspiration
 
   http://rubyluabridge.rubyforge.org/
+
 
 == finally
 
