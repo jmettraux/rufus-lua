@@ -43,16 +43,22 @@ module Rufus::Lua
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
     end
 
+    #
+    # Frees the reference to this object
+    # (Problably a good idea if you want Lua's GC to get rid of it later).
+    #
     def free
-      #
-      # TODO : investigate... is it freeing both ? does the artefact get GCed ?
-      #
       Lib.luaL_unref(@pointer, LUA_REGISTRYINDEX, @ref)
+      @ref = nil
     end
 
     protected
 
     def load_onto_stack
+
+      raise LuaError.new(
+        "#{self.class} got freed, cannot re-access it directly"
+      ) unless @ref
 
       stack_load_ref(@ref)
     end
