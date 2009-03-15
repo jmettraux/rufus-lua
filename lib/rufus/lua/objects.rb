@@ -48,8 +48,7 @@ module Rufus::Lua
 
     def load_onto_stack
 
-      Lib.lua_pushnil(@pointer) if stack_top < 1
-        # maybe refactor that to State...
+      stack_push(nil) if stack_top < 1
 
       Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
@@ -83,39 +82,17 @@ module Rufus::Lua
       load_onto_stack
         # load function on stack
 
-      args.each { |arg| push(arg) }
+      args.each { |arg| stack_push(arg) }
         # push arguments on stack
 
       pcall(top, args.length)
-    end
-
-    protected
-
-    def push (o)
-
-      case o
-
-        when NilClass then Lib.lua_pushnil(@pointer)
-
-        when TrueClass then Lib.lua_pushboolean(@pointer, 1)
-        when FalseClass then Lib.lua_pushboolean(@pointer, 1)
-
-        when Fixnum then Lib.lua_pushinteger(@pointer, o)
-        when Float then Lib.lua_pushnumber(@pointer, o)
-
-        when String then Lib.lua_pushstring(@pointer, o)
-
-        else raise(
-          ArgumentError.new(
-            "don't know how to pass Ruby instance of #{o.class} to Lua"))
-      end
     end
   end
 
   #
   # (coming soon)
   #
-  class Coroutine < Function
+  class Coroutine < Ref
 
     def resume (*args)
 
@@ -124,12 +101,11 @@ module Rufus::Lua
       load_onto_stack
         # load function on stack
 
-      args.each { |arg| push(arg) }
+      args.each { |arg| stack_push(arg) }
         # push arguments on stack
 
       do_resume(top, args.length)
     end
-    alias :call :resume
 
     def status
       # TODO : implement me

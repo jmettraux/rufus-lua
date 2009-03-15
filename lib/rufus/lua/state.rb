@@ -143,6 +143,29 @@ module Rufus::Lua
     end
 
     #
+    # Given a Ruby instance, will attempt to push it on the Lua stack.
+    #
+    def stack_push (o)
+
+      case o
+
+        when NilClass then Lib.lua_pushnil(@pointer)
+
+        when TrueClass then Lib.lua_pushboolean(@pointer, 1)
+        when FalseClass then Lib.lua_pushboolean(@pointer, 1)
+
+        when Fixnum then Lib.lua_pushinteger(@pointer, o)
+        when Float then Lib.lua_pushnumber(@pointer, o)
+
+        when String then Lib.lua_pushstring(@pointer, o)
+
+        else raise(
+          ArgumentError.new(
+            "don't know how to pass Ruby instance of #{o.class} to Lua"))
+      end
+    end
+
+    #
     # Returns the result of a function call or a coroutine.resume().
     #
     def return_result (stack_bottom)

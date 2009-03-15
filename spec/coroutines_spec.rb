@@ -19,7 +19,7 @@ describe 'Rufus::Lua::State (coroutines)' do
 
   it 'should find coroutines' do
     @s.eval(
-      "return coroutine.create(function (x) end)"
+      'return coroutine.create(function (x) end)'
     ).class.should.equal(Rufus::Lua::Coroutine)
   end
 
