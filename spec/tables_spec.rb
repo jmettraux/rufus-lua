@@ -42,12 +42,12 @@ describe 'Rufus::Lua::State (tables)' do
   end
 
   it 'should free tables' do
+
     t = @s.eval('t = {}; return t')
     t.free
-    lambda {
-      p :now
-      t.to_h
-    }.should.raise(TypeError)
+
+    t.ref.should.be.nil
+    lambda { t.to_h }.should.raise(Rufus::Lua::LuaError)
   end
 end
 
