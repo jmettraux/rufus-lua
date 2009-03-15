@@ -51,3 +51,20 @@ end
 
 LUA.close
 
+
+# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
+#                                      user     system      total        real
+# ruby                             0.050000   0.000000   0.050000 (  0.056082)
+# lua via ruby                     0.190000   0.010000   0.200000 (  0.193682)
+# lua                              0.000000   0.000000   0.000000 (  0.008548)
+# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
+#                                      user     system      total        real
+# ruby                             0.050000   0.000000   0.050000 (  0.051330)
+# lua via ruby                     0.180000   0.010000   0.190000 (  0.193941)
+# lua                              0.010000   0.000000   0.010000 (  0.009724)
+# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
+#                                      user     system      total        real
+# ruby                             0.050000   0.000000   0.050000 (  0.051940)
+# lua via ruby                     0.190000   0.010000   0.200000 (  0.201941)
+# lua                              0.010000   0.000000   0.010000 (  0.010278)
+
