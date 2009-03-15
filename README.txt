@@ -70,6 +70,16 @@ modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg
   sudo cp src/liblua.dylib /usr/local/lib/
 
 
+== build dependencies
+
+You need to add the github gems to your gem sources
+  gem sources -a http://gems.github.com
+
+The following gems are needed to run the specs
+  mislav-hanna
+  install bacon
+
+
 == dependencies
 
 the ruby gem 'ffi'
