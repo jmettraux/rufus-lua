@@ -46,7 +46,7 @@ module Lua
 
     raise(
       "didn't find the lua dylib on your system, " +
-      "see http://rufus.rubyforge.org/lua.html to learn how to get it"
+      "see http://rufus.rubyforge.org/rufus-lua/ to learn how to get it"
     ) unless path
 
     ffi_lib(path)
