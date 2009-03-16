@@ -67,6 +67,8 @@ module Rufus::Lua
     # The caching is done at the Lua state level (ie, all Lua objects available
     # via the state share the cache.
     #
+    # (Not sure yet about this yet)
+    #
     def fetch_library_method (s)
 
       if m = @pointer.__lib_method_cache[s]
@@ -121,9 +123,6 @@ module Rufus::Lua
     #
     def stack_top
 
-      #t = Lib.lua_gettop(@pointer)
-      #t < 0 ? 0 : t
-      #t
       Lib.lua_gettop(@pointer)
     end
 
@@ -201,6 +200,9 @@ module Rufus::Lua
 
         when String then Lib.lua_pushstring(@pointer, o)
 
+        #when Hash then ...
+        #when Array then ...
+
         else raise(
           ArgumentError.new(
             "don't know how to pass Ruby instance of #{o.class} to Lua"))
@@ -219,9 +221,6 @@ module Rufus::Lua
     # Loads the Lua object registered with the given ref on top of the stack
     #
     def stack_load_ref (ref)
-
-      #stack_push(nil) if stack_top < 0
-      #while (stack_top < 0) do stack_push(nil); end
 
       Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
@@ -363,11 +362,6 @@ module Rufus::Lua
 
       Lib.lua_close(@pointer)
     end
-
-    #def _G
-    #  get_global('_G')
-    #end
-    #alias :global_env :_G
   end
 end
 

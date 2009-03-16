@@ -30,6 +30,16 @@ module Rufus::Lua
   # to load liblua.dylib
   #++
 
+  #
+  # Turns a Ruby instance into a Lua parseable string representation.
+  #
+  # Will raise an ArgumentError as soon as something else than a simple
+  # Ruby type (or Hash/Array) is passed.
+  #
+  #   Rufus::Lua.to_lua_s({ 'a' => 'A', 'b' => 2})
+  #     #
+  #     # => '{ "a": "A", "b": 2 }'
+  #
   def self.to_lua_s (o)
 
     case o
@@ -50,6 +60,10 @@ module Rufus::Lua
     end
   end
 
+  #
+  # Turns a Ruby Array or Hash instance into a Lua parseable string
+  # representation.
+  #
   def self.to_lua_table_s (o)
 
     s = if o.is_a?(Array)

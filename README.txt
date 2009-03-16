@@ -1,7 +1,10 @@
 
 = rufus-lua
 
-Lua embedded in Ruby, via ruby FFI
+Lua embedded in Ruby, via Ruby FFI
+
+Tested with Ruby 1.8.6, Ruby 1.9.1p0 and JRuby 1.1.6
+
 
 == Lua
 
@@ -120,6 +123,7 @@ many thanks to the authors of Ruby FFI, and of Lua
 == authors
 
 John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
+Alain Hoang, http://blogs.law.harvard.edu/hoanga/
 
 
 == the rest of Rufus

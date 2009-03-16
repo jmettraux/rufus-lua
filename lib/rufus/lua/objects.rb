@@ -54,6 +54,10 @@ module Rufus::Lua
 
     protected
 
+    #
+    # Brings the referenced object on top of the stack (will probably
+    # then take part in a method call).
+    #
     def load_onto_stack
 
       raise LuaError.new(
@@ -186,13 +190,13 @@ module Rufus::Lua
       stack_pop
     end
 
-    #
+    #--
     # TODO : implement (maybe)
     #
-    def []= (k, v)
-
-      raise 'not yet !'
-    end
+    #def []= (k, v)
+    #  raise 'not yet !'
+    #end
+    #++
 
     #
     # Returns a Ruby Hash instance representing this Lua table.
@@ -204,8 +208,6 @@ module Rufus::Lua
       table_pos = stack_top
 
       Lib.lua_pushnil(@pointer)
-
-      raise TypeError unless Lib.lua_type(@pointer, table_pos) == TTABLE
 
       h = {}
 

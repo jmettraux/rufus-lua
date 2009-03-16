@@ -2,7 +2,7 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 0.1.0    not yet released
+== rufus-lua - 0.1.0    released 2009/03/16
 
 - initial release
 

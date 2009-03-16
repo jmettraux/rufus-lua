@@ -23,8 +23,7 @@ end
 
 s = %{
   co = coroutine.create(function ()
-    local n1 = 1
-    local n2 = 1
+    local n1 = 1; local n2 = 1
     while true do
       coroutine.yield(n1)
       n1, n2 = n2, n1+n2
@@ -53,24 +52,27 @@ end
 LUA.close
 
 
-# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
-#                                      user     system      total        real
-# ruby                             0.050000   0.010000   0.060000 (  0.054605)
-# lua via ruby                     0.180000   0.000000   0.180000 (  0.189010)
-# lua                              0.010000   0.000000   0.010000 (  0.005543)
-# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
-#                                      user     system      total        real
-# ruby                             0.050000   0.000000   0.050000 (  0.051531)
-# lua via ruby                     0.180000   0.010000   0.190000 (  0.194944)
-# lua                              0.010000   0.000000   0.010000 (  0.006325)
-# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
-#                                      user     system      total        real
-# ruby                             0.050000   0.010000   0.060000 (  0.052032)
-# lua via ruby                     0.180000   0.000000   0.180000 (  0.195411)
-# lua                              0.010000   0.000000   0.010000 (  0.006394)
-# jmettraux@sanma ~/rufus/rufus-lua (master) $ ruby19 test/bm_fiber.rb
-#                                      user     system      total        real
-# ruby                             0.050000   0.010000   0.060000 (  0.054892)
-# lua via ruby                     0.180000   0.000000   0.180000 (  0.267880)
-# lua                              0.000000   0.000000   0.000000 (  0.005865)
+# $ ruby19 test/bm_fiber.rb
+#                   user     system      total        real
+# ruby          0.050000   0.010000   0.060000 (  0.054605)
+# lua via ruby  0.180000   0.000000   0.180000 (  0.189010)
+# lua           0.010000   0.000000   0.010000 (  0.005543)
+#
+# $ ruby19 test/bm_fiber.rb
+#                   user     system      total        real
+# ruby          0.050000   0.000000   0.050000 (  0.051531)
+# lua via ruby  0.180000   0.010000   0.190000 (  0.194944)
+# lua           0.010000   0.000000   0.010000 (  0.006325)
+#
+# $ ruby19 test/bm_fiber.rb
+#                   user     system      total        real
+# ruby          0.050000   0.010000   0.060000 (  0.052032)
+# lua via ruby  0.180000   0.000000   0.180000 (  0.195411)
+# lua           0.010000   0.000000   0.010000 (  0.006394)
+#
+# $ ruby19 test/bm_fiber.rb
+#                   user     system      total        real
+# ruby          0.050000   0.010000   0.060000 (  0.054892)
+# lua via ruby  0.180000   0.000000   0.180000 (  0.267880)
+# lua           0.000000   0.000000   0.000000 (  0.005865)
 
