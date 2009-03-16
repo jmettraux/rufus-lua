@@ -388,7 +388,7 @@ module Rufus::Lua
     #
     def gc_collect!
 
-      raise "closed" unless @pointer
+      raise "State got closed, cannot proceed" unless @pointer
       Lib.lua_gc(@pointer, LUA_GCCOLLECT, 0)
     end
 
@@ -397,7 +397,7 @@ module Rufus::Lua
     #
     def gc_stop
 
-      raise "closed" unless @pointer
+      raise "State got closed, cannot proceed" unless @pointer
       Lib.lua_gc(@pointer, LUA_GCSTOP, 0)
     end
 
@@ -406,7 +406,7 @@ module Rufus::Lua
     #
     def gc_resume
 
-      raise "closed" unless @pointer
+      raise "State got closed, cannot proceed" unless @pointer
       Lib.lua_gc(@pointer, LUA_GCRESTART, 0)
     end
   end
