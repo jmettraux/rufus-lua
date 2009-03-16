@@ -12,4 +12,8 @@
 [o] fib.lua, use local, bench ! (2 times faster almost)
 
 [ ] add GC control methods (Alain)
+[ ] Add method to disable GC
+[ ] Add method to enable GC
+[ ] Look at parameters in Lua GC that can be tweaked
+[ ] Add method to tune GC parameters
 
