@@ -46,7 +46,7 @@ Rake::GemPackageTask.new($gemspec) do |pkg|
   #pkg.need_tar = true
 end
 
-Rake::PackageTask.new('rufus-lua', '0.1.0') do |pkg|
+Rake::PackageTask.new('rufus-lua', '0.1.1') do |pkg|
 
   pkg.need_zip = true
   pkg.package_files = FileList[
