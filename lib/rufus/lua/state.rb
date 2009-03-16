@@ -46,6 +46,16 @@ module Rufus::Lua
     LUA_NOREF = -2
     LUA_REFNIL = -1
 
+    # Lua GC constants
+    LUA_GCSTOP = 0
+    LUA_GCRESTART = 1
+    LUA_GCCOLLECT = 2
+    LUA_GCCOUNT = 3
+    LUA_GCCOUNTB = 4
+    LUA_GCSTEP = 5
+    LUA_GCSETPAUSE = 6
+    LUA_GCSETSTEPMUL = 7
+
     TNONE = -1
     TNIL = 0
     TBOOLEAN = 1
@@ -361,6 +371,43 @@ module Rufus::Lua
     def close
 
       Lib.lua_close(@pointer)
+      @pointer = nil
+    end
+
+    #
+    # Returns current amount of memory in KB in use by Lua
+    #
+    def gc_count
+
+      raise "closed" unless @pointer
+      Lib.lua_gc(@pointer, LUA_GCCOUNT, 0)
+    end
+
+    #
+    # Runs garbage collection
+    #
+    def gc_collect!
+
+      raise "closed" unless @pointer
+      Lib.lua_gc(@pointer, LUA_GCCOLLECT, 0)
+    end
+
+    #
+    # Stop garbage collection for this state
+    #
+    def gc_stop
+
+      raise "closed" unless @pointer
+      Lib.lua_gc(@pointer, LUA_GCSTOP, 0)
+    end
+
+    #
+    # Restart garbage collection for this state
+    #
+    def gc_resume
+
+      raise "closed" unless @pointer
+      Lib.lua_gc(@pointer, LUA_GCRESTART, 0)
     end
   end
 end

@@ -91,6 +91,8 @@ module Lua
     attach_function :luaL_loadbuffer, [ :pointer, :string, :int, :string ], :int
     attach_function :luaL_ref, [ :pointer, :int ], :int
     attach_function :luaL_unref, [ :pointer, :int, :int ], :void
+
+    attach_function :lua_gc, [ :pointer, :int, :int ], :int
   end
 end
 end
