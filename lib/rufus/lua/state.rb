@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2009, John Mettraux, jmettraux@gmail.com
+# Copyright (c) 2009, John Mettraux, Alain Hoang.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -190,6 +190,11 @@ module Rufus::Lua
 
       new_top = stack_top - 1
       new_top = 0 if new_top < 0
+        #
+        # there are no safeguard in Lua, setting top to -2 work well
+        # when the stack is crowed, but it has bad side effects when the
+        # stack is empty... Now safeguarding by ourselves.
+
       Lib.lua_settop(@pointer, new_top)
     end
 

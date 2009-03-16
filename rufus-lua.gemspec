@@ -3,7 +3,7 @@ $gemspec = Gem::Specification.new do |s|
 
   s.name = 'rufus-lua'
   s.version = '0.1.1'
-  s.authors = [ 'John Mettraux', ]
+  s.authors = [ 'John Mettraux', 'Alain Hoang' ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
   s.platform = Gem::Platform::RUBY
