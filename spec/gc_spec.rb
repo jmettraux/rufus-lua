@@ -15,9 +15,7 @@ describe 'Rufus::Lua::State (gc)' do
     @s = Rufus::Lua::State.new
     @s.close
 
-    lambda {
-      @s.gc_collect!
-    }.should.raise(RuntimeError)
+    should.raise(RuntimeError) { @s.gc_collect! }
   end
 
   it 'should accurately count Lua interpreter memory usage' do
