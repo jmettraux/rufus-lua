@@ -1,8 +1,8 @@
 
 [o] spec table.free()
 [o] function.call()
-[ ] Table#[]
-[ ] Table + Enumerable (not necessarily)
+[o] Table#[]
+[o] Table + Enumerable (not necessarily)
 
 [x] State#stack_ready() maybe : NO !
 
@@ -11,5 +11,5 @@
 [o] fix coroutine & co / memoization (make it better later)
 [o] fib.lua, use local, bench ! (2 times faster almost)
 
-[ ] add GC control methods
+[ ] add GC control methods (Alain)
 
