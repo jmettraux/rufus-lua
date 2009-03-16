@@ -104,20 +104,11 @@ module Rufus::Lua
   #
   class Coroutine < Ref
 
-    #def resume (*args)
-    #  top = stack_top + 1
-    #  load_onto_stack
-    #    # load function on stack
-    #  args.each { |arg| stack_push(arg) }
-    #    # push arguments on stack
-    #  do_resume(top, args.length)
-    #end
-
     def resume (*args)
 
       bottom = stack_top
 
-      coroutine_resume.load_onto_stack
+      fetch_library_method('coroutine.resume').load_onto_stack
 
       load_onto_stack
       args.each { |arg| stack_push(arg) }
@@ -129,21 +120,10 @@ module Rufus::Lua
 
       bottom = stack_top
 
-      coroutine_status.load_onto_stack
+      fetch_library_method('coroutine.status').load_onto_stack
       load_onto_stack
 
       pcall(bottom, 1)
-    end
-
-    protected
-
-    def coroutine_status
-      @coroutine_status ||= loadstring_and_call('return coroutine.status')
-        # TODO : bad !!!
-    end
-    def coroutine_resume
-      @coroutine_resume ||= loadstring_and_call('return coroutine.resume')
-        # TODO : bad !!!
     end
   end
 

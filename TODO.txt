@@ -8,3 +8,8 @@
 
 [o] better protection for State methods (into lib ?)
 
+[o] fix coroutine & co / memoization (make it better later)
+[o] fib.lua, use local, bench ! (2 times faster almost)
+
+[ ] add GC control methods
+

@@ -60,6 +60,21 @@ module Rufus::Lua
     protected
 
     #
+    # This method is used to fetch/cache references to library methods like
+    # 'math.sin' or 'coroutine.resume'.
+    # The caching is done at the Lua state level (ie, all Lua objects available
+    # via the state share the cache.
+    #
+    def fetch_library_method (s)
+
+      if m = @pointer.__lib_method_cache[s]
+        m
+      else
+        @pointer.__lib_method_cache[s] = loadstring_and_call("return #{s}")
+      end
+    end
+
+    #
     # This method holds the 'eval' mechanism.
     #
     def loadstring_and_call (s)
@@ -307,6 +322,14 @@ module Rufus::Lua
       @pointer = Lib.luaL_newstate
 
       Lib.luaL_openlibs(@pointer) if include_libs
+
+      #
+      # preparing library methods cache
+
+      class << @pointer
+        attr_reader :__lib_method_cache
+      end
+      @pointer.instance_variable_set(:@__lib_method_cache, {})
     end
 
     #
