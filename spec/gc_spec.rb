@@ -20,5 +20,14 @@ describe 'Rufus::Lua::State (gc)' do
     }.should.raise(RuntimeError)
   end
 
-end
+  it 'should accurately count Lua interpreter memory usage' do
 
+    @s = Rufus::Lua::State.new
+
+    before_usage = @s.gc_count
+    @s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
+    after_usage = @s.gc_count
+
+    after_usage.should.> before_usage
+  end
+end
