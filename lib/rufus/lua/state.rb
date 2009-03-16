@@ -370,6 +370,7 @@ module Rufus::Lua
     #
     def close
 
+      raise "State already closed" unless @pointer
       Lib.lua_close(@pointer)
       @pointer = nil
     end
@@ -379,7 +380,7 @@ module Rufus::Lua
     #
     def gc_count
 
-      raise "closed" unless @pointer
+      raise "State got closed, cannot proceed" unless @pointer
       Lib.lua_gc(@pointer, LUA_GCCOUNT, 0)
     end
 
