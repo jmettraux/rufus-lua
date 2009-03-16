@@ -1,11 +1,15 @@
 
-[x] spec table.free()
-[] Read up on how Lua gc() works and write some tests verifying free() is truly safe
-[x] function.call()
-[ ] Table#[]
-[ ] Table + Enumerable (not necessarily)
+[o] spec table.free()
+[o] function.call()
+[o] Table#[]
+[o] Table + Enumerable (not necessarily)
 
-[ ] State#stack_ready() maybe
+[x] State#stack_ready() maybe : NO !
 
-[x] better protection for State methods (into lib ?)
+[o] better protection for State methods (into lib ?)
+
+[o] fix coroutine & co / memoization (make it better later)
+[o] fib.lua, use local, bench ! (2 times faster almost)
+
+[ ] add GC control methods (Alain)
 

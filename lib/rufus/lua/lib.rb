@@ -75,6 +75,7 @@ module Lua
 
     attach_function :lua_objlen, [ :pointer, :int ], :int
     attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
+    attach_function :lua_gettable, [ :pointer, :int ], :void
 
     attach_function :lua_next, [ :pointer, :int ], :int
 

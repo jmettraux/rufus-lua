@@ -49,5 +49,24 @@ describe 'Rufus::Lua::State (tables)' do
     t.ref.should.be.nil
     lambda { t.to_h }.should.raise(Rufus::Lua::LuaError)
   end
+
+  it 'should index tables' do
+
+    t = @s.eval("return { a = 'A' }")
+    t['a'].should.equal('A')
+    t['b'].should.be.nil
+  end
+
+  it 'should iterate on tables' do
+    #t = @s.eval("return { a = 'A', b = 'B', c = 3, d = 3.1 }")
+    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+    t.values.sort { |a, b| a.to_s <=> b.to_s }.should.equal([ 3.0, 'A', 'B' ])
+    t.keys.sort.should.equal([ 'a', 'b', 'c' ])
+  end
+
+  it 'should provide keys and values for tables' do
+    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+    t.collect { |k, v| v }.size.should.equal(3)
+  end
 end
 

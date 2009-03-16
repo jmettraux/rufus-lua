@@ -104,20 +104,14 @@ module Rufus::Lua
   #
   class Coroutine < Ref
 
-    #def resume (*args)
-    #  top = stack_top + 1
-    #  load_onto_stack
-    #    # load function on stack
-    #  args.each { |arg| stack_push(arg) }
-    #    # push arguments on stack
-    #  do_resume(top, args.length)
-    #end
-
+    #
+    # Resumes the coroutine
+    #
     def resume (*args)
 
       bottom = stack_top
 
-      coroutine_resume.load_onto_stack
+      fetch_library_method('coroutine.resume').load_onto_stack
 
       load_onto_stack
       args.each { |arg| stack_push(arg) }
@@ -125,25 +119,18 @@ module Rufus::Lua
       pcall(bottom, args.length + 1)
     end
 
+    #
+    # Returns the string status of the coroutine :
+    # suspended/running/dead/normal
+    #
     def status
 
       bottom = stack_top
 
-      coroutine_status.load_onto_stack
+      fetch_library_method('coroutine.status').load_onto_stack
       load_onto_stack
 
       pcall(bottom, 1)
-    end
-
-    protected
-
-    def coroutine_status
-      @coroutine_status ||= loadstring_and_call('return coroutine.status')
-        # TODO : bad !!!
-    end
-    def coroutine_resume
-      @coroutine_resume ||= loadstring_and_call('return coroutine.resume')
-        # TODO : bad !!!
     end
   end
 
@@ -157,6 +144,55 @@ module Rufus::Lua
   # (as of now).
   #
   class Table < Ref
+    include Enumerable
+
+    #
+    # The classical 'each'.
+    #
+    # Note it cheats by first turning the table into a Ruby Hash and calling
+    # the each of that Hash instance (this way, the stack isn't involved
+    # in the iteration).
+    #
+    def each
+
+      return unless block_given?
+      self.to_h.each { |k, v| yield(k, v) }
+    end
+
+    #
+    # Returns the array of keys of this Table.
+    #
+    def keys
+
+      self.to_h.keys
+    end
+
+    #
+    # Returns the array of values in this Table.
+    #
+    def values
+
+      self.to_h.values
+    end
+
+    #
+    # Returns the value behind the key, or else nil.
+    #
+    def [] (k)
+
+      load_onto_stack # table
+      stack_push(k) # key
+      Lib.lua_gettable(@pointer, -2) # fetch val for key at top and table at -2
+      stack_pop
+    end
+
+    #
+    # TODO : implement (maybe)
+    #
+    def []= (k, v)
+
+      raise 'not yet !'
+    end
 
     #
     # Returns a Ruby Hash instance representing this Lua table.
@@ -178,7 +214,7 @@ module Rufus::Lua
         value = stack_fetch(-1)
         key = stack_fetch(-2)
 
-        stack_unstack
+        stack_unstack # leave key on top
 
         h[key] = value
       end
