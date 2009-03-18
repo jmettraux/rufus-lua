@@ -367,20 +367,29 @@ module Rufus::Lua
       k.index('.') ? self.eval("return #{k}") : get_global(k)
     end
 
-    def define_ruby_function (name, &block)
+    #
+    # TODO : document me
+    #
+    def define_callback (name, &block)
 
       raise "please pass a block for the body of the function" unless block
 
-      #p block.arity
-
       callback = Proc.new do |state|
-        args = []
-        block.call(*args)
-        0
+
+        args = block.arity > 0 ?
+          (1..block.arity).collect { |i| stack_pop } :
+          []
+
+        begin
+          block.call(*args)
+          return 0
+        rescue Exception => e
+          7
+        end
       end
 
       Lib.lua_pushcclosure(@pointer, callback, 0)
-      Lib.lua_setfield(@pointer, LUA_GLOBALSINDEX, name)
+      Lib.lua_setfield(@pointer, LUA_GLOBALSINDEX, name.to_s)
     end
 
     #

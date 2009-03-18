@@ -8,7 +8,7 @@
 require File.dirname(__FILE__) + '/spec_base'
 
 
-describe 'Rufus::Lua::State (functions)' do
+describe 'callbacks' do
 
   before do
     @s = Rufus::Lua::State.new
@@ -17,11 +17,18 @@ describe 'Rufus::Lua::State (functions)' do
     @s.close
   end
 
-  it 'should accept Ruby callbacks' do
+  it 'should raise when no block is given' do
+
+    lambda {
+      @s.define_callback 'no_block'
+    }.should.raise(RuntimeError)
+  end
+
+  it 'should work without arguments' do
 
     blinked = false
 
-    @s.define_ruby_function 'blink' do
+    @s.define_callback 'blink' do
       blinked = true
     end
 
@@ -29,6 +36,22 @@ describe 'Rufus::Lua::State (functions)' do
 
     blinked.should.be.true
   end
+
+  it 'should work with arguments' do
+
+    message = nil
+
+    @s.define_callback :greet do |msg|
+      message = msg
+    end
+
+    @s.eval("greet('obandegozaimasu')")
+
+    message.should.equal('obandegozaimasu')
+  end
+
+  # TODO : hash/array arguments
+  # TODO : return values (ruby to lua)
 
 end
 
