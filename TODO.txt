@@ -18,3 +18,5 @@
 [ ] Add method to tune GC parameters
 [ ] Test whether GC is truly independent for each state
 
+[ ] ruby callbacks
+

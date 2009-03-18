@@ -39,6 +39,7 @@ module Lua
     paths = Array(ENV['LUA_LIB'] || %w{
       /opt/local/lib/liblua.dylib
       /usr/local/lib/liblua.dylib
+      /opt/local/lib/liblua.so
       /usr/local/lib/liblua.so
     })
 
@@ -93,6 +94,10 @@ module Lua
     attach_function :luaL_unref, [ :pointer, :int, :int ], :void
 
     attach_function :lua_gc, [ :pointer, :int, :int ], :int
+
+    callback :cfunction, [ :pointer ], :int
+    attach_function :lua_pushcclosure, [ :pointer, :cfunction, :int ], :void
+    attach_function :lua_setfield, [ :pointer, :int, :string ], :void
   end
 end
 end
