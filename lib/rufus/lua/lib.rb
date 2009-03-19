@@ -78,6 +78,10 @@ module Lua
     attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
     attach_function :lua_gettable, [ :pointer, :int ], :void
 
+    attach_function :lua_createtable, [ :pointer, :int, :int ], :void
+    #attach_function :lua_newtable, [ :pointer ], :void
+    attach_function :lua_settable, [ :pointer, :int ], :void
+
     attach_function :lua_next, [ :pointer, :int ], :int
 
     attach_function :lua_pushnil, [ :pointer ], :pointer

@@ -215,12 +215,42 @@ module Rufus::Lua
 
         when String then Lib.lua_pushstring(@pointer, o)
 
-        #when Hash then ...
-        #when Array then ...
+        when Hash then stack_push_hash(o)
+        when Array then stack_push_array(o)
 
         else raise(
           ArgumentError.new(
             "don't know how to pass Ruby instance of #{o.class} to Lua"))
+      end
+    end
+
+    #
+    # Pushes a hash on top of the Lua stack.
+    #
+    def stack_push_hash (h)
+
+      Lib.lua_createtable(@pointer, 0, h.size)
+        # since we already know the size of the table...
+
+      h.each do |k, v|
+        stack_push(k)
+        stack_push(v)
+        Lib.lua_settable(@pointer, -3)
+      end
+    end
+
+    #
+    # Pushes an array on top of the Lua stack.
+    #
+    def stack_push_array (a)
+
+      Lib.lua_createtable(@pointer, a.size, 0)
+        # since we already know the size of the table...
+
+      a.each_with_index do |e, i|
+        stack_push(i)
+        stack_push(e)
+        Lib.lua_settable(@pointer, -3)
       end
     end
 
@@ -370,7 +400,7 @@ module Rufus::Lua
     #
     # TODO : document me
     #
-    def define_callback (name, &block)
+    def function (name, &block)
 
       raise "please pass a block for the body of the function" unless block
 
@@ -380,11 +410,21 @@ module Rufus::Lua
           (1..block.arity).collect { |i| stack_pop } :
           []
 
-        begin
+        result = begin
           block.call(*args)
-          return 0
         rescue Exception => e
-          7
+          e
+        end
+
+        # TODO : handle exceptions !
+
+        if result.is_a?(Hash)
+          stack_push(result)
+          1
+        else
+          result = Array(result)
+          result.each { |e| stack_push(e) }
+          result.size
         end
       end
 

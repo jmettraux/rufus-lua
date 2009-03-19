@@ -20,7 +20,7 @@ describe 'callbacks' do
   it 'should raise when no block is given' do
 
     lambda {
-      @s.define_callback 'no_block'
+      @s.function 'no_block'
     }.should.raise(RuntimeError)
   end
 
@@ -28,7 +28,7 @@ describe 'callbacks' do
 
     blinked = false
 
-    @s.define_callback 'blink' do
+    @s.function 'blink' do
       blinked = true
     end
 
@@ -41,7 +41,7 @@ describe 'callbacks' do
 
     message = nil
 
-    @s.define_callback :greet do |msg|
+    @s.function :greet do |msg|
       message = msg
     end
 
@@ -50,6 +50,42 @@ describe 'callbacks' do
     message.should.equal('obandegozaimasu')
   end
 
+  it 'should return a single value' do
+
+    @s.function :greet do
+      'hello !'
+    end
+    @s.eval('return greet()').should.equal('hello !')
+  end
+
+  it 'should return multiple values' do
+
+    @s.function :compute do
+      [ 'a', true, 1 ]
+    end
+    @s.eval('return compute()').should.equal([ 'a', true, 1.0 ])
+  end
+
+  it 'should return tables' do
+
+    @s.function :compute do
+      { 'a' => 'alpha', 'z' => 'zebra' }
+    end
+    @s.eval('return compute()').to_h.should.equal(
+      { 'a' => 'alpha', 'z' => 'zebra' }
+    )
+  end
+
+  #it 'should return tables (with nested array)' do
+  #  @s.function :compute do
+  #    { 'a' => 'alpha', 'z' => [ 1, 2, 3 ] }
+  #  end
+  #  @s.eval('return compute()').to_h.should.equal(
+  #    ''
+  #  )
+  #end
+
+  # TODO : errors !
   # TODO : hash/array arguments
   # TODO : return values (ruby to lua)
 
