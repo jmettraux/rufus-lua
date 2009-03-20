@@ -85,8 +85,31 @@ describe 'callbacks' do
     )
   end
 
-  # TODO : errors !
-  # TODO : hash/array arguments
+  it 'should accept hashes as arguments' do
+
+    @s.function :to_json do |h|
+      "{" + h.collect { |k, v| "#{k}:\"#{v}\"" }.join(",") + "}"
+    end
+    @s.eval(
+      "return to_json({ a = 'ALPHA', b = 'BRAVO' })"
+    ).should.equal(
+      '{a:"ALPHA",b:"BRAVO"}'
+    )
+  end
+
+  it 'should accept arrays as arguments' do
+
+    @s.function :do_join do |a|
+      a.to_a.join(', ')
+    end
+    @s.eval(
+      "return do_join({ 'alice', 'bob', 'charly' })"
+    ).should.equal(
+      'alice, bob, charly'
+    )
+  end
+
+  # TODO : errors ! : lua_error(L)
 
 end
 
