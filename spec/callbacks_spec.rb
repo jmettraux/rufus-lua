@@ -76,18 +76,17 @@ describe 'callbacks' do
     )
   end
 
-  #it 'should return tables (with nested array)' do
-  #  @s.function :compute do
-  #    { 'a' => 'alpha', 'z' => [ 1, 2, 3 ] }
-  #  end
-  #  @s.eval('return compute()').to_h.should.equal(
-  #    ''
-  #  )
-  #end
+  it 'should return tables (with nested array)' do
+    @s.function :compute do
+      { 'a' => 'alpha', 'z' => [ 1, 2, 3 ] }
+    end
+    @s.eval('return compute()').to_h['z'].to_a.should.equal(
+      [ 1.0, 2.0, 3.0 ]
+    )
+  end
 
   # TODO : errors !
   # TODO : hash/array arguments
-  # TODO : return values (ruby to lua)
 
 end
 

@@ -39,8 +39,10 @@ module Rufus::Lua
     attr_reader :ref
 
     def initialize (pointer)
+
       @pointer = pointer
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
+        # this pops the object out of the stack !
     end
 
     #
@@ -214,7 +216,10 @@ module Rufus::Lua
       while Lib.lua_next(@pointer, table_pos) != 0 do
 
         value = stack_fetch(-1)
+        value.load_onto_stack if value.is_a?(Ref)
+
         key = stack_fetch(-2)
+        key.load_onto_stack if key.is_a?(Ref)
 
         stack_unstack # leave key on top
 

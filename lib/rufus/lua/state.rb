@@ -67,6 +67,8 @@ module Rufus::Lua
     TUSERDATA = 7
     TTHREAD = 8
 
+    SIMPLE_TYPES = [ TNIL, TBOOLEAN, TNUMBER, TSTRING ]
+
     LUA_MULTRET = -1
 
     protected
@@ -109,11 +111,23 @@ module Rufus::Lua
       # warning : don't touch at stack[0]
 
       s = (1..stack_top).inject([]) { |a, i|
+
         type, tname = stack_type_at(i)
-        a << "#{i} : #{tname} (#{type})"
+
+        val = if type == TSTRING
+          "\"#{stack_fetch(i)}\""
+        elsif SIMPLE_TYPES.include?(type)
+          stack_fetch(i).to_s
+        else
+          ''
+        end
+
+        a << "#{i} : #{tname} (#{type}) #{val}"
         a
       }.reverse.join("\n")
+
       s += "\n" if s.length > 0
+
       s
     end
 
