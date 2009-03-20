@@ -412,7 +412,29 @@ module Rufus::Lua
     end
 
     #
-    # TODO : document me
+    # Binds a Ruby function (callback) in the top environment of Lua
+    #
+    #   require 'rubygems'
+    #   require 'rufus/lua'
+    #
+    #   s = Rufus::Lua::State.new
+    #
+    #   s.function 'key_up' do |table|
+    #     table.inject({}) do |h, (k, v)|
+    #       h[k.to_s.upcase] = v
+    #     end
+    #   end
+    #
+    #   p s.eval(%{
+    #     local table = {}
+    #     table['CoW'] = 2
+    #     table['pigs'] = 3
+    #     table['DUCKS'] = 'none'
+    #     return key_up(table)
+    #   }).to_h
+    #     # => { 'COW' => 2.0, 'DUCKS => 'none', 'PIGS' => 3.0 }
+    #
+    #   s.close
     #
     def function (name, &block)
 
@@ -424,13 +446,7 @@ module Rufus::Lua
           (1..block.arity).collect { |i| stack_pop } :
           []
 
-        result = begin
-          block.call(*args)
-        rescue Exception => e
-          e
-        end
-
-        # TODO : handle exceptions !
+        result = block.call(*args)
 
         if result.is_a?(Hash)
           stack_push(result)

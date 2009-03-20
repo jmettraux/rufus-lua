@@ -109,7 +109,34 @@ describe 'callbacks' do
     )
   end
 
-  # TODO : errors ! : lua_error(L)
+  it 'should raise exceptions' do
+
+    @s.function :do_fail do
+      raise "fail!"
+    end
+    lambda {
+      @s.eval("return do_fail()")
+    }.should.raise(RuntimeError)
+  end
+
+  it 'should count the animals correctly' do
+
+    @s.function 'key_up' do |table|
+      table.inject({}) do |h, (k, v)|
+        h[k.to_s.upcase] = v; h
+      end
+    end
+
+    @s.eval(%{
+      local table = {}
+      table['CoW'] = 2
+      table['pigs'] = 3
+      table['DUCKS'] = 'none'
+      return key_up(table)
+    }).to_h.should.equal(
+      { 'COW' => 2.0, 'DUCKS' => 'none', 'PIGS' => 3.0 }
+    )
+  end
 
 end
 

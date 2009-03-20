@@ -4,6 +4,9 @@
 
 == rufus-lua - 0.1.1    not yet released
 
+- fixed bug when pushing floats on the stack (float --> double)
+- added State#function for defining Ruby functions (callbacks) available via Lua
+
 
 == rufus-lua - 0.1.0    released 2009/03/16
 

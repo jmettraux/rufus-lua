@@ -65,7 +65,7 @@ module Lua
     #attach_function :lua_resume, [ :pointer, :int ], :int
 
     attach_function :lua_toboolean, [ :pointer, :int ], :int
-    attach_function :lua_tonumber, [ :pointer, :int ], :float
+    attach_function :lua_tonumber, [ :pointer, :int ], :double
     attach_function :lua_tolstring, [ :pointer, :int, :pointer ], :string
 
     attach_function :lua_type, [ :pointer, :int ], :int
@@ -87,7 +87,7 @@ module Lua
     attach_function :lua_pushnil, [ :pointer ], :pointer
     attach_function :lua_pushboolean, [ :pointer, :int ], :pointer
     attach_function :lua_pushinteger, [ :pointer, :int ], :pointer
-    attach_function :lua_pushnumber, [ :pointer, :float ], :pointer
+    attach_function :lua_pushnumber, [ :pointer, :double ], :pointer
     attach_function :lua_pushstring, [ :pointer, :string ], :pointer
 
     attach_function :lua_rawgeti, [ :pointer, :int, :int ], :void

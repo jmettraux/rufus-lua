@@ -46,6 +46,32 @@ then
 
   s.close
 
+
+=== binding Ruby code as Lua functions
+
+  require 'rubygems'
+  require 'rufus/lua'
+  
+  s = Rufus::Lua::State.new
+  
+  s.function 'key_up' do |table|
+    table.inject({}) do |h, (k, v)|
+      h[k.to_s.upcase] = v
+    end
+  end
+  
+  p s.eval(%{
+    local table = {}
+    table['CoW'] = 2
+    table['pigs'] = 3
+    table['DUCKS'] = 'none'
+    return key_up(table) -- calling Ruby from Lua...
+  }).to_h
+    # => { 'COW' => 2.0, 'DUCKS => 'none', 'PIGS' => 3.0 }
+  
+  s.close
+
+
 rufus-lua's rdoc is at http://rufus.rubyforge.org/rufus-lua/
 
 

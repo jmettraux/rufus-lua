@@ -18,5 +18,6 @@
 [ ] Add method to tune GC parameters
 [ ] Test whether GC is truly independent for each state
 
-[ ] ruby callbacks
+[x] ruby callbacks (functions)
+[ ] ability to bind ruby functions (callbacks) inside of tables (modules)
 
