@@ -3,7 +3,9 @@
 
 Lua embedded in Ruby, via Ruby FFI
 
-Tested with Ruby 1.8.6, Ruby 1.9.1p0 and JRuby 1.1.6
+Tested with
+  ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
+  jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
 
 
 == Lua
@@ -61,10 +63,7 @@ then
   end
   
   p s.eval(%{
-    local table = {}
-    table['CoW'] = 2
-    table['pigs'] = 3
-    table['DUCKS'] = 'none'
+    local table = { CoW = 2, pigs = 3, DUCKS = 'none' }
     return key_up(table) -- calling Ruby from Lua...
   }).to_h
     # => { 'COW' => 2.0, 'DUCKS => 'none', 'PIGS' => 3.0 }
@@ -72,7 +71,49 @@ then
   s.close
 
 
-rufus-lua's rdoc is at http://rufus.rubyforge.org/rufus-lua/
+It's OK to bind a function inside of a table (library) :
+
+  require 'rubygems'
+  require 'rufus/lua'
+  
+  s = Rufus::Lua::State.new
+
+  s.eval("rubies = {}")
+  s.function 'add' do |x, y|
+    x + y
+  end
+
+  s.eval("rubies.add(1, 2)")
+    # => 3.0
+
+  s.close
+
+
+You can omit the table definition (only 1 level allowed here though) :
+
+  require 'rubygems'
+  require 'rufus/lua'
+  
+  s = Rufus::Lua::State.new
+
+  s.function 'rubies.add' do |x, y|
+    x + y
+  end
+
+  s.eval("rubies.add(1, 2)")
+    # => 3.0
+
+  s.close
+  
+
+
+The specs contain more examples :
+
+  http://github.com/jmettraux/rufus-lua/tree/master/spec/
+
+rufus-lua's rdoc is at :
+
+  http://rufus.rubyforge.org/rufus-lua/
 
 
 == compiling liblua.dylib

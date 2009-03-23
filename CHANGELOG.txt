@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.0.0    not yet released
 
+- automatically creates lib table when defined Ruby function (callback)
 - implemented #[]=, #objlen and #size for table
 - fixed bug when pushing floats on the stack (float --> double)
 - added State#function for defining Ruby functions (callbacks) available via Lua

@@ -462,8 +462,36 @@ module Rufus::Lua
         end
       end
 
+      name = name.to_s
+
+      name, index = if ri = name.rindex('.')
+        #
+        # bind in the given table
+
+        table_name = name[0..ri-1]
+
+        t = self.eval("return #{table_name}") rescue nil
+
+        raise ArgumentError.new(
+          "won't create automatically nested tables"
+        ) if (not t) and table_name.index('.')
+
+        t = self.eval("#{table_name} = {}; return #{table_name}") \
+          unless t
+
+        t.send(:load_onto_stack)
+
+        [ name[ri+1..-1], -2 ]
+
+      else
+        #
+        # bind function at the global level
+
+        [ name, LUA_GLOBALSINDEX ]
+      end
+
       Lib.lua_pushcclosure(@pointer, callback, 0)
-      Lib.lua_setfield(@pointer, LUA_GLOBALSINDEX, name.to_s)
+      Lib.lua_setfield(@pointer, index, name)
     end
 
     #

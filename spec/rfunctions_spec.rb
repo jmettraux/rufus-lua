@@ -8,7 +8,7 @@
 require File.dirname(__FILE__) + '/spec_base'
 
 
-describe 'callbacks' do
+describe 'Ruby functions bound in Lua (callbacks)' do
 
   before do
     @s = Rufus::Lua::State.new
@@ -138,12 +138,30 @@ describe 'callbacks' do
     )
   end
 
-  #it 'should bind functions inside of tables' do
-  #  @s.function 'lib.myfunc' do |x|
-  #    x + 2
-  #  end
-  #  @s.eval("return lib.myfunc(3)").should.equal(5)
-  #end
+  it 'should bind functions inside of tables' do
+
+    @s.eval('lib = {}')
+    @s.function 'lib.myfunc' do |x|
+      x + 2
+    end
+
+    @s.eval("return lib.myfunc(3)").should.equal(5.0)
+  end
+
+  it 'should create the top table if not present' do
+
+    @s.function 'lib.myfunc' do |x|
+      x + 2
+    end
+    @s.eval("return lib.myfunc(3)").should.equal(5.0)
+  end
+
+  it 'should only create the top table' do
+
+    lambda {
+      @s.function('lib.toto.myfunc') { |x| x + 2 }
+    }.should.raise(ArgumentError)
+  end
 
 end
 
