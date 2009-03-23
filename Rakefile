@@ -11,7 +11,9 @@ require 'rake/testtask'
 #require 'rake/rdoctask'
 require 'hanna/rdoctask'
 
-load 'rufus-lua.gemspec'
+gemspec = File.read('rufus-lua.gemspec')
+eval "gemspec = #{gemspec}"
+
 
 #
 # tasks
@@ -39,14 +41,27 @@ end
 #end
 task :test => :spec
 
+
+#
+# VERSION
+
+task :change_version do
+
+  version = ARGV.pop
+  `sedip "s/VERSION = '.*'/VERSION = '#{version}'/" lib/rufus/lua/state.rb`
+  `sedip "s/s.version = '.*'/s.version = '#{version}'/" rufus-lua.gemspec`
+  exit 0 # prevent rake from triggering other tasks
+end
+
+
 #
 # PACKAGING
 
-Rake::GemPackageTask.new($gemspec) do |pkg|
+Rake::GemPackageTask.new(gemspec) do |pkg|
   #pkg.need_tar = true
 end
 
-Rake::PackageTask.new('rufus-lua', '0.1.1') do |pkg|
+Rake::PackageTask.new('rufus-lua', gemspec.version) do |pkg|
 
   pkg.need_zip = true
   pkg.package_files = FileList[
