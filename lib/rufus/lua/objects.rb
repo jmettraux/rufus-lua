@@ -192,13 +192,43 @@ module Rufus::Lua
       stack_pop
     end
 
-    #--
-    # TODO : implement (maybe)
     #
-    #def []= (k, v)
-    #  raise 'not yet !'
-    #end
-    #++
+    # Sets a value in the table
+    #
+    # TODO : have something for adding in the array part...
+    #
+    def []= (k, v)
+
+      load_onto_stack
+
+      stack_push(k)
+      stack_push(v)
+      Lib.lua_settable(@pointer, -3)
+
+      v
+    end
+
+    #
+    # Returns the size of the table, corresponds to the Lua '#' operator.
+    #
+    # Will thus return 0 if the table doesn't hold any value in its
+    # 'array' part.
+    #
+    def objlen
+
+      load_onto_stack
+      Lib.lua_objlen(@pointer, -1)
+    end
+
+    #
+    # Returns the real size of the table (number of entries + number of elements
+    # in array side)
+    #
+    def size
+
+      self.to_h.size
+    end
+    alias :length :size
 
     #
     # Returns a Ruby Hash instance representing this Lua table.

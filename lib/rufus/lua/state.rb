@@ -120,6 +120,8 @@ module Rufus::Lua
           "\"#{stack_fetch(i)}\""
         elsif SIMPLE_TYPES.include?(type)
           stack_fetch(i).to_s
+        elsif type == TTABLE
+          "(# is #{Lib.lua_objlen(@pointer, i)})"
         else
           ''
         end
@@ -440,7 +442,7 @@ module Rufus::Lua
     #
     def function (name, &block)
 
-      raise "please pass a block for the body of the function" unless block
+      raise 'please pass a block for the body of the function' unless block
 
       callback = Proc.new do |state|
 

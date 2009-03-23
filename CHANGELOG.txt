@@ -2,8 +2,9 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 0.1.1    not yet released
+== rufus-lua - 1.0.0    not yet released
 
+- implemented #[]=, #objlen and #size for table
 - fixed bug when pushing floats on the stack (float --> double)
 - added State#function for defining Ruby functions (callbacks) available via Lua
 

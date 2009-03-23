@@ -111,7 +111,8 @@ The following gems are needed to run the specs
 
 == tested with
 
-ruby 1.8.6, ruby 1.9.1p0, jruby 1.1.6, jruby 1.2.0
+ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
+jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
 
 
 == dependencies

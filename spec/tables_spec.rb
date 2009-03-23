@@ -81,5 +81,25 @@ describe 'Rufus::Lua::State (tables)' do
 
     t.collect { |k, v| v }.size.should.equal(3)
   end
+
+  it 'should give the size of a table' do
+
+    @s.eval("return { a = 'A', b = 'B', c = 3 }").objlen.should.equal(0.0)
+    @s.eval("return { 1, 2 }").objlen.should.equal(2)
+
+    @s.eval("return { a = 'A', b = 'B', c = 3 }").size.should.equal(3)
+    @s.eval("return { a = 'A', b = 'B', c = 3 }").length.should.equal(3)
+    @s.eval("return { 1, 2 }").size.should.equal(2)
+    @s.eval("return { 1, 2 }").length.should.equal(2)
+  end
+
+  it 'should allow table[k] = v' do
+
+    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+    t['b'] = 4
+
+    t['b'].should.equal(4.0)
+  end
+
 end
 

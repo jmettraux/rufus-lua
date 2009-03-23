@@ -138,5 +138,12 @@ describe 'callbacks' do
     )
   end
 
+  #it 'should bind functions inside of tables' do
+  #  @s.function 'lib.myfunc' do |x|
+  #    x + 2
+  #  end
+  #  @s.eval("return lib.myfunc(3)").should.equal(5)
+  #end
+
 end
 
