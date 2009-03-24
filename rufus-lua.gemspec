@@ -1,5 +1,5 @@
 
-$gemspec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
 
   s.name = 'rufus-lua'
   s.version = '1.0.0'
