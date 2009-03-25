@@ -43,14 +43,16 @@ module Lua
       /usr/local/lib/liblua.so
     })
 
-    path = paths.find { |path| File.exist?(path) }
+    begin
 
-    raise(
-      "didn't find the lua dylib on your system, " +
-      "see http://rufus.rubyforge.org/rufus-lua/ to learn how to get it"
-    ) unless path
+      ffi_lib(*paths)
 
-    ffi_lib(path)
+    rescue LoadError => le
+      raise(
+        "didn't find the lua dylib on your system, " +
+        "see http://rufus.rubyforge.org/rufus-lua/ to learn how to get it"
+      )
+    end
 
     #
     # attach functions
