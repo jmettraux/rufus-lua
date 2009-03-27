@@ -10,16 +10,15 @@ Tested with
 
 == Lua
 
-from 
-
-  http://www.lua.org/
-  http://www.lua.org/about.html
+http://www.lua.org/about.html says :
 
 """
 Lua is a powerful, fast, lightweight, embeddable scripting language.
 
 Lua combines simple procedural syntax with powerful data description constructs based on associative arrays and extensible semantics. Lua is dynamically typed, runs by interpreting bytecode for a register-based virtual machine, and has automatic memory management with incremental garbage collection, making it ideal for configuration, scripting, and rapid prototyping. 
 """
+
+http://www.lua.org/
 
 
 == other Ruby and Lua bridges / connectors
@@ -109,22 +108,22 @@ You can omit the table definition (only 1 level allowed here though) :
 
 The specs contain more examples :
 
-  http://github.com/jmettraux/rufus-lua/tree/master/spec/
+http://github.com/jmettraux/rufus-lua/tree/master/spec/
 
 rufus-lua's rdoc is at :
 
-  http://rufus.rubyforge.org/rufus-lua/
+http://rufus.rubyforge.org/rufus-lua/
 
 
 == compiling liblua.dylib
 
 original instructions by Adrian Perez at :
 
-  http://lua-users.org/lists/lua-l/2006-09/msg00894.html
+http://lua-users.org/lists/lua-l/2006-09/msg00894.html
 
 get the source at 
 
-  http://www.lua.org/ftp/lua-5.1.4.tar.gz
+http://www.lua.org/ftp/lua-5.1.4.tar.gz
 
 then
 
@@ -189,8 +188,9 @@ http://github.com/jmettraux/rufus-lua
 
 many thanks to the authors of Ruby FFI, and of Lua
 
-  http://kenai.com/projects/ruby-ffi/
-  http://lua.org/
+http://kenai.com/projects/ruby-ffi/
+
+http://lua.org/
 
 
 == authors
@@ -210,5 +210,5 @@ MIT
 
 Lua itself is licensed under the MIT license as well :
 
-  http://www.lua.org/license.html
+http://www.lua.org/license.html
 
