@@ -2,7 +2,10 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 1.0.0    not yet released
+== rufus-lua - 1.1.0    not yet released
+
+
+== rufus-lua - 1.0.0    released 2009/03/27
 
 - automatically creates lib table when defined Ruby function (callback)
 - implemented #[]=, #objlen and #size for table
