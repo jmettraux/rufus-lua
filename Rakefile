@@ -14,6 +14,12 @@ require 'hanna/rdoctask'
 gemspec = File.read('rufus-lua.gemspec')
 eval "gemspec = #{gemspec}"
 
+#task :gemspec do
+#  File.open('rufus-lua.gemspec', 'w') do |f|
+#    f.write(gemspec.to_ruby)
+#  end
+#end
+
 
 #
 # tasks
