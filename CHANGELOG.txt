@@ -4,8 +4,9 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- issue #2 : tables returned from Ruby functions were indexed at 0. (Scott)
 - issue #3 : passing false from Ruby to Lua twists it to true. (Scott)
-- issue #1 : ruby function return array not OK. Fixed. (Thanks Scott Persinger)
+- issue #1 : Ruby function return array not OK. Fixed. (Thanks Scott Persinger)
 
 
 == rufus-lua - 1.0.0    released 2009/03/27

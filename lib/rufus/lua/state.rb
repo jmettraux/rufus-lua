@@ -266,7 +266,7 @@ module Rufus::Lua
         # since we already know the size of the table...
 
       a.each_with_index do |e, i|
-        stack_push(i)
+        stack_push(i + 1)
         stack_push(e)
         Lib.lua_settable(@pointer, -3)
       end

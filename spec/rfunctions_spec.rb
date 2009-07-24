@@ -174,5 +174,17 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s['data'].to_a.should.equal(%w[ one two three ])
     @s.eval('return type(data)').should.equal('table')
   end
+
+  it 'should return lua tables that are properly indexed' do
+
+    @s.function :get_data do |msg|
+      %w[ one two three ]
+    end
+
+    @s.eval('data = get_data()')
+
+    @s.eval('return data[0]').should.be.nil
+    @s.eval('return data[1]').should.equal('one')
+  end
 end
 

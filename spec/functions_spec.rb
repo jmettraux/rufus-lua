@@ -62,5 +62,14 @@ describe 'Rufus::Lua::State (functions)' do
     f.call(false).should.equal(false)
   end
 
+  it 'should call functions with an array argument' do
+    f = @s.eval(%{
+      f = function (x)
+        return x
+      end
+      return f
+    })
+    f.call(%w[ one two three ]).to_a.should.equal(%w[ one two three ])
+  end
 end
 
