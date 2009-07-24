@@ -75,7 +75,6 @@ module Rufus::Lua
 
     protected
 
-    #
     # This method is used to fetch/cache references to library methods like
     # 'math.sin' or 'coroutine.resume'.
     # The caching is done at the Lua state level (ie, all Lua objects available
@@ -92,7 +91,6 @@ module Rufus::Lua
       end
     end
 
-    #
     # This method holds the 'eval' mechanism.
     #
     def loadstring_and_call (s)
@@ -105,7 +103,6 @@ module Rufus::Lua
       pcall(bottom, 0) # arg_count is set to 0
     end
 
-    #
     # Returns a string representation of the state's stack.
     #
     def stack_to_s
@@ -135,7 +132,6 @@ module Rufus::Lua
       s
     end
 
-    #
     # Outputs the stack to the stdout
     #
     def print_stack (msg=nil)
@@ -146,7 +142,6 @@ module Rufus::Lua
       puts "= ="
     end
 
-    #
     # Returns the offset (int) of the top element of the stack.
     #
     def stack_top
@@ -154,7 +149,6 @@ module Rufus::Lua
       Lib.lua_gettop(@pointer)
     end
 
-    #
     # Returns a pair type (int) and type name (string) of the element on top
     # of the Lua state's stack. There is an optional pos paramter to peek
     # at other elements of the stack.
@@ -167,7 +161,6 @@ module Rufus::Lua
       [ type, tname ]
     end
 
-    #
     # Fetches the top value on the stack (or the one specified by the optional
     # pos parameter), but does not 'pop' it.
     #
@@ -191,7 +184,6 @@ module Rufus::Lua
       end
     end
 
-    #
     # Pops the top value of lua state's stack and returns it.
     #
     def stack_pop
@@ -201,7 +193,6 @@ module Rufus::Lua
       r
     end
 
-    #
     # Makes sure the stack loses its top element (but doesn't return it).
     #
     def stack_unstack
@@ -216,7 +207,6 @@ module Rufus::Lua
       Lib.lua_settop(@pointer, new_top)
     end
 
-    #
     # Given a Ruby instance, will attempt to push it on the Lua stack.
     #
     def stack_push (o)
@@ -242,7 +232,6 @@ module Rufus::Lua
       end
     end
 
-    #
     # Pushes a hash on top of the Lua stack.
     #
     def stack_push_hash (h)
@@ -257,7 +246,6 @@ module Rufus::Lua
       end
     end
 
-    #
     # Pushes an array on top of the Lua stack.
     #
     def stack_push_array (a)
@@ -272,7 +260,6 @@ module Rufus::Lua
       end
     end
 
-    #
     # Loads a Lua global value on top of the stack
     #
     def stack_load_global (name)
@@ -280,7 +267,6 @@ module Rufus::Lua
       Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
     end
 
-    #
     # Loads the Lua object registered with the given ref on top of the stack
     #
     def stack_load_ref (ref)
@@ -288,7 +274,6 @@ module Rufus::Lua
       Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
 
-    #
     # Returns the result of a function call or a coroutine.resume().
     #
     def return_result (stack_bottom)
@@ -301,7 +286,6 @@ module Rufus::Lua
       (1..count).collect { |pos| stack_pop }.reverse
     end
 
-    #
     # Assumes the Lua stack is loaded with a ref to a method and arg_count
     # arguments (on top of the method), will then call that Lua method and
     # return a result.
@@ -331,7 +315,6 @@ module Rufus::Lua
     #end
     #++
 
-    #
     # This method will raise an error with err > 0, else it will immediately
     # return.
     #
@@ -352,7 +335,6 @@ module Rufus::Lua
       raise LuaError.new("#{where} : '#{s}' (#{err})")
     end
 
-    #
     # Given the name of a Lua global variable, will return its value (or nil
     # if there is nothing bound under that name).
     #
@@ -375,7 +357,6 @@ module Rufus::Lua
   class State
     include StateMixin
 
-    #
     # Instantiates a Lua state (runtime).
     #
     # Accepts an 'include_libs' optional arg. When set to true (the default,
@@ -396,7 +377,6 @@ module Rufus::Lua
       @pointer.instance_variable_set(:@__lib_method_cache, {})
     end
 
-    #
     # Evaluates a piece (string) of Lua code within the state.
     #
     def eval (s)
@@ -404,7 +384,6 @@ module Rufus::Lua
       loadstring_and_call(s)
     end
 
-    #
     # Returns a value set at the 'global' level in the state.
     #
     #   state.eval('a = 1 + 2')
@@ -415,7 +394,6 @@ module Rufus::Lua
       k.index('.') ? self.eval("return #{k}") : get_global(k)
     end
 
-    #
     # Binds a Ruby function (callback) in the top environment of Lua
     #
     #   require 'rubygems'
@@ -495,7 +473,6 @@ module Rufus::Lua
       Lib.lua_setfield(@pointer, index, name)
     end
 
-    #
     # Closes the state.
     #
     # It's probably a good idea (mem leaks) to close a Lua state once you're
@@ -508,7 +485,6 @@ module Rufus::Lua
       @pointer = nil
     end
 
-    #
     # Returns current amount of memory in KB in use by Lua
     #
     def gc_count
@@ -517,7 +493,6 @@ module Rufus::Lua
       Lib.lua_gc(@pointer, LUA_GCCOUNT, 0)
     end
 
-    #
     # Runs garbage collection
     #
     def gc_collect!
@@ -526,7 +501,6 @@ module Rufus::Lua
       Lib.lua_gc(@pointer, LUA_GCCOLLECT, 0)
     end
 
-    #
     # Stop garbage collection for this state
     #
     def gc_stop
@@ -535,7 +509,6 @@ module Rufus::Lua
       Lib.lua_gc(@pointer, LUA_GCSTOP, 0)
     end
 
-    #
     # Restart garbage collection for this state
     #
     def gc_resume

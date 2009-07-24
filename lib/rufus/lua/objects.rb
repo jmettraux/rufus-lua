@@ -32,7 +32,6 @@ module Rufus::Lua
   class Ref
     include StateMixin
 
-    #
     # The reference in the Lua registry.
     # (You shouldn't care about this value)
     #
@@ -45,7 +44,6 @@ module Rufus::Lua
         # this pops the object out of the stack !
     end
 
-    #
     # Frees the reference to this object
     # (Problably a good idea if you want Lua's GC to get rid of it later).
     #
@@ -56,7 +54,6 @@ module Rufus::Lua
 
     protected
 
-    #
     # Brings the referenced object on top of the stack (will probably
     # then take part in a method call).
     #
@@ -88,7 +85,6 @@ module Rufus::Lua
   #
   class Function < Ref
 
-    #
     # Calls the Lua function.
     #
     def call (*args)
@@ -110,7 +106,6 @@ module Rufus::Lua
   #
   class Coroutine < Ref
 
-    #
     # Resumes the coroutine
     #
     def resume (*args)
@@ -125,7 +120,6 @@ module Rufus::Lua
       pcall(bottom, args.length + 1)
     end
 
-    #
     # Returns the string status of the coroutine :
     # suspended/running/dead/normal
     #
@@ -152,7 +146,6 @@ module Rufus::Lua
   class Table < Ref
     include Enumerable
 
-    #
     # The classical 'each'.
     #
     # Note it cheats by first turning the table into a Ruby Hash and calling
@@ -165,7 +158,6 @@ module Rufus::Lua
       self.to_h.each { |k, v| yield(k, v) }
     end
 
-    #
     # Returns the array of keys of this Table.
     #
     def keys
@@ -173,7 +165,6 @@ module Rufus::Lua
       self.to_h.keys
     end
 
-    #
     # Returns the array of values in this Table.
     #
     def values
@@ -181,7 +172,6 @@ module Rufus::Lua
       self.to_h.values
     end
 
-    #
     # Returns the value behind the key, or else nil.
     #
     def [] (k)
@@ -192,7 +182,6 @@ module Rufus::Lua
       stack_pop
     end
 
-    #
     # Sets a value in the table
     #
     # TODO : have something for adding in the array part...
@@ -208,7 +197,6 @@ module Rufus::Lua
       v
     end
 
-    #
     # Returns the size of the table, corresponds to the Lua '#' operator.
     #
     # Will thus return 0 if the table doesn't hold any value in its
@@ -220,7 +208,6 @@ module Rufus::Lua
       Lib.lua_objlen(@pointer, -1)
     end
 
-    #
     # Returns the real size of the table (number of entries + number of elements
     # in array side)
     #
@@ -230,7 +217,6 @@ module Rufus::Lua
     end
     alias :length :size
 
-    #
     # Returns a Ruby Hash instance representing this Lua table.
     #
     def to_h
@@ -259,7 +245,6 @@ module Rufus::Lua
       h
     end
 
-    #
     # Returns a Ruby Array instance representing this Lua table.
     #
     # Will raise an error if the 'rendering' is not possible.

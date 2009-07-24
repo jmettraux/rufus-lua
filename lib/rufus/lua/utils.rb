@@ -30,7 +30,6 @@ module Rufus::Lua
   # to load liblua.dylib
   #++
 
-  #
   # Turns a Ruby instance into a Lua parseable string representation.
   #
   # Will raise an ArgumentError as soon as something else than a simple
@@ -60,7 +59,6 @@ module Rufus::Lua
     end
   end
 
-  #
   # Turns a Ruby Array or Hash instance into a Lua parseable string
   # representation.
   #
