@@ -100,5 +100,15 @@ describe 'Rufus::Lua::State (tables)' do
 
     t['b'].should.equal(4.0)
   end
+
+  it 'should index tables properly' do
+
+    @s.eval("t = { 'a', 'b', 'c' }")
+
+    @s.eval("return t[0]").should.be.nil
+    @s.eval("return t[1]").should.equal('a')
+    @s.eval("return t[3]").should.equal('c')
+    @s.eval("return t[4]").should.be.nil
+  end
 end
 
