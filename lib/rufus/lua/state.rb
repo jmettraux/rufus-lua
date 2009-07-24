@@ -25,7 +25,7 @@
 
 module Rufus::Lua
 
-  VERSION = '1.0.0'
+  VERSION = '1.1.0'
 
   #
   # An error class for this gem/library.
@@ -452,14 +452,15 @@ module Rufus::Lua
 
         result = block.call(*args)
 
-        if result.is_a?(Hash)
-          stack_push(result)
-          1
-        else
-          result = Array(result)
-          result.each { |e| stack_push(e) }
-          result.size
-        end
+        #if result.is_a?(Hash)
+        stack_push(result)
+        1
+        #else
+        #  result = Array(result)
+        #  result.each { |e| stack_push(e) }
+        #  result.size
+        #end
+          # this hack was not necessary, thanks Scott Persinger for finding out
       end
 
       name = name.to_s

@@ -63,7 +63,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :compute do
       [ 'a', true, 1 ]
     end
-    @s.eval('return compute()').should.equal([ 'a', true, 1.0 ])
+    @s.eval('return compute()').to_a.should.equal([ 'a', true, 1.0 ])
   end
 
   it 'should return tables' do
@@ -163,5 +163,16 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     }.should.raise(ArgumentError)
   end
 
+  it 'should return ruby arrays as lua tables' do
+
+    @s.function :get_data do |msg|
+      %w[ one two three ]
+    end
+
+    @s.eval('data = get_data()')
+
+    @s['data'].to_a.should.equal(%w[ one two three ])
+    @s.eval('return type(data)').should.equal('table')
+  end
 end
 

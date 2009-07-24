@@ -5,7 +5,12 @@
 == authors
 
 John Mettraux  http://jmettraux.wordpress.com
-Alain Hoang    http://blogs.law.harvard.edu/hoanga/
+Alain Hoang  http://blogs.law.harvard.edu/hoanga/
+
+
+== contributors
+
+Scott Persinger  http://github.com/scottpersinger
 
 
 == inspiration
@@ -15,7 +20,7 @@ Alain Hoang    http://blogs.law.harvard.edu/hoanga/
 
 == finally
 
-many thanks to the authors of ruby-ffi
+many thanks to the authors of ruby-ffi, especially Wayne Meissner,
 
   http://kenai.com/projects/ruby-ffi
 

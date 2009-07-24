@@ -100,6 +100,5 @@ describe 'Rufus::Lua::State (tables)' do
 
     t['b'].should.equal(4.0)
   end
-
 end
 

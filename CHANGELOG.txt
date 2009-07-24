@@ -4,6 +4,8 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- issue #1 : ruby function return array not OK. Fixed. (Thanks Scott Persinger)
+
 
 == rufus-lua - 1.0.0    released 2009/03/27
 

@@ -2,7 +2,7 @@
 Gem::Specification.new do |s|
 
   s.name = 'rufus-lua'
-  s.version = '1.0.0'
+  s.version = '1.1.0'
   s.authors = [ 'John Mettraux', 'Alain Hoang' ]
   s.email = 'jmettraux@gmail.com'
   s.homepage = 'http://rufus.rubyforge.org/'
