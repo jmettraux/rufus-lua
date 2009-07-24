@@ -394,6 +394,17 @@ module Rufus::Lua
       k.index('.') ? self.eval("return #{k}") : get_global(k)
     end
 
+    # Allows for setting a Lua varible immediately.
+    #
+    #   state['var'] = [ 1, 2, 3 ]
+    #   puts state['var'].to_a[0] # => 1
+    #
+    def []= (k, v)
+
+      #puts; puts("#{k} = #{Rufus::Lua.to_lua_s(v)}")
+      self.eval("#{k} = #{Rufus::Lua.to_lua_s(v)}")
+    end
+
     # Binds a Ruby function (callback) in the top environment of Lua
     #
     #   require 'rubygems'

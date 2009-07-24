@@ -48,6 +48,7 @@ module Rufus::Lua
     # (Problably a good idea if you want Lua's GC to get rid of it later).
     #
     def free
+
       Lib.luaL_unref(@pointer, LUA_REGISTRYINDEX, @ref)
       @ref = nil
     end

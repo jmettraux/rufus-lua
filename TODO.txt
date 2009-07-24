@@ -11,7 +11,7 @@
 [o] fix coroutine & co / memoization (make it better later)
 [o] fib.lua, use local, bench ! (2 times faster almost)
 
-[ ] add GC control methods (Alain)
+[o] add GC control methods (Alain)
 [X] Add method to disable GC
 [X] Add method to enable GC
 [ ] Look at parameters in Lua GC that can be tweaked
@@ -20,4 +20,9 @@
 
 [x] ruby callbacks (functions)
 [ ] ability to bind ruby functions (callbacks) inside of tables (modules)
+
+[ ] state['var'] = value
+[ ] state['var'] = hash
+
+[ ] state.load_and_eval(filepath)
 

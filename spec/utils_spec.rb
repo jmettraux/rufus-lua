@@ -21,10 +21,8 @@ describe 'Rufus::Lua (utils)' do
     Rufus::Lua.to_lua_s(
       { 'a' => 'A', 'b' => 2}
     ).should.equal(
-      '{ "a": "A", "b": 2 }'
+      '{ ["a"] = "A", ["b"] = 2 }'
     )
-      # TODO : ["a"] is probably better...
   end
-
 end
 

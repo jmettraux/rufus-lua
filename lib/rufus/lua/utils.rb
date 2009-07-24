@@ -67,7 +67,7 @@ module Rufus::Lua
     s = if o.is_a?(Array)
       o.collect { |e| to_lua_s(e) }
     else
-      o.collect { |k, v| "#{to_lua_s(k)}: #{to_lua_s(v)}" }
+      o.collect { |k, v| "[#{to_lua_s(k)}] = #{to_lua_s(v)}" }
     end
 
     "{ #{s.join(', ')} }"
