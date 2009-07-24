@@ -51,5 +51,16 @@ describe 'Rufus::Lua::State (functions)' do
     f.call(2).should.equal(4.0)
   end
 
+  it 'should call functions with boolean arguments' do
+    f = @s.eval(%{
+      f = function (x)
+        return x
+      end
+      return f
+    })
+    f.call(true).should.equal(true)
+    f.call(false).should.equal(false)
+  end
+
 end
 

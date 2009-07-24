@@ -226,7 +226,7 @@ module Rufus::Lua
         when NilClass then Lib.lua_pushnil(@pointer)
 
         when TrueClass then Lib.lua_pushboolean(@pointer, 1)
-        when FalseClass then Lib.lua_pushboolean(@pointer, 1)
+        when FalseClass then Lib.lua_pushboolean(@pointer, 0)
 
         when Fixnum then Lib.lua_pushinteger(@pointer, o)
         when Float then Lib.lua_pushnumber(@pointer, o)

@@ -57,5 +57,13 @@ describe Rufus::Lua::State do
   it 'should return multiple values' do
     @s.eval('return 1, 2').should.equal([ 1.0, 2.0 ])
   end
+
+  it 'should return false' do
+    @s.eval('return false').should.equal(false)
+  end
+
+  it 'should return true' do
+    @s.eval('return true').should.equal(true)
+  end
 end
 

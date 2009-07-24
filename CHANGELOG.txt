@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- issue #3 : passing false from Ruby to Lua twists it to true. (Scott)
 - issue #1 : ruby function return array not OK. Fixed. (Thanks Scott Persinger)
 
 
