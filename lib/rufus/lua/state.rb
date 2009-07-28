@@ -435,21 +435,25 @@ module Rufus::Lua
 
       callback = Proc.new do |state|
 
-        args = block.arity > 0 ?
-          (1..block.arity).collect { |i| stack_pop }.reverse :
-          []
+        args = []
+
+        loop do
+          break if stack_top == 0 # never touch stack[0] !!
+          arg = stack_fetch
+          break if arg.class == Rufus::Lua::Function
+          args.unshift(arg)
+          stack_unstack
+        end
+
+        while args.size < block.arity
+          args << nil
+        end
 
         result = block.call(*args)
 
-        #if result.is_a?(Hash)
         stack_push(result)
+
         1
-        #else
-        #  result = Array(result)
-        #  result.each { |e| stack_push(e) }
-        #  result.size
-        #end
-          # this hack was not necessary, thanks Scott Persinger for finding out
       end
 
       name = name.to_s

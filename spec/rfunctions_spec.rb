@@ -192,7 +192,26 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function 'myfunc' do |a, b, c|
       "#{a}_#{b}_#{c}"
     end
+
     @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0_3.0')
+  end
+
+  it 'should accept optional arguments' do
+
+    @s.function 'myfunc' do |a, b, c|
+      "#{a}_#{b}_#{c}"
+    end
+
+    @s.eval("return myfunc(1)").should.equal('1.0__')
+  end
+
+  it 'should be ok when there are too many args' do
+
+    @s.function 'myfunc' do |a, b|
+      "#{a}_#{b}"
+    end
+
+    @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0')
   end
 end
 
