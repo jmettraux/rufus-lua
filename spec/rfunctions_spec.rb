@@ -186,5 +186,13 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.eval('return data[0]').should.be.nil
     @s.eval('return data[1]').should.equal('one')
   end
+
+  it 'should accept more than 1 arg and order them correctly' do
+
+    @s.function 'myfunc' do |a, b, c|
+      "#{a}_#{b}_#{c}"
+    end
+    @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0_3.0')
+  end
 end
 

@@ -436,7 +436,7 @@ module Rufus::Lua
       callback = Proc.new do |state|
 
         args = block.arity > 0 ?
-          (1..block.arity).collect { |i| stack_pop } :
+          (1..block.arity).collect { |i| stack_pop }.reverse :
           []
 
         result = block.call(*args)

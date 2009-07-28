@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- issue #4  : Ruby function inverses order of its parameters. Fixed. (Scott)
 - todo      : state['a'] = [ 1, 2, 3 ] now possible
 - issue #2  : tables returned from Ruby functions were indexed at 0. (Scott)
 - issue #3  : passing false from Ruby to Lua twists it to true. (Scott)
