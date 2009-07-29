@@ -71,5 +71,25 @@ describe 'Rufus::Lua::State (functions)' do
     })
     f.call(%w[ one two three ]).to_a.should.equal(%w[ one two three ])
   end
+
+  it 'should call functions with multiple arguments' do
+    f = @s.eval(%{
+      f = function (x, y)
+        return x + y
+      end
+      return f
+    })
+    f.call(1, 2).should.equal(3.0)
+  end
+
+  #it 'should call functions with a Time argument' do
+  #  f = @s.eval(%{
+  #    f = function (x)
+  #      return x
+  #    end
+  #    return f
+  #  })
+  #  f.call(Time.now).should.equal(0)
+  #end
 end
 
