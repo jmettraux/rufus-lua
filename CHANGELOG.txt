@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- todo      : search for dylib in /usr/lib as well (Scott)
 - issue #5  : Ruby function more tolerant with block arity.
 - issue #4  : Ruby function inverses order of its parameters. Fixed. (Scott)
 - todo      : state['a'] = [ 1, 2, 3 ] now possible

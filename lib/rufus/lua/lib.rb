@@ -34,14 +34,16 @@ module Lua
     extend FFI::Library
 
     #
-    # locate dylib
+    # locate the dynamic library
 
-    paths = Array(ENV['LUA_LIB'] || %w{
-      /opt/local/lib/liblua.dylib
-      /usr/local/lib/liblua.dylib
-      /opt/local/lib/liblua.so
-      /usr/local/lib/liblua.so
-    })
+    paths = Array(
+      ENV['LUA_LIB'] ||
+      Dir.glob('/usr/lib/liblua*.so') +
+      Dir.glob('/usr/local/lib/liblua*.so') +
+      Dir.glob('/opt/local/lib/liblua*.so') +
+      Dir.glob('/usr/lib/liblua*.dylib') +
+      Dir.glob('/usr/local/lib/liblua*.dylib') +
+      Dir.glob('/opt/local/lib/liblua*.dylib'))
 
     begin
 
