@@ -211,6 +211,8 @@ module Rufus::Lua
     #
     def stack_push (o)
 
+      return stack_push(o.to_lua) if o.respond_to?(:to_lua)
+
       case o
 
         when NilClass then Lib.lua_pushnil(@pointer)

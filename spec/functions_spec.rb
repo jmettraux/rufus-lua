@@ -82,14 +82,22 @@ describe 'Rufus::Lua::State (functions)' do
     f.call(1, 2).should.equal(3.0)
   end
 
-  #it 'should call functions with a Time argument' do
-  #  f = @s.eval(%{
-  #    f = function (x)
-  #      return x
-  #    end
-  #    return f
-  #  })
-  #  f.call(Time.now).should.equal(0)
-  #end
+  it 'should call honour the to_lua method for ruby args' do
+
+    f = @s.eval(%{
+      f = function (x)
+        return x
+      end
+      return f
+    })
+
+    t = Time.now
+
+    def t.to_lua
+      "lua:#{to_s}"
+    end
+
+    f.call(t).should.equal(t.to_lua)
+  end
 end
 
