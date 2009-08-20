@@ -5,7 +5,7 @@
 # Mon Mar 16 23:38:00 JST 2009
 #
 
-require File.dirname(__FILE__) + '/spec_base'
+require File.join(File.dirname(__FILE__), '/spec_base')
 
 
 describe Rufus::Lua::State do
@@ -16,6 +16,31 @@ describe Rufus::Lua::State do
     @s.close
 
     should.raise(RuntimeError) { @s.close }
+  end
+
+  it 'should load all libs by default' do
+    @s = Rufus::Lua::State.new
+    @s.eval('return os;').should.not.be.nil
+    @s.close
+  end
+
+  it 'should load no libs when told so' do
+
+    @s = Rufus::Lua::State.new(false)
+    @s.eval('return os;').should.be.nil
+    @s.close
+  end
+
+  it 'should load only specific libs when told so' do
+
+    #@s = Rufus::Lua::State.new([ :math, :io ])
+      #
+      # loading io result in a PANIC (macsox at least)
+
+    @s = Rufus::Lua::State.new([ :os, :math ])
+    @s.eval('return io;').should.be.nil
+    @s.eval('return os;').should.not.be.nil
+    @s.close
   end
 end
 

@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- todo      : added way to load only a given set of libs when State.new (Scott)
 - todo      : honouring #to_lua when calling Lua functions from Ruby (Scott)
 - todo      : search for dylib in /usr/lib as well (Scott)
 - issue #5  : Ruby function more tolerant with block arity.

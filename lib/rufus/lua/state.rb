@@ -364,11 +364,27 @@ module Rufus::Lua
     # Accepts an 'include_libs' optional arg. When set to true (the default,
     # all the base Lua libs are loaded in the runtime.
     #
+    # This optional arg can be set to false, when no libs should be present, or
+    # to an array of libs to load in order to prepare the state.
+    #
+    # The list may include 'base', 'package', 'table', 'string', 'math', 'io',
+    # 'os' and 'debug'.
+    #
     def initialize (include_libs=true)
 
       @pointer = Lib.luaL_newstate
 
-      Lib.luaL_openlibs(@pointer) if include_libs
+      Array(include_libs).each do |libname|
+
+        if libname == false
+          break
+        elsif libname == true
+          Lib.luaL_openlibs(@pointer)
+          break
+        else
+          Lib.send("luaopen_#{libname}", @pointer)
+        end
+      end
 
       #
       # preparing library methods cache
