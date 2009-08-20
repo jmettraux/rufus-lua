@@ -133,8 +133,8 @@ then
 modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg00894.html
 
   make 
-  make masocx # or make linux ...
-  make -C src src liblua.dylib
+  make macosx # or make linux ...
+  make -C src liblua.dylib
 
   sudo cp src/liblua.dylib /usr/local/lib/
 
