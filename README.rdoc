@@ -4,8 +4,9 @@
 Lua embedded in Ruby, via Ruby FFI
 
 Tested with
-  ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
-  jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
+
+ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
+jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
 
 
 == Lua
@@ -24,8 +25,8 @@ http://www.lua.org/
 == other Ruby and Lua bridges / connectors
 
 
-  http://rubyluabridge.rubyforge.org/
-  http://raa.ruby-lang.org/project/ruby-lua
+http://rubyluabridge.rubyforge.org/
+http://raa.ruby-lang.org/project/ruby-lua
 
 
 == using rufus-lua
@@ -141,12 +142,9 @@ modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg
 
 == build dependencies
 
-You need to add the github gems to your gem sources
-  gem sources -a http://gems.github.com
-
 The following gems are needed to run the specs
-  mislav-hanna
-  install bacon
+
+  sudo gem install bacon
 
 
 == tested with
@@ -164,12 +162,12 @@ the ruby gem 'ffi'
 
 On the rufus-ruby list :
 
-  http://groups.google.com/group/rufus-ruby
+http://groups.google.com/group/rufus-ruby
 
 
 == issue tracker
 
-  http://rubyforge.org/tracker/?atid=18584&group_id=4812&func=browse
+http://github.com/jmettraux/rufus-lua/issues
 
 
 == irc

@@ -8,8 +8,6 @@ require 'rake/packagetask'
 require 'rake/gempackagetask'
 require 'rake/testtask'
 
-#require 'rake/rdoctask'
-require 'hanna/rdoctask'
 
 gemspec = File.read('rufus-lua.gemspec')
 eval "gemspec = #{gemspec}"
@@ -33,18 +31,13 @@ task :default => [ :clean, :repackage ]
 # SPECING
 
 task :spec do
-  load File.dirname(__FILE__) + '/spec/spec.rb'
+  load File.join(File.dirname(__FILE__), 'spec', 'spec.rb')
 end
 
 
 #
 # TESTING
-#Rake::TestTask.new(:test) do |t|
-#  t.libs << 'lib'
-#  t.libs << 'test'
-#  t.test_files = FileList['test/test.rb']
-#  t.verbose = true
-#end
+
 task :test => :spec
 
 
@@ -89,31 +82,20 @@ end
 #
 # DOCUMENTATION
 
-Rake::RDocTask.new do |rd|
-
-  rd.main = 'README.txt'
-  rd.rdoc_dir = 'html/rufus-lua'
-  rd.rdoc_files.include(
-    'README.txt',
-    'CHANGELOG.txt',
-    'LICENSE.txt',
-    'CREDITS.txt',
-    'lib/**/*.rb')
-  #rd.rdoc_files.exclude('lib/tokyotyrant.rb')
-  rd.title = 'rufus-lua rdoc'
-  rd.options << '-N' # line numbers
-  rd.options << '-S' # inline source
-end
-
-task :rrdoc => :rdoc do
-  FileUtils.cp('doc/rdoc-style.css', 'html/rufus-lua/')
+task :rdoc do
+  sh %{
+    rm -fR rdoc
+    yardoc 'lib/**/*.rb' \
+      -o html/rufus-lua \
+      --title 'rufus-lua'
+  }
 end
 
 
 #
 # WEBSITE
 
-task :upload_website => [ :clean, :rrdoc ] do
+task :upload_website => [ :clean, :rdoc ] do
 
   account = 'jmettraux@rubyforge.org'
   webdir = '/var/www/gforge-projects/rufus'
