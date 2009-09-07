@@ -136,8 +136,9 @@ modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg
   make 
   make macosx # or make linux ...
   make -C src liblua.dylib
-
   sudo cp src/liblua.dylib /usr/local/lib/
+
+  sudo make macosx install
 
 
 == build dependencies
