@@ -122,5 +122,17 @@ describe 'Rufus::Lua::State (tables)' do
     @s.eval("return { 1, 2, car = 'benz' }").to_a(false).should.equal(
       [1.0, 2.0, ["car", "benz"]])
   end
+
+  it 'should do its best with to_ruby' do
+
+    @s.eval("return { a = 'A', b = 'B', c = 3 }").to_ruby.should.equal(
+      {"a"=>"A", "b"=>"B", "c"=>3.0})
+    @s.eval("return { 1, 2 }").to_ruby.should.equal(
+      [ 1.0, 2.0 ])
+    @s.eval("return {}").to_ruby.should.equal(
+      [])
+    @s.eval("return { 1, 2, car = 'benz' }").to_ruby.should.equal(
+      {1.0=>1.0, "car"=>"benz", 2.0=>2.0})
+  end
 end
 

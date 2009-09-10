@@ -297,6 +297,13 @@ module Rufus::Lua
         a
       }
     end
+
+    # Turns the Lua table into a Ruby array, or else into a Ruby Hash instance.
+    #
+    def to_ruby
+
+      to_a rescue to_h
+    end
   end
 end
 
