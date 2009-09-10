@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- todo      : implemented State#function :to_ruby option
 - todo      : implemented Table#to_ruby
 - todo      : added 'pure' option to Table#to_a
 - issue     : added State@callbacks array to preserve callback from GC (Scott)

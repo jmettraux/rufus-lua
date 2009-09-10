@@ -455,9 +455,29 @@ module Rufus::Lua
     #
     #   s.close
     #
-    def function (name, &block)
+    # == :to_ruby => true
+    #
+    # Without this option set to true, Lua tables passed to the wrapped
+    # Ruby code are instances of Rufus::Lua::Table. With this option set,
+    # rufus-lua will call #to_ruby on any parameter that responds to it
+    # (And Rufus::Lua::Table does).
+    #
+    #   s = Rufus::Lua::State.new
+    #
+    #   s.function 'is_array', :to_ruby => true do |table|
+    #     table.is_a?(Array)
+    #   end
+    #
+    #   s.eval(return is_array({ 1, 2 }))
+    #     # => true
+    #   s.eval(return is_array({ 'a' = 'b' }))
+    #     # => false
+    #
+    def function (name, opts={}, &block)
 
       raise 'please pass a block for the body of the function' unless block
+
+      to_ruby = opts[:to_ruby]
 
       callback = Proc.new do |state|
 
@@ -478,6 +498,9 @@ module Rufus::Lua
         while args.size < block.arity
           args << nil
         end
+
+        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } \
+          if to_ruby
 
         result = block.call(*args)
 

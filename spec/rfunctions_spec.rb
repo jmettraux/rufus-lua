@@ -227,13 +227,29 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.function 'check_types' do |t, s, f, h, a|
 
-      #p [ t, s, f, h.to_h, a ]
+      #p [ t, s, f, h, a ]
 
       (t.is_a?(TrueClass) &&
        s.is_a?(String) &&
        f.is_a?(Float) &&
        h.is_a?(Rufus::Lua::Table) &&
        a.is_a?(Rufus::Lua::Table))
+    end
+
+    @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
+  end
+
+  it 'should honour to_ruby=true' do
+
+    @s.function 'check_types', :to_ruby => true do |t, s, f, h, a|
+
+      #p [ t, s, f, h, a ]
+
+      (t.is_a?(TrueClass) &&
+       s.is_a?(String) &&
+       f.is_a?(Float) &&
+       h.is_a?(Hash) &&
+       a.is_a?(Array))
     end
 
     @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
