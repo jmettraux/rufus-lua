@@ -250,18 +250,53 @@ module Rufus::Lua
     #
     # Will raise an error if the 'rendering' is not possible.
     #
-    def to_a
+    #   s = Rufus::Lua::State.new
+    #
+    #   @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a
+    #     # => error !
+    #
+    #   @s.eval("return { 1, 2 }").to_a
+    #     # => [ 1.0, 2.0 ]
+    #
+    #   @s.eval("return {}").to_a
+    #     # => []
+    #
+    #   @s.eval("return { 1, 2, car = 'benz' }").to_a
+    #     # => error !
+    #
+    # == to_a(false)
+    #
+    # Setting the optional argument 'pure' to false will manage any table :
+    #
+    #   s = Rufus::Lua::State.new
+    #
+    #   @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a(false)
+    #     # => [["a", "A"], ["b", "B"], ["c", 3.0]]
+    #
+    #   @s.eval("return { 1, 2 }").to_a(false)
+    #     # => [1.0, 2.0]
+    #
+    #   @s.eval("return {}").to_a(false)
+    #     # => []
+    #
+    #   @s.eval("return { 1, 2, car = 'benz' }").to_a(false)
+    #     # => [1.0, 2.0, ["car", "benz"]]
+    #
+    def to_a (pure=true)
 
       h = self.to_h
 
-      keys = h.keys.sort
-
-      keys.find { |k| not [ Float ].include?(k.class) } &&
+      pure && h.keys.find { |k| not [ Float ].include?(k.class) } &&
         raise("cannot turn hash into array, some keys are not numbers")
 
-      keys.inject([]) { |a, k| a << h[k]; a }
-    end
+      a_keys = (1..objlen).to_a.collect { |k| k.to_f }
+      keys = a_keys + (h.keys - a_keys)
 
+      keys.inject([]) { |a, k|
+        a << (a_keys.include?(k) ? h[k] : [ k, h[k] ])
+        a
+      }
+    end
   end
 end
 
