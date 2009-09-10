@@ -395,6 +395,12 @@ module Rufus::Lua
         attr_reader :__lib_method_cache
       end
       @pointer.instance_variable_set(:@__lib_method_cache, {})
+
+      #
+      # an array for preserving callback (Ruby functions) from Ruby
+      # garbage collection (Scott).
+
+      @callbacks = []
     end
 
     # Evaluates a piece (string) of Lua code within the state.
@@ -479,6 +485,9 @@ module Rufus::Lua
 
         1
       end
+
+      @callbacks << callback
+        # preserving the callback from garbage collection
 
       name = name.to_s
 

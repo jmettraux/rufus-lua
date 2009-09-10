@@ -238,5 +238,13 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
   end
+
+  it 'should preserve callbacks from GC' do
+
+    @s.function 'myfunc' do |a|
+    end
+
+    @s.instance_variable_get(:@callbacks).size.should.equal(1)
+  end
 end
 
