@@ -213,5 +213,30 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0')
   end
+
+  it 'should pass Float arguments correctly' do
+
+    @s.function 'myfunc' do |a|
+      "#{a.class} #{a}"
+    end
+
+    @s.eval("return myfunc(3.14)").should.equal('Float 3.14')
+  end
+
+  it 'should preserve arguments' do
+
+    @s.function 'check_types' do |t, s, f, h, a|
+
+      #p [ t, s, f, h.to_h, a ]
+
+      (t.is_a?(TrueClass) &&
+       s.is_a?(String) &&
+       f.is_a?(Float) &&
+       h.is_a?(Rufus::Lua::Table) &&
+       a.is_a?(Rufus::Lua::Table))
+    end
+
+    @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
+  end
 end
 

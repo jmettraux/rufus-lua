@@ -177,6 +177,8 @@ module Rufus::Lua
         when TNUMBER then Lib.lua_tonumber(@pointer, pos)
 
         when TTABLE then Table.new(@pointer)
+          # warning : this pops up the item from the stack !
+
         when TFUNCTION then Function.new(@pointer)
         when TTHREAD then Coroutine.new(@pointer)
 
@@ -456,11 +458,15 @@ module Rufus::Lua
         args = []
 
         loop do
+
           break if stack_top == 0 # never touch stack[0] !!
+
           arg = stack_fetch
           break if arg.class == Rufus::Lua::Function
+
           args.unshift(arg)
-          stack_unstack
+
+          stack_unstack unless args.first.is_a?(Rufus::Lua::Table)
         end
 
         while args.size < block.arity
