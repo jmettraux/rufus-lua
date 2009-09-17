@@ -226,6 +226,7 @@ module Rufus::Lua
         when Float then Lib.lua_pushnumber(@pointer, o)
 
         when String then Lib.lua_pushstring(@pointer, o)
+        when Symbol then Lib.lua_pushstring(@pointer, o.to_s)
 
         when Hash then stack_push_hash(o)
         when Array then stack_push_array(o)

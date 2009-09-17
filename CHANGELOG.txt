@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.0    not yet released
 
+- todo      : Ruby symbols are passed to Lua as strings (Scott)
 - todo      : implemented State#function :to_ruby option
 - todo      : implemented Table#to_ruby
 - todo      : added 'pure' option to Table#to_a
