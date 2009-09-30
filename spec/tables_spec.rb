@@ -113,7 +113,7 @@ describe 'Rufus::Lua::State (tables)' do
 
   it 'should reply to to_a(false) (pure = false)' do
 
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a(false).should.equal(
+    @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a(false).sort.should.equal(
       [["a", "A"], ["b", "B"], ["c", 3.0]])
     @s.eval("return { 1, 2 }").to_a(false).should.equal(
       [ 1.0, 2.0 ])
