@@ -160,12 +160,12 @@ the ruby gem 'ffi'
 
 On the rufus-ruby list :
 
-[http://groups.google.com/group/rufus-ruby]
+http://groups.google.com/group/rufus-ruby
 
 
 == issue tracker
 
-[http://github.com/jmettraux/rufus-lua/issues]
+http://github.com/jmettraux/rufus-lua/issues
 
 
 == irc
@@ -184,19 +184,20 @@ http://github.com/jmettraux/rufus-lua
 
 many thanks to the authors of Ruby FFI, and of Lua
 
-http://wiki.github.com/ffi/ffi[http://wiki.github.com/ffi/ffi]
-http://lua.org/[http://lua.org/]
+http://wiki.github.com/ffi/ffi
+http://lua.org/
 
 
 == authors
 
 John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
 Alain Hoang, http://blogs.law.harvard.edu/hoanga/
+Scott Persinger, http://github.com/scottpersinger/
 
 
 == the rest of Rufus
 
-http://rufus.rubyforge.org[http://rufus.rubyforge.org]
+http://rufus.rubyforge.org
 
 
 == license
@@ -205,5 +206,5 @@ MIT
 
 Lua itself is licensed under the MIT license as well :
 
-http://www.lua.org/license.html[http://www.lua.org/license.html]
+http://www.lua.org/license.html
 
