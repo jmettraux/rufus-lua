@@ -2,7 +2,7 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 1.1.0    not yet released
+== rufus-lua - 1.1.0    released 2009/09/30
 
 - todo      : Ruby symbols are passed to Lua as strings (Scott)
 - todo      : implemented State#function :to_ruby option

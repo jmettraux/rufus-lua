@@ -3,11 +3,6 @@
 
 Lua embedded in Ruby, via Ruby FFI
 
-Tested with
-
-ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
-jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
-
 
 == Lua
 
@@ -150,8 +145,10 @@ The following gems are needed to run the specs
 
 == tested with
 
-ruby 1.8.6, ruby 1.9.1p0, jruby 1.2.0
+ruby 1.8.7p72, ruby 1.9.1p0, jruby 1.2.0
 jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
+
+ruby-ffi 0.4.0 and 0.5.0
 
 
 == dependencies
@@ -163,12 +160,12 @@ the ruby gem 'ffi'
 
 On the rufus-ruby list :
 
-http://groups.google.com/group/rufus-ruby
+[http://groups.google.com/group/rufus-ruby]
 
 
 == issue tracker
 
-http://github.com/jmettraux/rufus-lua/issues
+[http://github.com/jmettraux/rufus-lua/issues]
 
 
 == irc
@@ -187,9 +184,8 @@ http://github.com/jmettraux/rufus-lua
 
 many thanks to the authors of Ruby FFI, and of Lua
 
-http://kenai.com/projects/ruby-ffi/
-
-http://lua.org/
+http://wiki.github.com/ffi/ffi[http://wiki.github.com/ffi/ffi]
+http://lua.org/[http://lua.org/]
 
 
 == authors
@@ -200,7 +196,7 @@ Alain Hoang, http://blogs.law.harvard.edu/hoanga/
 
 == the rest of Rufus
 
-http://rufus.rubyforge.org
+http://rufus.rubyforge.org[http://rufus.rubyforge.org]
 
 
 == license
@@ -209,5 +205,5 @@ MIT
 
 Lua itself is licensed under the MIT license as well :
 
-http://www.lua.org/license.html
+http://www.lua.org/license.html[http://www.lua.org/license.html]
 

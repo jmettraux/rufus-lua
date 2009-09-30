@@ -6,10 +6,6 @@
 
 John Mettraux  http://jmettraux.wordpress.com
 Alain Hoang  http://blogs.law.harvard.edu/hoanga/
-
-
-== contributors
-
 Scott Persinger  http://github.com/scottpersinger
 
 
@@ -22,5 +18,5 @@ Scott Persinger  http://github.com/scottpersinger
 
 many thanks to the authors of ruby-ffi, especially Wayne Meissner,
 
-  http://kenai.com/projects/ruby-ffi
+  http://wiki.github.com/ffi/ffi
 
