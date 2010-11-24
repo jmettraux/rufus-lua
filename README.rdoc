@@ -22,6 +22,7 @@ http://www.lua.org/
 
 http://rubyluabridge.rubyforge.org/
 http://raa.ruby-lang.org/project/ruby-lua
+http://rubydoc.info/gems/rlua/1.0/frames
 
 
 == using rufus-lua
