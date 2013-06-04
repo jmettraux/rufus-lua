@@ -30,6 +30,17 @@ http://www.lua.org/
 * http://rubydoc.info/gems/rlua/1.0/frames
 
 
+## getting Lua on your system
+
+On Debian GNU/Linux, I do
+
+```
+  sudo apt-get install liblua5.1-0
+```
+
+If your system's package manager doesn't have some version (5.1.x) of Lua around, jump to "compiling liblua.dylib" below.
+
+
 ## using rufus-lua
 
 If you don't have liblua.dylib on your system, scroll until "compiling liblua.dylib" to learn how to get it.
