@@ -5,7 +5,7 @@
 # Sat Mar 14 23:51:42 JST 2009
 #
 
-require File.dirname(__FILE__) + '/spec_base'
+require 'spec_base'
 
 
 describe 'Rufus::Lua::State (coroutines)' do
@@ -20,14 +20,14 @@ describe 'Rufus::Lua::State (coroutines)' do
   it 'should find coroutines' do
     @s.eval(
       'return coroutine.create(function (x) end)'
-    ).class.should.equal(Rufus::Lua::Coroutine)
+    ).class.should == Rufus::Lua::Coroutine
   end
 
   it 'should give coroutine status' do
     co = @s.eval(
       'return coroutine.create(function (x) end)'
     )
-    co.status.should.equal('suspended')
+    co.status.should == 'suspended'
   end
 
   it 'should resume coroutines' do
@@ -38,9 +38,8 @@ describe 'Rufus::Lua::State (coroutines)' do
         end
       end)
     })
-    @s['co'].resume(7).should.equal([ true, 7.0 ])
-    @s['co'].resume().should.equal([ true, 7.0 ])
+    @s['co'].resume(7).should == [ true, 7.0 ]
+    @s['co'].resume().should == [ true, 7.0 ]
   end
-
 end
 

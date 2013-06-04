@@ -5,7 +5,7 @@
 # Wed Mar 11 17:09:17 JST 2009
 #
 
-require File.dirname(__FILE__) + '/spec_base'
+require 'spec_base'
 
 
 describe 'Rufus::Lua::State (functions)' do
@@ -18,68 +18,81 @@ describe 'Rufus::Lua::State (functions)' do
   end
 
   it 'should return Lua functions' do
-    @s.eval('return function () end').class.should.equal(Rufus::Lua::Function)
+
+    @s.eval('return function () end').class.should == Rufus::Lua::Function
   end
 
   it 'should call Lua functions' do
+
     f = @s.eval(%{
       f = function ()
         return 77
       end
       return f
     })
-    f.call().should.equal(77.0)
+
+    f.call().should == 77.0
   end
 
   it 'should call Lua functions which return multiple values' do
+
     f = @s.eval(%{
       f = function ()
         return 77, 44
       end
       return f
     })
-    f.call().should.equal([ 77.0, 44.0 ])
+
+    f.call().should == [ 77.0, 44.0 ]
   end
 
   it 'should call functions with arguments' do
+
     f = @s.eval(%{
       f = function (x)
         return x * x
       end
       return f
     })
-    f.call(2).should.equal(4.0)
+
+    f.call(2).should == 4.0
   end
 
   it 'should call functions with boolean arguments' do
+
     f = @s.eval(%{
       f = function (x)
         return x
       end
       return f
     })
-    f.call(true).should.equal(true)
-    f.call(false).should.equal(false)
+
+    f.call(true).should == true
+    f.call(false).should == false
   end
 
   it 'should call functions with an array argument' do
+
     f = @s.eval(%{
       f = function (x)
         return x
       end
       return f
     })
-    f.call(%w[ one two three ]).to_a.should.equal(%w[ one two three ])
+
+    f.call(%w[ one two three ]).to_a.should == %w[ one two three ]
   end
 
   it 'should call functions with multiple arguments' do
+
     f = @s.eval(%{
       f = function (x, y)
         return x + y
       end
       return f
     })
-    f.call(1, 2).should.equal(3.0)
+
+    f.call(1, 2).should == 3.0
   end
 
   it 'should call honour the to_lua method for ruby args' do
@@ -97,7 +110,7 @@ describe 'Rufus::Lua::State (functions)' do
       "lua:#{to_s}"
     end
 
-    f.call(t).should.equal(t.to_lua)
+    f.call(t).should == t.to_lua
   end
 end
 

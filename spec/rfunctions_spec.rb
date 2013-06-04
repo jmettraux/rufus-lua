@@ -5,7 +5,7 @@
 # Wed Mar 18 17:53:06 JST 2009
 #
 
-require File.dirname(__FILE__) + '/spec_base'
+require 'spec_base'
 
 
 describe 'Ruby functions bound in Lua (callbacks)' do
@@ -21,7 +21,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     lambda {
       @s.function 'no_block'
-    }.should.raise(RuntimeError)
+    }.should raise_error(RuntimeError)
   end
 
   it 'should work without arguments' do
@@ -34,7 +34,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval('blink()')
 
-    blinked.should.be.true
+    blinked.should == true
   end
 
   it 'should work with arguments' do
@@ -47,7 +47,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval("greet('obandegozaimasu')")
 
-    message.should.equal('obandegozaimasu')
+    message.should == 'obandegozaimasu'
   end
 
   it 'should return a single value' do
@@ -55,7 +55,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :greet do
       'hello !'
     end
-    @s.eval('return greet()').should.equal('hello !')
+    @s.eval('return greet()').should == 'hello !'
   end
 
   it 'should return multiple values' do
@@ -63,7 +63,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :compute do
       [ 'a', true, 1 ]
     end
-    @s.eval('return compute()').to_a.should.equal([ 'a', true, 1.0 ])
+    @s.eval('return compute()').to_a.should == [ 'a', true, 1.0 ]
   end
 
   it 'should return tables' do
@@ -71,18 +71,17 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :compute do
       { 'a' => 'alpha', 'z' => 'zebra' }
     end
-    @s.eval('return compute()').to_h.should.equal(
+
+    @s.eval('return compute()').to_h.should ==
       { 'a' => 'alpha', 'z' => 'zebra' }
-    )
   end
 
   it 'should return tables (with nested array)' do
+
     @s.function :compute do
       { 'a' => 'alpha', 'z' => [ 1, 2, 3 ] }
     end
-    @s.eval('return compute()').to_h['z'].to_a.should.equal(
-      [ 1.0, 2.0, 3.0 ]
-    )
+    @s.eval('return compute()').to_h['z'].to_a.should == [ 1.0, 2.0, 3.0 ]
   end
 
   it 'should accept hashes as arguments' do
@@ -90,11 +89,11 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :to_json do |h|
       "{" + h.collect { |k, v| "#{k}:\"#{v}\"" }.join(",") + "}"
     end
+
     @s.eval(
       "return to_json({ a = 'ALPHA', b = 'BRAVO' })"
-    ).should.equal(
+    ).should ==
       '{a:"ALPHA",b:"BRAVO"}'
-    )
   end
 
   it 'should accept arrays as arguments' do
@@ -102,11 +101,11 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :do_join do |a|
       a.to_a.join(', ')
     end
+
     @s.eval(
       "return do_join({ 'alice', 'bob', 'charly' })"
-    ).should.equal(
+    ).should ==
       'alice, bob, charly'
-    )
   end
 
   it 'should raise exceptions' do
@@ -114,9 +113,10 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function :do_fail do
       raise "fail!"
     end
+
     lambda {
       @s.eval("return do_fail()")
-    }.should.raise(RuntimeError)
+    }.should raise_error(RuntimeError)
   end
 
   it 'should count the animals correctly' do
@@ -133,9 +133,8 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       table['pigs'] = 3
       table['DUCKS'] = 'none'
       return key_up(table)
-    }).to_h.should.equal(
+    }).to_h.should ==
       { 'COW' => 2.0, 'DUCKS' => 'none', 'PIGS' => 3.0 }
-    )
   end
 
   it 'should bind functions inside of tables' do
@@ -145,7 +144,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       x + 2
     end
 
-    @s.eval("return lib.myfunc(3)").should.equal(5.0)
+    @s.eval("return lib.myfunc(3)").should == 5.0
   end
 
   it 'should create the top table if not present' do
@@ -153,14 +152,15 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function 'lib.myfunc' do |x|
       x + 2
     end
-    @s.eval("return lib.myfunc(3)").should.equal(5.0)
+
+    @s.eval("return lib.myfunc(3)").should == 5.0
   end
 
   it 'should only create the top table' do
 
     lambda {
       @s.function('lib.toto.myfunc') { |x| x + 2 }
-    }.should.raise(ArgumentError)
+    }.should raise_error(ArgumentError)
   end
 
   it 'should return ruby arrays as lua tables' do
@@ -171,8 +171,8 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval('data = get_data()')
 
-    @s['data'].to_a.should.equal(%w[ one two three ])
-    @s.eval('return type(data)').should.equal('table')
+    @s['data'].to_a.should == %w[ one two three ]
+    @s.eval('return type(data)').should == 'table'
   end
 
   it 'should return lua tables that are properly indexed' do
@@ -183,8 +183,8 @@ describe 'Ruby functions bound in Lua (callbacks)' do
 
     @s.eval('data = get_data()')
 
-    @s.eval('return data[0]').should.be.nil
-    @s.eval('return data[1]').should.equal('one')
+    @s.eval('return data[0]').should == nil
+    @s.eval('return data[1]').should == 'one'
   end
 
   it 'should accept more than 1 arg and order them correctly' do
@@ -193,7 +193,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       "#{a}_#{b}_#{c}"
     end
 
-    @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0_3.0')
+    @s.eval("return myfunc(1, 2, 3)").should == '1.0_2.0_3.0'
   end
 
   it 'should accept optional arguments' do
@@ -202,7 +202,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       "#{a}_#{b}_#{c}"
     end
 
-    @s.eval("return myfunc(1)").should.equal('1.0__')
+    @s.eval("return myfunc(1)").should == '1.0__'
   end
 
   it 'should be ok when there are too many args' do
@@ -211,7 +211,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       "#{a}_#{b}"
     end
 
-    @s.eval("return myfunc(1, 2, 3)").should.equal('1.0_2.0')
+    @s.eval("return myfunc(1, 2, 3)").should == '1.0_2.0'
   end
 
   it 'should pass Float arguments correctly' do
@@ -220,7 +220,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
       "#{a.class} #{a}"
     end
 
-    @s.eval("return myfunc(3.14)").should.equal('Float 3.14')
+    @s.eval("return myfunc(3.14)").should == 'Float 3.14'
   end
 
   it 'should preserve arguments' do
@@ -236,7 +236,9 @@ describe 'Ruby functions bound in Lua (callbacks)' do
        a.is_a?(Rufus::Lua::Table))
     end
 
-    @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
+    @s.eval(
+      "return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})"
+    ).should == true
   end
 
   it 'should honour to_ruby=true' do
@@ -252,7 +254,9 @@ describe 'Ruby functions bound in Lua (callbacks)' do
        a.is_a?(Array))
     end
 
-    @s.eval("return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})").should.equal(true)
+    @s.eval(
+      "return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})"
+    ).should == true
   end
 
   it 'should preserve callbacks from GC' do
@@ -260,7 +264,7 @@ describe 'Ruby functions bound in Lua (callbacks)' do
     @s.function 'myfunc' do |a|
     end
 
-    @s.instance_variable_get(:@callbacks).size.should.equal(1)
+    @s.instance_variable_get(:@callbacks).size.should == 1
   end
 end
 
