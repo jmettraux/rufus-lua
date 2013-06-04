@@ -51,7 +51,7 @@ module Lua
     rescue LoadError => le
       raise(
         "didn't find the lua dylib on your system, " +
-        "see http://rufus.rubyforge.org/rufus-lua/ to learn how to get it"
+        "see https://github.com/jmettraux/rufus-lua/ to learn how to get it"
       )
     end
 

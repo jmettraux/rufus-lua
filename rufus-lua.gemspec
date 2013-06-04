@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = [ 'John Mettraux', 'Alain Hoang', 'Scott Persinger' ]
   s.email = [ 'jmettraux@gmail.com' ]
-  s.homepage = 'http://github.com/jmettraux/rufus-lua'
+  s.homepage = 'https://github.com/jmettraux/rufus-lua'
   s.rubyforge_project = 'rufus'
   s.license = 'MIT'
   s.summary = 'ruby-ffi based bridge from Ruby to Lua'
