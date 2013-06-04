@@ -1,105 +1,82 @@
 
-require 'rubygems'
+$:.unshift('.') # 1.9.2
 
-require 'fileutils'
 require 'rake'
 require 'rake/clean'
-require 'rake/packagetask'
-require 'rake/gempackagetask'
-require 'rake/testtask'
-
-
-gemspec = File.read('rufus-lua.gemspec')
-eval "gemspec = #{gemspec}"
-
-#task :gemspec do
-#  File.open('rufus-lua.gemspec', 'w') do |f|
-#    f.write(gemspec.to_ruby)
-#  end
-#end
+require 'rspec/core/rake_task'
 
 
 #
-# tasks
+# clean
 
-CLEAN.include('pkg', 'tmp', 'html')
-
-task :default => [ :clean, :repackage ]
+CLEAN.include('pkg', 'rdoc')
 
 
 #
-# SPECING
+# test / spec
 
-task :spec do
-  load File.join(File.dirname(__FILE__), 'spec', 'spec.rb')
-end
-
-
-#
-# TESTING
+RSpec::Core::RakeTask.new
 
 task :test => :spec
+task :default => :spec
 
 
 #
-# VERSION
+# gem
 
-task :change_version do
+GEMSPEC_FILE = Dir['*.gemspec'].first
+GEMSPEC = eval(File.read(GEMSPEC_FILE))
+GEMSPEC.validate
 
-  version = ARGV.pop
-  `sedip "s/VERSION = '.*'/VERSION = '#{version}'/" lib/rufus/lua/state.rb`
-  `sedip "s/s.version = '.*'/s.version = '#{version}'/" rufus-lua.gemspec`
-  exit 0 # prevent rake from triggering other tasks
+
+desc %{
+  builds the gem and places it in pkg/
+}
+task :build do
+
+  sh "gem build #{GEMSPEC_FILE}"
+  sh "mkdir pkg" rescue nil
+  sh "mv #{GEMSPEC.name}-#{GEMSPEC.version}.gem pkg/"
+end
+
+desc %{
+  builds the gem and pushes it to rubygems.org
+}
+task :push => :build do
+
+  sh "gem push pkg/#{GEMSPEC.name}-#{GEMSPEC.version}.gem"
 end
 
 
+##
+## rdoc
+##
+## make sure to have rdoc 2.5.x to run that
 #
-# PACKAGING
-
-Rake::GemPackageTask.new(gemspec) do |pkg|
-  #pkg.need_tar = true
-end
-
-Rake::PackageTask.new('rufus-lua', gemspec.version) do |pkg|
-
-  pkg.need_zip = true
-  pkg.package_files = FileList[
-    'Rakefile',
-    '*.txt',
-    'lib/**/*',
-    'spec/**/*',
-    'test/**/*'
-  ].to_a
-  #pkg.package_files.delete("MISC.txt")
-  class << pkg
-    def package_name
-      "#{@name}-#{@version}-src"
-    end
-  end
-end
-
-
+#Rake::RDocTask.new do |rd|
 #
-# DOCUMENTATION
-
-task :rdoc do
-  sh %{
-    rm -fR rdoc
-    yardoc 'lib/**/*.rb' \
-      -o html/rufus-lua \
-      --title 'rufus-lua'
-  }
-end
-
-
+#  rd.main = 'README.txt'
+#  rd.rdoc_dir = "rdoc/#{GEMSPEC.name}"
 #
-# WEBSITE
-
-task :upload_website => [ :clean, :rdoc ] do
-
-  account = 'jmettraux@rubyforge.org'
-  webdir = '/var/www/gforge-projects/rufus'
-
-  sh "rsync -azv -e ssh html/rufus-lua #{account}:#{webdir}/"
-end
+#  rd.rdoc_files.include('README.mdown', 'CHANGELOG.txt', 'lib/**/*.rb')
+#
+#  rd.title = "#{GEMSPEC.name} #{GEMSPEC.version}"
+#end
+#
+#
+##
+## upload_rdoc
+#
+#desc %{
+#  upload the rdoc to rubyforge
+#}
+#task :upload_rdoc => [ :clean, :rdoc ] do
+#
+#  account = 'jmettraux@rubyforge.org'
+#  webdir = '/var/www/gforge-projects/rufus'
+#
+#  sh "rsync -azv -e ssh rdoc/#{GEMSPEC.name} #{account}:#{webdir}/"
+#end
+  #
+  # keep that in the fridge for now
 
