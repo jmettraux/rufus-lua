@@ -22,11 +22,11 @@
 # Made in Japan.
 #++
 
-require 'rufus/lua/version'
 
-require 'rufus/lua/lib'
+module Rufus
+module Lua
 
-require 'rufus/lua/state'
-require 'rufus/lua/utils'
-require 'rufus/lua/objects'
+  VERSION = '1.1.0'
+end
+end
 

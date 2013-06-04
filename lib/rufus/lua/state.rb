@@ -1,5 +1,5 @@
 #--
-# Copyright (c) 2009, John Mettraux, Alain Hoang.
+# Copyright (c) 2009-2013, John Mettraux, Alain Hoang.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -434,7 +434,6 @@ module Rufus::Lua
 
     # Binds a Ruby function (callback) in the top environment of Lua
     #
-    #   require 'rubygems'
     #   require 'rufus/lua'
     #
     #   s = Rufus::Lua::State.new

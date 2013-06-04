@@ -2,25 +2,35 @@
 Gem::Specification.new do |s|
 
   s.name = 'rufus-lua'
-  s.version = '1.1.0'
-  s.authors = [ 'John Mettraux', 'Alain Hoang', 'Scott Persinger' ]
-  s.email = 'jmettraux@gmail.com'
-  s.homepage = 'http://rufus.rubyforge.org/'
+
+  s.version = File.read(
+    File.expand_path('../lib/rufus/lua/version.rb', __FILE__)
+  ).match(/ VERSION *= *['"]([^'"]+)/)[1]
+
   s.platform = Gem::Platform::RUBY
+  s.authors = [ 'John Mettraux', 'Alain Hoang', 'Scott Persinger' ]
+  s.email = [ 'jmettraux@gmail.com' ]
+  s.homepage = 'http://github.com/jmettraux/rufus-lua'
+  s.rubyforge_project = 'rufus'
+  s.license = 'MIT'
   s.summary = 'ruby-ffi based bridge from Ruby to Lua'
 
+  s.description = %{
+ruby-ffi based bridge from Ruby to Lua
+  }.strip
+
+  #s.files = `git ls-files`.split("\n")
+  s.files = Dir[
+    'Rakefile',
+    'lib/**/*.rb', 'spec/**/*.rb', 'test/**/*.rb',
+    '*.gemspec', '*.txt', '*.rdoc', '*.md'
+  ]
+
+  s.add_dependency 'ffi'
+
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rspec', '>= 2.13.0'
+
   s.require_path = 'lib'
-  s.test_file = 'spec/spec.rb'
-  s.has_rdoc = true
-  s.extra_rdoc_files = %w{ README.rdoc CHANGELOG.txt CREDITS.txt LICENSE.txt }
-  s.rubyforge_project = 'rufus'
-
-  %w{ ffi }.each do |d|
-    s.requirements << d
-    s.add_dependency(d)
-  end
-
-  #s.files = Dir['lib/**/*.rb'] + Dir['*.txt'] - [ 'lib/tokyotyrant.rb' ]
-  s.files = Dir['lib/**/*.rb'] + Dir['*.txt']
 end
 
