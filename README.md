@@ -216,11 +216,11 @@ many thanks to the authors of Ruby FFI, and of Lua
 * http://lua.org/
 
 
-== authors
+## authors
 
-John Mettraux, jmettraux@gmail.com, http://lambda.io/jmettraux
-Alain Hoang, http://blogs.law.harvard.edu/hoanga/
-Scott Persinger, http://github.com/scottpersinger/
+* John Mettraux, jmettraux@gmail.com, http://lambda.io/jmettraux
+* Alain Hoang, http://blogs.law.harvard.edu/hoanga/
+* Scott Persinger, http://github.com/scottpersinger/
 
 
 ## the rest of Rufus
