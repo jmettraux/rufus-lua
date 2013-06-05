@@ -18,16 +18,14 @@ http://www.lua.org/about.html says :
 > garbage collection, making it ideal for configuration, scripting, and
 > rapid prototyping.
 
-
 http://www.lua.org/
 
 
 ## other Ruby and Lua bridges / connectors
 
-
-* http://rubyluabridge.rubyforge.org/
-* http://raa.ruby-lang.org/project/ruby-lua
-* http://rubydoc.info/gems/rlua/1.0/frames
+* https://github.com/glejeune/ruby-lua by Gregoire Lejeune
+* http://rubyluabridge.rubyforge.org/ by Evan Wies
+* https://github.com/whitequark/rlua by Peter Zotov
 
 
 ## getting Lua on your system
@@ -214,13 +212,13 @@ http://github.com/jmettraux/rufus-lua
 
 many thanks to the authors of Ruby FFI, and of Lua
 
-http://wiki.github.com/ffi/ffi
-http://lua.org/
+* http://wiki.github.com/ffi/ffi
+* http://lua.org/
 
 
 == authors
 
-John Mettraux, jmettraux@gmail.com, http://jmettraux.wordpress.com
+John Mettraux, jmettraux@gmail.com, http://lambda.io/jmettraux
 Alain Hoang, http://blogs.law.harvard.edu/hoanga/
 Scott Persinger, http://github.com/scottpersinger/
 
