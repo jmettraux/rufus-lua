@@ -8,7 +8,7 @@
 require 'spec_base'
 
 
-describe 'Rufus::Lua::State (gc)' do
+describe Rufus::Lua::State do
 
   before do
     @s = Rufus::Lua::State.new
@@ -17,19 +17,25 @@ describe 'Rufus::Lua::State (gc)' do
     @s.close
   end
 
-  it 'should raise an exception when operating on closed states' do
+  describe '#gc_collect!' do
 
-    s = Rufus::Lua::State.new
-    s.close
-    lambda { s.gc_collect! }.should raise_error(RuntimeError)
+    it 'raises when called on a closed Rufus::Lua::State instance' do
+
+      s = Rufus::Lua::State.new
+      s.close
+      lambda { s.gc_collect! }.should raise_error(RuntimeError)
+    end
   end
 
-  it 'should accurately count Lua interpreter memory usage' do
+  describe '#gc_count' do
 
-    before_usage = @s.gc_count
-    @s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
-    after_usage = @s.gc_count
+    it 'returns an indication about the Lua interpreter memory usage' do
 
-    after_usage.should > before_usage
+      before_usage = @s.gc_count
+      @s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
+      after_usage = @s.gc_count
+
+      after_usage.should > before_usage
+    end
   end
 end

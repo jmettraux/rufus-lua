@@ -8,131 +8,134 @@
 require 'spec_base'
 
 
-describe 'Rufus::Lua::State (tables)' do
+describe Rufus::Lua::State do
 
-  before do
-    @s = Rufus::Lua::State.new
-  end
-  after do
-    @s.close
-  end
+  context 'tables' do
 
-  it 'should find a hash' do
+    before do
+      @s = Rufus::Lua::State.new
+    end
+    after do
+      @s.close
+    end
 
-    @s.eval('h = { a = "b", c = 2, 4 }')
+    it 'finds a hash' do
 
-    @s['h'].to_h.should == { 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 }
-  end
+      @s.eval('h = { a = "b", c = 2, 4 }')
 
-  it 'should turn a hash into an array' do
+      @s['h'].to_h.should == { 'a' => 'b', 'c' => 2.0, 1.0 => 4.0 }
+    end
 
-    @s.eval('a = { "a", "b", "c" }')
+    it 'turns a hash into an array' do
 
-    @s['a'].to_h.should == { 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' }
-    @s['a'].to_a.should == %w{ a b c }
-  end
+      @s.eval('a = { "a", "b", "c" }')
 
-  it 'should do nested lookups (2)' do
+      @s['a'].to_h.should == { 1.0 => 'a', 2.0 => 'b', 3.0 => 'c' }
+      @s['a'].to_a.should == %w{ a b c }
+    end
 
-    @s.eval('a = { b = { c = 0 } }')
+    it 'does nested lookups (2)' do
 
-    @s['a.b.c'].should == 0
-  end
+      @s.eval('a = { b = { c = 0 } }')
 
-  it 'should return Lua tables' do
+      @s['a.b.c'].should == 0
+    end
 
-    @s.eval('return {}').class.should == Rufus::Lua::Table
-  end
+    it 'returns Lua tables' do
 
-  it 'should return turn Lua tables into Ruby hashes' do
+      @s.eval('return {}').class.should == Rufus::Lua::Table
+    end
 
-    @s.eval('return {}').to_h.should == {}
-  end
+    it 'turns Lua tables into Ruby hashes' do
 
-  it 'should free tables' do
+      @s.eval('return {}').to_h.should == {}
+    end
 
-    t = @s.eval('t = {}; return t')
-    t.free
+    it 'can free Lua tables' do
 
-    t.ref.should == nil
-    lambda { t.to_h }.should raise_error(Rufus::Lua::LuaError)
-  end
+      t = @s.eval('t = {}; return t')
+      t.free
 
-  it 'should index tables' do
+      t.ref.should == nil
+      lambda { t.to_h }.should raise_error(Rufus::Lua::LuaError)
+    end
 
-    t = @s.eval("return { a = 'A' }")
+    it 'indexes tables' do
 
-    t['a'].should == 'A'
-    t['b'].should == nil
-  end
+      t = @s.eval("return { a = 'A' }")
 
-  it 'should iterate on tables' do
+      t['a'].should == 'A'
+      t['b'].should == nil
+    end
 
-    #t = @s.eval("return { a = 'A', b = 'B', c = 3, d = 3.1 }")
-    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+    it 'iterates over Lua tables' do
 
-    t.values.sort_by { |v| v.to_s }.should == [ 3.0, 'A', 'B' ]
-    t.keys.sort.should == [ 'a', 'b', 'c' ]
-  end
+      #t = @s.eval("return { a = 'A', b = 'B', c = 3, d = 3.1 }")
+      t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
 
-  it 'should provide keys and values for tables' do
+      t.values.sort_by { |v| v.to_s }.should == [ 3.0, 'A', 'B' ]
+      t.keys.sort.should == [ 'a', 'b', 'c' ]
+    end
 
-    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+    it 'provides keys and values for tables' do
 
-    t.collect { |k, v| v }.size.should == 3
-  end
+      t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
 
-  it 'should give the size of a table' do
+      t.collect { |k, v| v }.size.should == 3
+    end
 
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").objlen.should == 0.0
-    @s.eval("return { 1, 2 }").objlen.should == 2
+    it 'provides the size of a table' do
 
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").size.should == 3
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").length.should == 3
-    @s.eval("return { 1, 2 }").size.should == 2
-    @s.eval("return { 1, 2 }").length.should == 2
-  end
+      @s.eval("return { a = 'A', b = 'B', c = 3 }").objlen.should == 0.0
+      @s.eval("return { 1, 2 }").objlen.should == 2
 
-  it 'should allow table[k] = v' do
+      @s.eval("return { a = 'A', b = 'B', c = 3 }").size.should == 3
+      @s.eval("return { a = 'A', b = 'B', c = 3 }").length.should == 3
+      @s.eval("return { 1, 2 }").size.should == 2
+      @s.eval("return { 1, 2 }").length.should == 2
+    end
 
-    t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
-    t['b'] = 4
+    it 'lets setting values in Lua tables from Ruby' do
 
-    t['b'].should == 4.0
-  end
+      t = @s.eval("return { a = 'A', b = 'B', c = 3 }")
+      t['b'] = 4
 
-  it 'should index tables properly' do
+      t['b'].should == 4.0
+    end
 
-    @s.eval("t = { 'a', 'b', 'c' }")
+    it 'indexes tables properly' do
 
-    @s.eval("return t[0]").should == nil
-    @s.eval("return t[1]").should == 'a'
-    @s.eval("return t[3]").should == 'c'
-    @s.eval("return t[4]").should == nil
-  end
+      @s.eval("t = { 'a', 'b', 'c' }")
 
-  it 'should reply to to_a(false) (pure = false)' do
+      @s.eval("return t[0]").should == nil
+      @s.eval("return t[1]").should == 'a'
+      @s.eval("return t[3]").should == 'c'
+      @s.eval("return t[4]").should == nil
+    end
 
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a(false).sort.should ==
-      [ [ "a", "A" ], [ "b", "B" ], [ "c", 3.0 ] ]
-    @s.eval("return { 1, 2 }").to_a(false).should ==
-      [ 1.0, 2.0 ]
-    @s.eval("return {}").to_a(false).should ==
-      []
-    @s.eval("return { 1, 2, car = 'benz' }").to_a(false).should ==
-      [ 1.0, 2.0, ["car", "benz"] ]
-  end
+    it 'replies to to_a(false) (pure = false)' do
 
-  it 'should do its best with to_ruby' do
+      @s.eval("return { a = 'A', b = 'B', c = 3 }").to_a(false).sort.should ==
+        [ [ "a", "A" ], [ "b", "B" ], [ "c", 3.0 ] ]
+      @s.eval("return { 1, 2 }").to_a(false).should ==
+        [ 1.0, 2.0 ]
+      @s.eval("return {}").to_a(false).should ==
+        []
+      @s.eval("return { 1, 2, car = 'benz' }").to_a(false).should ==
+        [ 1.0, 2.0, ["car", "benz"] ]
+    end
 
-    @s.eval("return { a = 'A', b = 'B', c = 3 }").to_ruby.should ==
-      { "a" => "A", "b" => "B", "c" => 3.0 }
-    @s.eval("return { 1, 2 }").to_ruby.should ==
-      [ 1.0, 2.0 ]
-    @s.eval("return {}").to_ruby.should ==
-      []
-    @s.eval("return { 1, 2, car = 'benz' }").to_ruby.should ==
-      { 1.0 => 1.0, "car" => "benz", 2.0 => 2.0 }
+    it 'tries hard to honour #to_ruby' do
+
+      @s.eval("return { a = 'A', b = 'B', c = 3 }").to_ruby.should ==
+        { "a" => "A", "b" => "B", "c" => 3.0 }
+      @s.eval("return { 1, 2 }").to_ruby.should ==
+        [ 1.0, 2.0 ]
+      @s.eval("return {}").to_ruby.should ==
+        []
+      @s.eval("return { 1, 2, car = 'benz' }").to_ruby.should ==
+        { 1.0 => 1.0, "car" => "benz", 2.0 => 2.0 }
+    end
   end
 end
 

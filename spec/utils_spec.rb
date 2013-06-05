@@ -8,24 +8,27 @@
 require 'spec_base'
 
 
-describe 'Rufus::Lua (utils)' do
+describe Rufus::Lua do
 
-  it 'should turn Ruby arrays into Lua string representations' do
+  context '(utils)' do
 
-    Rufus::Lua.to_lua_s(
-      %w{ a b c }
-    ).should ==
-      '{ "a", "b", "c" }'
+    it 'turns Ruby arrays into Lua string representations' do
 
-    # TODO : ["a"] is probably better...
-  end
+      Rufus::Lua.to_lua_s(
+        %w{ a b c }
+      ).should ==
+        '{ "a", "b", "c" }'
 
-  it 'should turn Ruby hashes into Lua string representations' do
+      # TODO : ["a"] is probably better...
+    end
 
-    Rufus::Lua.to_lua_s(
-      { 'a' => 'A', 'b' => 2}
-    ).should ==
-      '{ ["a"] = "A", ["b"] = 2 }'
+    it 'turns Ruby hashes into Lua string representations' do
+
+      Rufus::Lua.to_lua_s(
+        { 'a' => 'A', 'b' => 2}
+      ).should ==
+        '{ ["a"] = "A", ["b"] = 2 }'
+    end
   end
 end
 
