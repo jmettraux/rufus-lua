@@ -1,0 +1,32 @@
+PATH
+  remote: .
+  specs:
+    rufus-lua (1.1.1)
+      ffi
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    diff-lcs (1.2.5)
+    ffi (1.9.3)
+    rake (10.3.2)
+    rspec (3.0.0)
+      rspec-core (~> 3.0.0)
+      rspec-expectations (~> 3.0.0)
+      rspec-mocks (~> 3.0.0)
+    rspec-core (3.0.1)
+      rspec-support (~> 3.0.0)
+    rspec-expectations (3.0.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.0.0)
+    rspec-mocks (3.0.1)
+      rspec-support (~> 3.0.0)
+    rspec-support (3.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  rspec (>= 2.13.0)
+  rufus-lua!

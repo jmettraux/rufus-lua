@@ -1,5 +1,4 @@
 # .gitignore
 
-Gemfile.lock
 .rspec
 
