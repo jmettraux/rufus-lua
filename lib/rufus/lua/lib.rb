@@ -46,7 +46,7 @@ module Lua
 
     begin
 
-      ffi_lib(*paths)
+      ffi_lib(paths)
 
     rescue LoadError => le
       raise(
