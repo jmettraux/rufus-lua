@@ -166,15 +166,6 @@ sudo make macosx install
 ```
 
 
-## build dependencies
-
-The following gems are needed to run the specs
-
-```
-sudo gem install bacon
-```
-
-
 ## tested with
 
 ruby 1.8.7p72, ruby 1.9.1p0, jruby 1.2.0
