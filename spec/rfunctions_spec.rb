@@ -21,9 +21,9 @@ describe Rufus::Lua::State do
 
     it 'raises when no block is given' do
 
-      lambda {
+      expect(lambda {
         @s.function 'no_block'
-      }.should raise_error(RuntimeError)
+      }).to raise_error(RuntimeError)
     end
 
     it 'works without arguments' do
@@ -36,7 +36,7 @@ describe Rufus::Lua::State do
 
       @s.eval('blink()')
 
-      blinked.should == true
+      expect(blinked).to eq true
     end
 
     it 'works with arguments' do
@@ -49,7 +49,7 @@ describe Rufus::Lua::State do
 
       @s.eval("greet('obandegozaimasu')")
 
-      message.should == 'obandegozaimasu'
+      expect(message).to eq 'obandegozaimasu'
     end
 
     it 'binds functions inside of Lua tables' do
@@ -59,7 +59,7 @@ describe Rufus::Lua::State do
         x + 2
       end
 
-      @s.eval("return lib.myfunc(3)").should == 5.0
+      expect(@s.eval("return lib.myfunc(3)")).to eq 5.0
     end
 
     it 'creates the top Lua table if not present' do
@@ -68,14 +68,14 @@ describe Rufus::Lua::State do
         x + 2
       end
 
-      @s.eval("return lib.myfunc(3)").should == 5.0
+      expect(@s.eval("return lib.myfunc(3)")).to eq 5.0
     end
 
     it 'only creates the top table (not intermediary tables)' do
 
-      lambda {
+      expect(lambda {
         @s.function('lib.toto.myfunc') { |x| x + 2 }
-      }.should raise_error(ArgumentError)
+      }).to raise_error(ArgumentError)
     end
   end
 
@@ -87,7 +87,7 @@ describe Rufus::Lua::State do
         'hello !'
       end
 
-      @s.eval('return greet()').should == 'hello !'
+      expect(@s.eval('return greet()')).to eq 'hello !'
     end
 
     it 'may return multiple values' do
@@ -96,7 +96,7 @@ describe Rufus::Lua::State do
         [ 'a', true, 1 ]
       end
 
-      @s.eval('return compute()').to_a.should == [ 'a', true, 1.0 ]
+      expect(@s.eval('return compute()').to_a).to eq [ 'a', true, 1.0 ]
     end
 
     it 'may return tables' do
@@ -105,8 +105,8 @@ describe Rufus::Lua::State do
         { 'a' => 'alpha', 'z' => 'zebra' }
       end
 
-      @s.eval('return compute()').to_h.should ==
-        { 'a' => 'alpha', 'z' => 'zebra' }
+      expect(@s.eval('return compute()').to_h).to eq(
+        { 'a' => 'alpha', 'z' => 'zebra' })
     end
 
     it 'may return tables (with nested arrays)' do
@@ -115,7 +115,7 @@ describe Rufus::Lua::State do
         { 'a' => 'alpha', 'z' => [ 1, 2, 3 ] }
       end
 
-      @s.eval('return compute()').to_h['z'].to_a.should == [ 1.0, 2.0, 3.0 ]
+      expect(@s.eval('return compute()').to_h['z'].to_a).to eq [ 1.0, 2.0, 3.0 ]
     end
 
     it 'accepts hashes as arguments' do
@@ -124,10 +124,11 @@ describe Rufus::Lua::State do
         "{" + h.collect { |k, v| "#{k}:\"#{v}\"" }.join(",") + "}"
       end
 
-      @s.eval(
+      expect(@s.eval(
         "return to_json({ a = 'ALPHA', b = 'BRAVO' })"
-      ).should ==
+      )).to eq(
         '{a:"ALPHA",b:"BRAVO"}'
+      )
     end
 
     it 'accepts arrays as arguments' do
@@ -136,10 +137,11 @@ describe Rufus::Lua::State do
         a.to_a.join(', ')
       end
 
-      @s.eval(
+      expect(@s.eval(
         "return do_join({ 'alice', 'bob', 'charly' })"
-      ).should ==
+      )).to eq(
         'alice, bob, charly'
+      )
     end
 
     it 'raise exceptions (Ruby -> Lua -> Ruby and back)' do
@@ -148,9 +150,9 @@ describe Rufus::Lua::State do
         raise "fail!"
       end
 
-      lambda {
+      expect(lambda {
         @s.eval("return do_fail()")
-      }.should raise_error(RuntimeError)
+      }).to raise_error(RuntimeError)
     end
 
     it 'counts the animals correctly' do
@@ -161,14 +163,15 @@ describe Rufus::Lua::State do
         end
       end
 
-      @s.eval(%{
+      expect(@s.eval(%{
         local table = {}
         table['CoW'] = 2
         table['pigs'] = 3
         table['DUCKS'] = 'none'
         return key_up(table)
-      }).to_h.should ==
+      }).to_h).to eq(
         { 'COW' => 2.0, 'DUCKS' => 'none', 'PIGS' => 3.0 }
+      )
     end
 
     it 'returns Ruby arrays as Lua tables' do
@@ -179,8 +182,8 @@ describe Rufus::Lua::State do
 
       @s.eval('data = get_data()')
 
-      @s['data'].to_a.should == %w[ one two three ]
-      @s.eval('return type(data)').should == 'table'
+      expect(@s['data'].to_a).to eq %w[ one two three ]
+      expect(@s.eval('return type(data)')).to eq('table')
     end
 
     it 'return properly indexed Lua tables' do
@@ -191,8 +194,8 @@ describe Rufus::Lua::State do
 
       @s.eval('data = get_data()')
 
-      @s.eval('return data[0]').should == nil
-      @s.eval('return data[1]').should == 'one'
+      expect(@s.eval('return data[0]')).to eq nil
+      expect(@s.eval('return data[1]')).to eq 'one'
     end
 
     it 'accepts more than 1 arg and order the args correctly' do
@@ -201,7 +204,7 @@ describe Rufus::Lua::State do
         "#{a}_#{b}_#{c}"
       end
 
-      @s.eval("return myfunc(1, 2, 3)").should == '1.0_2.0_3.0'
+      expect(@s.eval("return myfunc(1, 2, 3)")).to eq '1.0_2.0_3.0'
     end
 
     it 'accepts optional arguments' do
@@ -210,7 +213,7 @@ describe Rufus::Lua::State do
         "#{a}_#{b}_#{c}"
       end
 
-      @s.eval("return myfunc(1)").should == '1.0__'
+      expect(@s.eval("return myfunc(1)")).to eq '1.0__'
     end
 
     it 'is ok when there are too many args' do
@@ -219,7 +222,7 @@ describe Rufus::Lua::State do
         "#{a}_#{b}"
       end
 
-      @s.eval("return myfunc(1, 2, 3)").should == '1.0_2.0'
+      expect(@s.eval("return myfunc(1, 2, 3)")).to eq '1.0_2.0'
     end
 
     it 'passes Float arguments correctly' do
@@ -228,7 +231,7 @@ describe Rufus::Lua::State do
         "#{a.class} #{a}"
       end
 
-      @s.eval("return myfunc(3.14)").should == 'Float 3.14'
+      expect(@s.eval("return myfunc(3.14)")).to eq 'Float 3.14'
     end
 
     it 'preserves arguments' do
@@ -244,9 +247,9 @@ describe Rufus::Lua::State do
          a.is_a?(Rufus::Lua::Table))
       end
 
-      @s.eval(
+      expect(@s.eval(
         "return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})"
-      ).should == true
+      )).to eq true
     end
 
     it 'honours to_ruby=true' do
@@ -262,9 +265,9 @@ describe Rufus::Lua::State do
          a.is_a?(Array))
       end
 
-      @s.eval(
+      expect(@s.eval(
         "return check_types(true, 'foobar', 3.13, {a='ay',b='bee'}, {'one','two','three'})"
-      ).should == true
+      )).to eq true
     end
 
     it 'protects callbacks from GC' do
@@ -272,7 +275,7 @@ describe Rufus::Lua::State do
       @s.function 'myfunc' do |a|
       end
 
-      @s.instance_variable_get(:@callbacks).size.should == 1
+      expect(@s.instance_variable_get(:@callbacks).size).to eq 1
     end
   end
 end

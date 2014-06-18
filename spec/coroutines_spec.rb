@@ -21,9 +21,9 @@ describe Rufus::Lua::State do
 
     it 'can be returned to Ruby' do
 
-      @s.eval(
+      expect(@s.eval(
         'return coroutine.create(function (x) end)'
-      ).class.should == Rufus::Lua::Coroutine
+      ).class).to eq(Rufus::Lua::Coroutine)
     end
 
     it 'has a status visible from Ruby' do
@@ -31,7 +31,7 @@ describe Rufus::Lua::State do
       co = @s.eval(
         'return coroutine.create(function (x) end)'
       )
-      co.status.should == 'suspended'
+      expect(co.status).to eq('suspended')
     end
 
     it 'can be resumed from Ruby' do
@@ -43,8 +43,8 @@ describe Rufus::Lua::State do
           end
         end)
       })
-      @s['co'].resume(7).should == [ true, 7.0 ]
-      @s['co'].resume().should == [ true, 7.0 ]
+      expect(@s['co'].resume(7)).to eq [ true, 7.0 ]
+      expect(@s['co'].resume()).to eq [ true, 7.0 ]
     end
   end
 end

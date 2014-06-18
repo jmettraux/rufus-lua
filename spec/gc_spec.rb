@@ -23,7 +23,7 @@ describe Rufus::Lua::State do
 
       s = Rufus::Lua::State.new
       s.close
-      lambda { s.gc_collect! }.should raise_error(RuntimeError)
+      expect(lambda { s.gc_collect! }).to raise_error(RuntimeError)
     end
   end
 
@@ -35,7 +35,7 @@ describe Rufus::Lua::State do
       @s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
       after_usage = @s.gc_count
 
-      after_usage.should > before_usage
+      expect(after_usage).to be > before_usage
     end
   end
 end

@@ -15,14 +15,14 @@ describe Rufus::Lua::State do
     it 'loads all libs by default' do
 
       @s = Rufus::Lua::State.new
-      @s.eval('return os;').should_not == nil
+      expect(@s.eval('return os;')).not_to be nil
       @s.close
     end
 
     it 'loads no libs when told so' do
 
       @s = Rufus::Lua::State.new(false)
-      @s.eval('return os;').should == nil
+      expect(@s.eval('return os;')).to be nil
       @s.close
     end
 
@@ -33,8 +33,8 @@ describe Rufus::Lua::State do
         # loading io result in a PANIC (macsox at least)
 
       @s = Rufus::Lua::State.new([ :os, :math ])
-      @s.eval('return io;').should == nil
-      @s.eval('return os;').should_not == nil
+      expect(@s.eval('return io;')).to be nil
+      expect(@s.eval('return os;')).not_to be nil
       @s.close
     end
   end
@@ -46,7 +46,7 @@ describe Rufus::Lua::State do
       @s = Rufus::Lua::State.new
       @s.close
 
-      lambda { @s.close }.should raise_error(RuntimeError)
+      expect(lambda { @s.close }).to raise_error(RuntimeError)
     end
   end
 
@@ -61,7 +61,7 @@ describe Rufus::Lua::State do
 
     it 'return nils for unbound variables' do
 
-      @s['a'].should == nil
+      expect(@s['a']).to be nil
     end
 
     it 'accepts setting values directly' do
@@ -73,14 +73,14 @@ describe Rufus::Lua::State do
     it 'accepts setting array values directly' do
 
       @s['a'] = [ true, false, %w[ alpha bravo charly ] ]
-      @s['a'].to_a[0].should == true
-      @s['a'].to_a[2].to_a.should == %w[ alpha bravo charly ]
+      expect(@s['a'].to_a[0]).to be true
+      expect(@s['a'].to_a[2].to_a).to eq %w[ alpha bravo charly ]
     end
 
     it 'accepts setting hash values directly' do
 
       @s['a'] = { 'a' => 'alpha', 'b' => 'bravo' }
-      @s['a'].to_h.should == { 'a' => 'alpha', 'b' => 'bravo' }
+      expect(@s['a'].to_h).to eq({ 'a' => 'alpha', 'b' => 'bravo' })
     end
   end
 end

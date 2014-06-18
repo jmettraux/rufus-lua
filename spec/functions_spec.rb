@@ -21,7 +21,7 @@ describe Rufus::Lua::State do
 
     it 'are returned as Rufus::Lua::Function instances' do
 
-      @s.eval('return function () end').class.should == Rufus::Lua::Function
+      expect(@s.eval('return function () end').class).to eq Rufus::Lua::Function
     end
 
     it 'are callable from Ruby' do
@@ -33,7 +33,7 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call().should == 77.0
+      expect(f.call()).to eq 77.0
     end
 
     it 'are callable even when they return multiple values' do
@@ -45,7 +45,7 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call().should == [ 77.0, 44.0 ]
+      expect(f.call()).to eq [ 77.0, 44.0 ]
     end
 
     it 'are callable with arguments' do
@@ -57,7 +57,7 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call(2).should == 4.0
+      expect(f.call(2)).to eq 4.0
     end
 
     it 'are callable with boolean arguments' do
@@ -69,8 +69,8 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call(true).should == true
-      f.call(false).should == false
+      expect(f.call(true)).to eq true
+      expect(f.call(false)).to eq false
     end
 
     it 'are callable with array arguments' do
@@ -82,7 +82,7 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call(%w[ one two three ]).to_a.should == %w[ one two three ]
+      expect(f.call(%w[ one two three ]).to_a).to eq %w[ one two three ]
     end
 
     it 'are callable with multiple arguments' do
@@ -94,7 +94,7 @@ describe Rufus::Lua::State do
         return f
       })
 
-      f.call(1, 2).should == 3.0
+      expect(f.call(1, 2)).to eq 3.0
     end
 
     it 'are called with #to_lua\'ed Ruby arguments' do
@@ -112,7 +112,7 @@ describe Rufus::Lua::State do
         "lua:#{to_s}"
       end
 
-      f.call(t).should == t.to_lua
+      expect(f.call(t)).to eq t.to_lua
     end
   end
 end

@@ -14,20 +14,22 @@ describe Rufus::Lua do
 
     it 'turns Ruby arrays into Lua string representations' do
 
-      Rufus::Lua.to_lua_s(
+      expect(Rufus::Lua.to_lua_s(
         %w{ a b c }
-      ).should ==
+      )).to eq(
         '{ "a", "b", "c" }'
+      )
 
       # TODO : ["a"] is probably better...
     end
 
     it 'turns Ruby hashes into Lua string representations' do
 
-      Rufus::Lua.to_lua_s(
+      expect(Rufus::Lua.to_lua_s(
         { 'a' => 'A', 'b' => 2}
-      ).should ==
+      )).to eq(
         '{ ["a"] = "A", ["b"] = 2 }'
+      )
     end
   end
 end

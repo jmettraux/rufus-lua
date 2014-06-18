@@ -21,7 +21,7 @@ describe Rufus::Lua::State do
 
     it 'returns nil for an unknown value/binding' do
 
-      @s['unknown'].should == nil
+      expect(@s['unknown']).to eq nil
     end
   end
 
@@ -30,56 +30,56 @@ describe Rufus::Lua::State do
     it 'evals true' do
 
       @s.eval('a = true')
-      @s['a'].should == true
+      expect(@s['a']).to eq true
     end
 
     it 'evals false' do
 
       @s.eval('a = false')
-      @s['a'].should == false
+      expect(@s['a']).to eq false
     end
 
     it 'evals strings' do
 
       @s.eval('a = "black adder"')
-      @s['a'].should == 'black adder'
+      expect(@s['a']).to eq 'black adder'
     end
 
     it 'evals additions' do
 
       @s.eval('a = 1 + 1')
-      @s['a'].should == 2.0
+      expect(@s['a']).to eq 2.0
     end
 
     it 'evals nested lookups' do
 
       @s.eval('a = { b = { c = 0 } }')
       @s.eval('_ = a.b.c')
-      @s['_'].should == 0
+      expect(@s['_']).to eq 0
     end
 
     #it 'returns the global environment' do
-    #  @s['_G'].should == {}
+    #  @s['_G']).to eq {}
     #end
 
     it 'returns numbers' do
 
-      @s.eval('return 7').should == 7.0
+      expect(@s.eval('return 7')).to eq 7.0
     end
 
     it 'returns multiple values' do
 
-      @s.eval('return 1, 2').should == [ 1.0, 2.0 ]
+      expect(@s.eval('return 1, 2')).to eq [ 1.0, 2.0 ]
     end
 
     it 'returns false' do
 
-      @s.eval('return false').should == false
+      expect(@s.eval('return false')).to eq false
     end
 
     it 'returns true' do
 
-      @s.eval('return true').should == true
+      expect(@s.eval('return true')).to eq true
     end
   end
 end
