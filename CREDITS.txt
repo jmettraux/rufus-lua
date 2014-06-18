@@ -4,10 +4,14 @@
 
 == authors
 
-John Mettraux  http://jmettraux.wordpress.com
+John Mettraux  http://jmettraux.lambda.io
 Alain Hoang  http://blogs.law.harvard.edu/hoanga/
-Scott Persinger  http://github.com/scottpersinger
+Scott Persinger  https://github.com/scottpersinger
 
+
+== contributors
+
+Nathanael Jones  https://github.com/nathanaeljones
 
 == inspiration
 
