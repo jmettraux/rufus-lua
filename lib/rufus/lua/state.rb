@@ -25,8 +25,6 @@
 
 module Rufus::Lua
 
-  VERSION = '1.1.0'
-
   #
   # An error class for this gem/library.
   #
