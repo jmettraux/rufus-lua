@@ -149,24 +149,30 @@ http://www.lua.org/ftp/lua-5.1.4.tar.gz
 
 then
 
-  tar xzvf lua-5.1.4.tar.gz
-  cd lua-5.1.4
+```
+tar xzvf lua-5.1.4.tar.gz
+cd lua-5.1.4
+```
 
 modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg00894.html
 
-  make
-  make macosx # or make linux ...
-  make -C src liblua.dylib
-  sudo cp src/liblua.dylib /usr/local/lib/
+```
+make
+make macosx # or make linux ...
+make -C src liblua.dylib
+sudo cp src/liblua.dylib /usr/local/lib/
 
-  sudo make macosx install
+sudo make macosx install
+```
 
 
 ## build dependencies
 
 The following gems are needed to run the specs
 
-  sudo gem install bacon
+```
+sudo gem install bacon
+```
 
 
 ## tested with
@@ -194,38 +200,18 @@ http://groups.google.com/group/rufus-ruby
 http://github.com/jmettraux/rufus-lua/issues
 
 
-## irc
-
-irc.freenode.net #ruote
-
-
 ## source
 
 http://github.com/jmettraux/rufus-lua
 
 ```
-  git clone git://github.com/jmettraux/rufus-lua.git
+git clone git://github.com/jmettraux/rufus-lua.git
 ```
 
 
-## credits
+## authors and credits
 
-many thanks to the authors of Ruby FFI, and of Lua
-
-* http://wiki.github.com/ffi/ffi
-* http://lua.org/
-
-
-## authors
-
-* John Mettraux, jmettraux@gmail.com, http://lambda.io/jmettraux
-* Alain Hoang, http://blogs.law.harvard.edu/hoanga/
-* Scott Persinger, http://github.com/scottpersinger/
-
-
-## the rest of Rufus
-
-http://rufus.rubyforge.org
+see [CREDITS.txt](CREDITS.txt)
 
 
 ## license
