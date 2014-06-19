@@ -1,7 +1,9 @@
 
 # rufus-lua
 
-Lua embedded in Ruby, via Ruby FFI
+Lua embedded in Ruby, via Ruby FFI.
+
+(Lua 5.1.x only, sorry).
 
 
 ## Lua
@@ -131,10 +133,6 @@ You can omit the table definition (only 1 level allowed here though) :
 The specs contain more examples :
 
 https://github.com/jmettraux/rufus-lua/tree/master/spec/
-
-rufus-lua's rdoc is at :
-
-http://rufus.rubyforge.org/rufus-lua/
 
 
 ## compiling liblua.dylib
