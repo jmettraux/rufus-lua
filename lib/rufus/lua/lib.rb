@@ -35,24 +35,39 @@ module Lua
     #
     # locate the dynamic library
 
-    paths = Array(
+    @path =
       ENV['LUA_LIB'] ||
-      Dir.glob('/usr/lib/liblua*.so') +
-      Dir.glob('/usr/local/lib/liblua*.so') +
-      Dir.glob('/opt/local/lib/liblua*.so') +
-      Dir.glob('/usr/lib/liblua*.dylib') +
-      Dir.glob('/usr/local/lib/liblua*.dylib') +
-      Dir.glob('/opt/local/lib/liblua*.dylib'))
+        # developer points to the right lib
+      (
+        Dir.glob('/usr/lib/liblua*.so') +
+        Dir.glob('/usr/lib/*/liblua*.so') +
+        Dir.glob('/usr/local/lib/liblua*.so') +
+        Dir.glob('/opt/local/lib/liblua*.so') +
+        Dir.glob('/usr/lib/liblua*.dylib') +
+        Dir.glob('/usr/local/lib/liblua*.dylib') +
+        Dir.glob('/opt/local/lib/liblua*.dylib')
+      ).first
+        # or else we attempt to find it from potential locations
 
     begin
 
-      ffi_lib(*paths)
+      ffi_lib(@path)
 
     rescue LoadError => le
-      raise(
-        "didn't find the lua dylib on your system, " +
-        "see https://github.com/jmettraux/rufus-lua/ to learn how to get it"
+
+      fail RuntimeError.new(
+        "Didn't find the Lua dynamic library on your system. " +
+        "Set LUA_LIB in your environment if have that library or " +
+        "go to https://github.com/jmettraux/rufus-lua to learn how to " +
+        "get it."
       )
+    end
+
+    # Rufus::Lua::Lib.path returns the path to the library used.
+    #
+    def self.path
+
+      @path
     end
 
     #

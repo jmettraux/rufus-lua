@@ -173,6 +173,13 @@ jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
 
 ruby-ffi 0.4.0 and 0.5.0
 
+I run the specs with
+
+```
+bundle install # first time only
+bundle exec rspec
+```
+
 
 ## dependencies
 
