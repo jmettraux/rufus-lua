@@ -81,6 +81,7 @@ module Lua
 
     attach_function :luaL_openlibs, [ :pointer ], :void
 
+    attach_function :lua_call, [ :pointer, :int, :int ], :void
     %w[ base package string table math io os debug ].each do |libname|
       attach_function "luaopen_#{libname}", [ :pointer ], :void
     end

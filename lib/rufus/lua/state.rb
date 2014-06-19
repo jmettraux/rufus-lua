@@ -383,7 +383,7 @@ module Rufus::Lua
           Lib.luaL_openlibs(@pointer)
           break
         else
-          Lib.send("luaopen_#{libname}", @pointer)
+          load_individual_library(libname)
         end
       end
 
@@ -585,6 +585,25 @@ module Rufus::Lua
       raise "State got closed, cannot proceed" unless @pointer
       Lib.lua_gc(@pointer, LUA_GCRESTART, 0)
     end
+
+  private
+
+    # #load_individual_library(libname) - load a lua library via lua_call().
+    #
+    # This is needed because is the Lua 5.1 Reference Manual Section 5
+    # (http://www.lua.org/manual/5.1/manual.html#5) it says:
+    #
+    # "The luaopen_* functions (to open libraries) cannot be called
+    # directly, like a regular C function. They must be called through
+    # Lua, like a Lua function."
+    #
+    # "..you must call them like any other Lua C function, e.g., by using lua_call."
+    def load_individual_library(libname)
+      Lib.lua_pushcclosure(@pointer, lambda { |pointer| Lib.send("luaopen_#{libname}", @pointer) }, 0)
+      Lib.lua_pushstring(@pointer, (libname.to_s == "base" ? "" : libname.to_s))
+      Lib.lua_call(@pointer, 1, 0)
+    end
+
   end
 end
 
