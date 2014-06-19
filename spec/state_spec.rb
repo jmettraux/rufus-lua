@@ -28,10 +28,6 @@ describe Rufus::Lua::State do
 
     it 'loads only specific libs when told so' do
 
-      #@s = Rufus::Lua::State.new([ :math, :io ])
-        #
-        # loading io result in a PANIC (macsox at least)
-
       @s = Rufus::Lua::State.new([ :os, :math ])
       expect(@s.eval('return io;')).to be nil
       expect(@s.eval('return os;')).not_to be nil
@@ -73,6 +69,7 @@ describe Rufus::Lua::State do
     it 'accepts setting array values directly' do
 
       @s['a'] = [ true, false, %w[ alpha bravo charly ] ]
+
       expect(@s['a'].to_a[0]).to be true
       expect(@s['a'].to_a[2].to_a).to eq %w[ alpha bravo charly ]
     end
@@ -80,16 +77,29 @@ describe Rufus::Lua::State do
     it 'accepts setting hash values directly' do
 
       @s['a'] = { 'a' => 'alpha', 'b' => 'bravo' }
+
       expect(@s['a'].to_h).to eq({ 'a' => 'alpha', 'b' => 'bravo' })
     end
   end
 
   context 'gh-6 panic: unprotected error' do
 
+    it 'does not happen when loading io alone' do
+
+      state = Rufus::Lua::State.new(%w[ io ])
+
+      expect(state.eval('return io;')).not_to be nil
+      expect(state.eval('return math;')).to be nil
+      state.close
+    end
+
     it 'does not happen' do
 
       state = Rufus::Lua::State.new(%w[ base table string math package ])
-      expect(true).to be true
+
+      expect(state.eval('return table;')).not_to be nil
+      expect(state.eval('return math;')).not_to be nil
+      state.close
     end
   end
 end

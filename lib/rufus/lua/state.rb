@@ -375,17 +375,7 @@ module Rufus::Lua
 
       @pointer = Lib.luaL_newstate
 
-      Array(include_libs).each do |libname|
-
-        if libname == false
-          break
-        elsif libname == true
-          Lib.luaL_openlibs(@pointer)
-          break
-        else
-          load_individual_library(libname)
-        end
-      end
+      open_libraries(include_libs)
 
       #
       # preparing library methods cache
@@ -586,9 +576,7 @@ module Rufus::Lua
       Lib.lua_gc(@pointer, LUA_GCRESTART, 0)
     end
 
-  private
-
-    # #load_individual_library(libname) - load a lua library via lua_call().
+    # #open_library(libname) - load a lua library via lua_call().
     #
     # This is needed because is the Lua 5.1 Reference Manual Section 5
     # (http://www.lua.org/manual/5.1/manual.html#5) it says:
@@ -597,13 +585,29 @@ module Rufus::Lua
     # directly, like a regular C function. They must be called through
     # Lua, like a Lua function."
     #
-    # "..you must call them like any other Lua C function, e.g., by using lua_call."
-    def load_individual_library(libname)
-      Lib.lua_pushcclosure(@pointer, lambda { |pointer| Lib.send("luaopen_#{libname}", @pointer) }, 0)
-      Lib.lua_pushstring(@pointer, (libname.to_s == "base" ? "" : libname.to_s))
-      Lib.lua_call(@pointer, 1, 0)
+    # "..you must call them like any other Lua C function, e.g., by using
+    # lua_call."
+    #
+    # (by Matthew Nielsen - https://github.com/xunker)
+    #
+    def open_library(libname)
+
+      Lib.lua_pushcclosure(
+        @pointer, lambda { |ptr| Lib.send("luaopen_#{libname}", @pointer) }, 0)
+      Lib.lua_pushstring(
+        @pointer, (libname.to_s == "base" ? "" : libname.to_s))
+      Lib.lua_call(
+        @pointer, 1, 0)
     end
 
+    def open_libraries(libs)
+
+      if libs == true
+        Lib.luaL_openlibs(@pointer)
+      elsif libs.is_a?(Array)
+        libs.each { |l| open_library(l) }
+      end
+    end
   end
 end
 
