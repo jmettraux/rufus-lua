@@ -51,6 +51,8 @@ module Lua
 
     begin
 
+      ffi_lib_flags(:lazy, :global)
+
       ffi_lib(@path)
 
     rescue LoadError => le

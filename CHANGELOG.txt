@@ -8,6 +8,7 @@
 - remove double VERSION (Nathanael Jones - https://github.com/nathanaeljones)
 - load only one Lua lib (Thanks Nathanael)
 - add Rufus::Lua::Lib.path to learn which Lua lib got loaded (idea Nathanael)
+- set `ffi_lib_flags(:lazy, :global)` before loading Lua (thanks Nathanael)
 
 
 == rufus-lua - 1.1.0    released 2009/09/30
