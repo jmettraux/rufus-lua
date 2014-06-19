@@ -37,7 +37,7 @@ module Rufus::Lua
     #
     attr_reader :ref
 
-    def initialize (pointer)
+    def initialize(pointer)
 
       @pointer = pointer
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
@@ -87,7 +87,7 @@ module Rufus::Lua
 
     # Calls the Lua function.
     #
-    def call (*args)
+    def call(*args)
 
       bottom = stack_top
 
@@ -108,7 +108,7 @@ module Rufus::Lua
 
     # Resumes the coroutine
     #
-    def resume (*args)
+    def resume(*args)
 
       bottom = stack_top
 
@@ -174,7 +174,7 @@ module Rufus::Lua
 
     # Returns the value behind the key, or else nil.
     #
-    def [] (k)
+    def [](k)
 
       load_onto_stack # table
       stack_push(k) # key
@@ -186,7 +186,7 @@ module Rufus::Lua
     #
     # TODO : have something for adding in the array part...
     #
-    def []= (k, v)
+    def []=(k, v)
 
       load_onto_stack
 
@@ -281,7 +281,7 @@ module Rufus::Lua
     #   @s.eval("return { 1, 2, car = 'benz' }").to_a(false)
     #     # => [1.0, 2.0, ["car", "benz"]]
     #
-    def to_a (pure=true)
+    def to_a(pure=true)
 
       h = self.to_h
 

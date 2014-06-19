@@ -39,7 +39,7 @@ module Rufus::Lua
   #     #
   #     # => '{ "a": "A", "b": 2 }'
   #
-  def self.to_lua_s (o)
+  def self.to_lua_s(o)
 
     case o
 
@@ -62,7 +62,7 @@ module Rufus::Lua
   # Turns a Ruby Array or Hash instance into a Lua parseable string
   # representation.
   #
-  def self.to_lua_table_s (o)
+  def self.to_lua_table_s(o)
 
     s = if o.is_a?(Array)
       o.collect { |e| to_lua_s(e) }

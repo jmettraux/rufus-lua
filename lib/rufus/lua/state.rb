@@ -80,7 +80,7 @@ module Rufus::Lua
     #
     # (Not sure yet about this yet)
     #
-    def fetch_library_method (s)
+    def fetch_library_method(s)
 
       if m = @pointer.__lib_method_cache[s]
         m
@@ -91,7 +91,7 @@ module Rufus::Lua
 
     # This method holds the 'eval' mechanism.
     #
-    def loadstring_and_call (s)
+    def loadstring_and_call(s)
 
       bottom = stack_top
 
@@ -132,7 +132,7 @@ module Rufus::Lua
 
     # Outputs the stack to the stdout
     #
-    def print_stack (msg=nil)
+    def print_stack(msg=nil)
 
       puts "\n=stack= #{msg ? "(#{msg})" : ""}"
       puts "top : #{stack_top}"
@@ -151,7 +151,7 @@ module Rufus::Lua
     # of the Lua state's stack. There is an optional pos paramter to peek
     # at other elements of the stack.
     #
-    def stack_type_at (pos=-1)
+    def stack_type_at(pos=-1)
 
       type = Lib.lua_type(@pointer, pos)
       tname = Lib.lua_typename(@pointer, type)
@@ -162,7 +162,7 @@ module Rufus::Lua
     # Fetches the top value on the stack (or the one specified by the optional
     # pos parameter), but does not 'pop' it.
     #
-    def stack_fetch (pos=-1)
+    def stack_fetch(pos=-1)
 
       type, tname = stack_type_at(pos)
 
@@ -209,7 +209,7 @@ module Rufus::Lua
 
     # Given a Ruby instance, will attempt to push it on the Lua stack.
     #
-    def stack_push (o)
+    def stack_push(o)
 
       return stack_push(o.to_lua) if o.respond_to?(:to_lua)
 
@@ -237,7 +237,7 @@ module Rufus::Lua
 
     # Pushes a hash on top of the Lua stack.
     #
-    def stack_push_hash (h)
+    def stack_push_hash(h)
 
       Lib.lua_createtable(@pointer, 0, h.size)
         # since we already know the size of the table...
@@ -251,7 +251,7 @@ module Rufus::Lua
 
     # Pushes an array on top of the Lua stack.
     #
-    def stack_push_array (a)
+    def stack_push_array(a)
 
       Lib.lua_createtable(@pointer, a.size, 0)
         # since we already know the size of the table...
@@ -265,21 +265,21 @@ module Rufus::Lua
 
     # Loads a Lua global value on top of the stack
     #
-    def stack_load_global (name)
+    def stack_load_global(name)
 
       Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
     end
 
     # Loads the Lua object registered with the given ref on top of the stack
     #
-    def stack_load_ref (ref)
+    def stack_load_ref(ref)
 
       Lib.lua_rawgeti(@pointer, LUA_REGISTRYINDEX, @ref)
     end
 
     # Returns the result of a function call or a coroutine.resume().
     #
-    def return_result (stack_bottom)
+    def return_result(stack_bottom)
 
       count = stack_top - stack_bottom
 
@@ -295,7 +295,7 @@ module Rufus::Lua
     #
     # Will raise an error in case of failure.
     #
-    def pcall (stack_bottom, arg_count)
+    def pcall(stack_bottom, arg_count)
 
       #err = Lib.lua_pcall(@pointer, 0, 1, 0)
         # when there's only 1 return value, use LUA_MULTRET (-1) the
@@ -311,7 +311,7 @@ module Rufus::Lua
     # Resumes a coroutine (that has been placed, under its arguments,
     # on top of the stack).
     #
-    #def do_resume (stack_bottom, arg_count)
+    #def do_resume(stack_bottom, arg_count)
     #  err = Lib.lua_resume(@pointer, arg_count)
     #  raise_if_error('eval:resume', err)
     #  return_result(stack_bottom)
@@ -321,7 +321,7 @@ module Rufus::Lua
     # This method will raise an error with err > 0, else it will immediately
     # return.
     #
-    def raise_if_error (where, err)
+    def raise_if_error(where, err)
 
       return if err < 1
 
@@ -341,7 +341,7 @@ module Rufus::Lua
     # Given the name of a Lua global variable, will return its value (or nil
     # if there is nothing bound under that name).
     #
-    def get_global (name)
+    def get_global(name)
 
       stack_load_global(name)
       stack_pop
@@ -371,7 +371,7 @@ module Rufus::Lua
     # The list may include 'base', 'package', 'table', 'string', 'math', 'io',
     # 'os' and 'debug'.
     #
-    def initialize (include_libs=true)
+    def initialize(include_libs=true)
 
       @pointer = Lib.luaL_newstate
 
@@ -404,7 +404,7 @@ module Rufus::Lua
 
     # Evaluates a piece (string) of Lua code within the state.
     #
-    def eval (s)
+    def eval(s)
 
       loadstring_and_call(s)
     end
@@ -414,7 +414,7 @@ module Rufus::Lua
     #   state.eval('a = 1 + 2')
     #   puts state['a'] # => "3.0"
     #
-    def [] (k)
+    def [](k)
 
       k.index('.') ? self.eval("return #{k}") : get_global(k)
     end
@@ -424,7 +424,7 @@ module Rufus::Lua
     #   state['var'] = [ 1, 2, 3 ]
     #   puts state['var'].to_a[0] # => 1
     #
-    def []= (k, v)
+    def []=(k, v)
 
       #puts; puts("#{k} = #{Rufus::Lua.to_lua_s(v)}")
       self.eval("#{k} = #{Rufus::Lua.to_lua_s(v)}")
@@ -471,7 +471,7 @@ module Rufus::Lua
     #   s.eval(return is_array({ 'a' = 'b' }))
     #     # => false
     #
-    def function (name, opts={}, &block)
+    def function(name, opts={}, &block)
 
       raise 'please pass a block for the body of the function' unless block
 
