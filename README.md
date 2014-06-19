@@ -179,13 +179,6 @@ ruby-ffi 0.4.0 and 0.5.0
 the ruby gem 'ffi'
 
 
-## mailing list
-
-On the rufus-ruby list :
-
-http://groups.google.com/group/rufus-ruby
-
-
 ## issue tracker
 
 http://github.com/jmettraux/rufus-lua/issues
