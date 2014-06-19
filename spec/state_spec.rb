@@ -83,5 +83,14 @@ describe Rufus::Lua::State do
       expect(@s['a'].to_h).to eq({ 'a' => 'alpha', 'b' => 'bravo' })
     end
   end
+
+  context 'gh-6 panic: unprotected error' do
+
+    it 'does not happen' do
+
+      state = Rufus::Lua::State.new(%w[ base table string math package ])
+      expect(true).to be true
+    end
+  end
 end
 
