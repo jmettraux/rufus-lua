@@ -2,6 +2,12 @@
 = rufus-lua CHANGELOG.txt
 
 
+== rufus-lua - 1.1.1    not yet released
+
+- move from bacon to rspec
+- remove double VERSION (Nathanael Jones - https://github.com/nathanaeljones)
+
+
 == rufus-lua - 1.1.0    released 2009/09/30
 
 - todo      : Ruby symbols are passed to Lua as strings (Scott)
