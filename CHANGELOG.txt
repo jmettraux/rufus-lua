@@ -6,6 +6,8 @@
 
 - move from bacon to rspec
 - remove double VERSION (Nathanael Jones - https://github.com/nathanaeljones)
+- load only one Lua lib (Thanks Nathanael)
+- add Rufus::Lua::Lib.path to learn which Lua lib got loaded (idea Nathanael)
 
 
 == rufus-lua - 1.1.0    released 2009/09/30
