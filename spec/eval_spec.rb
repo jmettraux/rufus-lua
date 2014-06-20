@@ -81,6 +81,24 @@ describe Rufus::Lua::State do
 
       expect(@s.eval('return true')).to eq true
     end
+
+    context 'and errors' do
+
+      it 'makes the file and line available' do
+
+        le = nil
+        begin
+          @s.eval('error(77)')
+        rescue Rufus::Lua::LuaError => le
+        end
+
+        expect(le.kind).to eq('eval:pcall')
+        expect(le.msg).to eq('[string "line"]:1: 77')
+        expect(le.errcode).to eq(2)
+        expect(le.file).to eq(__FILE__)
+        expect(le.line).to eq(__LINE__ - 8)
+      end
+    end
   end
 end
 

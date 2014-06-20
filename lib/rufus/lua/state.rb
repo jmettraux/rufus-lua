@@ -28,7 +28,21 @@ module Rufus::Lua
   #
   # An error class for this gem/library.
   #
-  class LuaError < RuntimeError; end
+  class LuaError < RuntimeError
+
+    attr_reader :kind, :errcode, :msg, :file, :line
+
+    def initialize(kind, errcode, msg, file_and_line)
+
+      @kind = kind
+      @errcode = errcode
+      @msg = msg
+      @file, @line = file_and_line
+
+      super(
+        "#{@kind} : '#{@msg}' (#{@errcode}) #{File.basename(@file)}:#{@line}")
+    end
+  end
 
   #
   # Rufus::Lua::Lib contains all the raw C API Lua methods. The methods
@@ -85,20 +99,21 @@ module Rufus::Lua
       if m = @pointer.__lib_method_cache[s]
         m
       else
-        @pointer.__lib_method_cache[s] = loadstring_and_call("return #{s}")
+        @pointer.__lib_method_cache[s] =
+          loadstring_and_call("return #{s}", [ __FILE__, __LINE__ ])
       end
     end
 
     # This method holds the 'eval' mechanism.
     #
-    def loadstring_and_call(s)
+    def loadstring_and_call(s, file_and_line)
 
       bottom = stack_top
 
       err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
-      raise_if_error('eval:compile', err)
+      fail_if_error('eval:compile', err, file_and_line)
 
-      pcall(bottom, 0) # arg_count is set to 0
+      pcall(bottom, 0, file_and_line) # arg_count is set to 0
     end
 
     # Returns a string representation of the state's stack.
@@ -295,14 +310,14 @@ module Rufus::Lua
     #
     # Will raise an error in case of failure.
     #
-    def pcall(stack_bottom, arg_count)
+    def pcall(stack_bottom, arg_count, file_and_line)
 
       #err = Lib.lua_pcall(@pointer, 0, 1, 0)
         # when there's only 1 return value, use LUA_MULTRET (-1) the
         # rest of the time
 
       err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, 0)
-      raise_if_error('eval:pcall', err)
+      fail_if_error('eval:pcall', err, file_and_line)
 
       return_result(stack_bottom)
     end
@@ -313,7 +328,7 @@ module Rufus::Lua
     #
     #def do_resume(stack_bottom, arg_count)
     #  err = Lib.lua_resume(@pointer, arg_count)
-    #  raise_if_error('eval:resume', err)
+    #  fail_if_error('eval:resume', err)
     #  return_result(stack_bottom)
     #end
     #++
@@ -321,7 +336,7 @@ module Rufus::Lua
     # This method will raise an error with err > 0, else it will immediately
     # return.
     #
-    def raise_if_error(where, err)
+    def fail_if_error(kind, err, file_and_line)
 
       return if err < 1
 
@@ -335,7 +350,7 @@ module Rufus::Lua
       s = Lib.lua_tolstring(@pointer, -1, nil)
       Lib.lua_settop(@pointer, -2)
 
-      raise LuaError.new("#{where} : '#{s}' (#{err})")
+      fail LuaError.new(kind, err, s, file_and_line)
     end
 
     # Given the name of a Lua global variable, will return its value (or nil
@@ -396,7 +411,7 @@ module Rufus::Lua
     #
     def eval(s)
 
-      loadstring_and_call(s)
+      loadstring_and_call(s, Rufus::Lua.determine_file_and_line)
     end
 
     # Returns a value set at the 'global' level in the state.
@@ -406,7 +421,7 @@ module Rufus::Lua
     #
     def [](k)
 
-      k.index('.') ? self.eval("return #{k}") : get_global(k)
+      k.index('.') ?  self.eval("return #{k}") : get_global(k)
     end
 
     # Allows for setting a Lua varible immediately.

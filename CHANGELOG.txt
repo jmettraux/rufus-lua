@@ -11,6 +11,8 @@
 - set `ffi_lib_flags(:lazy, :global)` before loading Lua (thanks Nathanael)
 - fix panic error when creating new Rufus::Lua::State with specific
   list of lib to load (fix by Matthew Nielsen - https://github.com/xunker)
+- enhanced Rufus::Lua::LuaError by adding file and line - based on
+  a suggestion by Nathanael Jones)
 
 
 == rufus-lua - 1.1.0    released 2009/09/30

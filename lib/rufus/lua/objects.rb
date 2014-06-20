@@ -60,7 +60,7 @@ module Rufus::Lua
     #
     def load_onto_stack
 
-      raise LuaError.new(
+      fail RuntimeError.new(
         "#{self.class} got freed, cannot re-access it directly"
       ) unless @ref
 
@@ -97,7 +97,7 @@ module Rufus::Lua
       args.each { |arg| stack_push(arg) }
         # push arguments on stack
 
-      pcall(bottom, args.length)
+      pcall(bottom, args.length, Rufus::Lua.determine_file_and_line)
     end
   end
 
@@ -117,7 +117,7 @@ module Rufus::Lua
       load_onto_stack
       args.each { |arg| stack_push(arg) }
 
-      pcall(bottom, args.length + 1)
+      pcall(bottom, args.length + 1, Rufus::Lua.determine_file_and_line)
     end
 
     # Returns the string status of the coroutine :
@@ -130,7 +130,7 @@ module Rufus::Lua
       fetch_library_method('coroutine.status').load_onto_stack
       load_onto_stack
 
-      pcall(bottom, 1)
+      pcall(bottom, 1, Rufus::Lua.determine_file_and_line)
     end
   end
 

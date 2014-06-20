@@ -57,7 +57,7 @@ describe Rufus::Lua::State do
       t.free
 
       expect(t.ref).to eq nil
-      expect(lambda { t.to_h }).to raise_error(Rufus::Lua::LuaError)
+      expect(lambda { t.to_h }).to raise_error(RuntimeError)
     end
 
     it 'indexes tables' do

@@ -72,5 +72,18 @@ module Rufus::Lua
 
     "{ #{s.join(', ')} }"
   end
+
+  CALLER_REX = /^(.+):(\d+):/
+  DIR = File.dirname(__FILE__)
+
+  def self.determine_file_and_line
+
+    caller.each do |line|
+      m = CALLER_REX.match(line)
+      return [ m[1], m[2].to_i ] if m && File.dirname(m[1]) != DIR
+    end
+
+    [ '', -1 ]
+  end
 end
 
