@@ -97,7 +97,7 @@ module Rufus::Lua
       args.each { |arg| stack_push(arg) }
         # push arguments on stack
 
-      pcall(bottom, args.length, Rufus::Lua.determine_file_and_line)
+      pcall(bottom, args.length)
     end
   end
 
@@ -117,7 +117,7 @@ module Rufus::Lua
       load_onto_stack
       args.each { |arg| stack_push(arg) }
 
-      pcall(bottom, args.length + 1, Rufus::Lua.determine_file_and_line)
+      pcall(bottom, args.length + 1)
     end
 
     # Returns the string status of the coroutine :
@@ -130,7 +130,7 @@ module Rufus::Lua
       fetch_library_method('coroutine.status').load_onto_stack
       load_onto_stack
 
-      pcall(bottom, 1, Rufus::Lua.determine_file_and_line)
+      pcall(bottom, 1)
     end
   end
 
