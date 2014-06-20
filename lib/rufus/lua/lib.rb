@@ -35,7 +35,7 @@ module Lua
     #
     # locate the dynamic library
 
-    @path =
+    paths =
       ENV['LUA_LIB'] ||
         # developer points to the right lib
       (
@@ -46,14 +46,14 @@ module Lua
         Dir.glob('/usr/lib/liblua*.dylib') +
         Dir.glob('/usr/local/lib/liblua*.dylib') +
         Dir.glob('/opt/local/lib/liblua*.dylib')
-      ).first
+      )
         # or else we attempt to find it from potential locations
 
     begin
 
       ffi_lib_flags(:lazy, :global)
 
-      ffi_lib(@path)
+      ffi_lib(paths)
 
     rescue LoadError => le
 
@@ -61,7 +61,7 @@ module Lua
         "Didn't find the Lua dynamic library on your system. " +
         "Set LUA_LIB in your environment if have that library or " +
         "go to https://github.com/jmettraux/rufus-lua to learn how to " +
-        "get it."
+        "get it. (paths: #{paths.inspect})"
       )
     end
 
@@ -69,7 +69,9 @@ module Lua
     #
     def self.path
 
-      @path
+      f = ffi_libraries.first
+
+      f ? f.name : nil
     end
 
     #
