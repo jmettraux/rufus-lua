@@ -119,12 +119,12 @@ describe 'lua strings' do
 
         function routine()
           local retval = hostfunc()
-          cy(retval)
+          cy({retval,"luastring"})
         end
         setfenv(routine, env)
         co = coroutine.create(routine)
         a, b = coroutine.resume(co)
-        return {a,b}}).to_ruby).to eq([true,"success"])
+        return {a,b}}).to_ruby[1].to_ruby).to eq(["success", "luastring"])
     end
   end
 end
