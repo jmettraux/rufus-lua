@@ -200,8 +200,9 @@ module Rufus::Lua
         when TNIL then nil
 
         when TSTRING then
-          len = Lib.lua_objlen(@pointer, pos)
-          Lib.lua_tolstring(@pointer, pos, nil).read_string(len)
+          len = FFI::MemoryPointer.new(:size_t)
+          ptr = Lib.lua_tolstring(@pointer, pos, len)
+          ptr.read_string(len.read_long)
 
         when TBOOLEAN then (Lib.lua_toboolean(@pointer, pos) == 1)
         when TNUMBER then Lib.lua_tonumber(@pointer, pos)
