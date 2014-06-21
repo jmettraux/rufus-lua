@@ -94,6 +94,38 @@ describe 'lua strings' do
       expect(output["length"]).to eq(3)
     end
 
+    it 'should not convert a string into a function' do
+      @s.function "host_function" do
+        "success"
+      end
+      expect(@s.eval(%{
+        function routine()
+          local retval = host_function()
+          return retval
+        end
+        return routine()})).to eq("success")
+    end
+
+    it 'should not convert a string into a function when coroutines are in use' do
+      @s.function "host_function" do
+        "success"
+      end
+      expect(@s.eval(%{
+        function hf()
+          return host_function()
+        end
+        env = {tostring=tostring,cy = coroutine.yield,hostfunc=hf}
+        env["_G"] = env
+
+        function routine()
+          local retval = hostfunc()
+          cy(retval)
+        end
+        setfenv(routine, env)
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        return {a,b}}).to_ruby).to eq([true,"success"])
+    end
   end
 end
 
