@@ -26,7 +26,7 @@ ruby-ffi based bridge from Ruby to Lua
     '*.gemspec', '*.txt', '*.rdoc', '*.md'
   ]
 
-  s.add_dependency 'ffi'
+  s.add_dependency 'ffi', '~> 1.9'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 2.13.0'
