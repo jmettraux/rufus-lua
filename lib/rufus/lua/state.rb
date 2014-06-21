@@ -222,8 +222,7 @@ module Rufus::Lua
         when Fixnum then Lib.lua_pushinteger(@pointer, o)
         when Float then Lib.lua_pushnumber(@pointer, o)
 
-        when String then stack_push_string(o)
-
+        when String then Lib.lua_pushlstring(@pointer, o, o.unpack('C*').size)
         when Symbol then Lib.lua_pushstring(@pointer, o.to_s)
 
         when Hash then stack_push_hash(o)
@@ -233,22 +232,6 @@ module Rufus::Lua
           ArgumentError.new(
             "don't know how to pass Ruby instance of #{o.class} to Lua"))
       end
-    end
-
-    # Pushes a string to top of the Lua stack.
-    #
-    # Based on a suggestion by Nathanael Jones in
-    # https://github.com/jmettraux/rufus-lua/issues/14
-    #
-    def stack_push_string(s)
-
-      arr = s.unpack('C*')
-      len = arr.size
-
-      buf =  FFI::MemoryPointer.new(:char, len)
-      buf.put_array_of_char(0, arr)
-
-      Lib.lua_pushlstring(@pointer, buf, len)
     end
 
     # Pushes a hash on top of the Lua stack.
