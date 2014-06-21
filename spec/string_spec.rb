@@ -23,16 +23,14 @@ describe 'lua strings' do
 
     it 'are not truncated when returned to Ruby' do
 
-      s = @s.eval('return string.char(1, 0, 0)')
+      s = @s.eval('return string.char(1, 0, 0, 2, 0, 0)')
 
-      expect(s.bytes.to_a).to eq([ 1, 0, 0 ])
+      expect(s.bytes.to_a).to eq([ 1, 0, 0, 2, 0, 0 ])
     end
 
     it 'are not truncated when passed from Ruby to Lua and back' do
 
-      #pending "Ruby FFI doesn't allow it"
-
-      s = [ 65, 66, 0, 67, 68 ].pack('c*')
+      s = [ 65, 66, 0, 67, 0, 0, 68, 0 ].pack('c*')
 
       f = @s.eval(%{
         f = function(s)
@@ -41,7 +39,7 @@ describe 'lua strings' do
         return f
       })
 
-      expect(f.call(s).to_h).to eq({ 's' => s, 'l' => 5 })
+      expect(f.call(s).to_h).to eq({ 's' => s, 'l' => 8.0 })
     end
   end
 end
