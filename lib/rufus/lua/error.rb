@@ -22,12 +22,41 @@
 # Made in Japan.
 #++
 
-require 'rufus/lua/version'
 
-require 'rufus/lua/lib'
+module Rufus::Lua
 
-require 'rufus/lua/error'
-require 'rufus/lua/state'
-require 'rufus/lua/utils'
-require 'rufus/lua/objects'
+  #
+  # An error class for rufus-lua.
+  #
+  class LuaError < RuntimeError
+
+    attr_reader :kind, :errcode, :msg, :file, :line
+
+    def initialize(kind, errcode, msg)
+
+      @kind = kind
+      @errcode = errcode
+      @msg = msg
+      @file, @line = determine_file_and_line
+
+      super(
+        "#{@kind} : '#{@msg}' (#{@errcode}) #{File.basename(@file)}:#{@line}")
+    end
+
+    protected
+
+    CALLER_REX = /^(.+):(\d+):/
+    DIR = File.dirname(__FILE__)
+
+    def determine_file_and_line
+
+      caller.each do |line|
+        m = CALLER_REX.match(line)
+        return [ m[1], m[2].to_i ] if m && File.dirname(m[1]) != DIR
+      end
+
+      [ '', -1 ]
+    end
+  end
+end
 

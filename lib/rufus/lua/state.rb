@@ -26,40 +26,6 @@
 module Rufus::Lua
 
   #
-  # An error class for this gem/library.
-  #
-  class LuaError < RuntimeError
-
-    attr_reader :kind, :errcode, :msg, :file, :line
-
-    def initialize(kind, errcode, msg)
-
-      @kind = kind
-      @errcode = errcode
-      @msg = msg
-      @file, @line = determine_file_and_line
-
-      super(
-        "#{@kind} : '#{@msg}' (#{@errcode}) #{File.basename(@file)}:#{@line}")
-    end
-
-    protected
-
-    CALLER_REX = /^(.+):(\d+):/
-    DIR = File.dirname(__FILE__)
-
-    def determine_file_and_line
-
-      caller.each do |line|
-        m = CALLER_REX.match(line)
-        return [ m[1], m[2].to_i ] if m && File.dirname(m[1]) != DIR
-      end
-
-      [ '', -1 ]
-    end
-  end
-
-  #
   # Rufus::Lua::Lib contains all the raw C API Lua methods. The methods
   # here are shared by all the rufus-lua classes that have to deal with
   # a Lua state. They are protected since they aren't meant to be called
