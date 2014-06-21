@@ -206,6 +206,32 @@ module Rufus::Lua
       Lib.lua_settop(@pointer, new_top)
     end
 
+    def stack_push_string_unit8(s)
+      array = s.unpack('C*')
+      size = array.size
+      buf =  FFI::MemoryPointer.new(:char, size) # Create a memory pointer sized to the data
+      buf.put_array_of_uint8(0, array)
+      Lib.lua_pushlstring(@pointer, buf, size)
+    end
+
+    def stack_push_string_bytes(s)
+      size = s.bytesize
+      buf =  FFI::MemoryPointer.new(:char, size) # Create a memory pointer sized to the data
+      buf.put_bytes(0, s, 0, size)  
+      Lib.lua_pushlstring(@pointer, buf, size)
+    end
+
+    def stack_push_string_string(s)
+      size = s.bytesize
+      buf =  FFI::MemoryPointer.new(:char, size) # Create a memory pointer sized to the data
+      buf.write_string(s, size) 
+      Lib.lua_pushlstring(@pointer, buf, size)
+    end
+
+    def stack_push_string(s)
+      stack_push_string_string(s)
+    end
+
     # Given a Ruby instance, will attempt to push it on the Lua stack.
     #
     def stack_push(o)
@@ -222,8 +248,9 @@ module Rufus::Lua
         when Fixnum then Lib.lua_pushinteger(@pointer, o)
         when Float then Lib.lua_pushnumber(@pointer, o)
 
-        when String then Lib.lua_pushlstring(@pointer, o, o.unpack('C*').size)
-        when Symbol then Lib.lua_pushstring(@pointer, o.to_s)
+        when String then stack_push_string(o)
+
+        when Symbol then stack_push_string(o.to_s)
 
         when Hash then stack_push_hash(o)
         when Array then stack_push_array(o)
