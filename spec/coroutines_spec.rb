@@ -60,6 +60,27 @@ describe Rufus::Lua::State do
       expect(@s['co'].resume(s)).to eq [ true, s ]
       expect(@s['co'].resume()).to eq [ true, s ]
     end
+
+    # compressed version of the spec proposed by Nathanael Jones
+    # in https://github.com/nathanaeljones/rufus-lua/commit/179184aS
+    #
+    it 'yields the right value' do
+
+      @s.function :host_function do
+        'success'
+      end
+      r = @s.eval(%{
+        function routine()
+          coroutine.yield(host_function())
+          --coroutine.yield("success") -- that works :-(
+        end
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        return { a, b }
+      }).to_ruby
+
+      expect(r).to eq([ true, 'success' ])
+    end
   end
 end
 
