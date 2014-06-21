@@ -93,7 +93,7 @@ module Lua
 
     attach_function :lua_toboolean, [ :pointer, :int ], :int
     attach_function :lua_tonumber, [ :pointer, :int ], :double
-    attach_function :lua_tolstring, [ :pointer, :int, :pointer ], :string
+    attach_function :lua_tolstring, [ :pointer, :int, :pointer ], :pointer
 
     attach_function :lua_type, [ :pointer, :int ], :int
     attach_function :lua_typename, [ :pointer, :int ], :string
@@ -116,6 +116,7 @@ module Lua
     attach_function :lua_pushinteger, [ :pointer, :int ], :pointer
     attach_function :lua_pushnumber, [ :pointer, :double ], :pointer
     attach_function :lua_pushstring, [ :pointer, :string ], :pointer
+    attach_function :lua_pushlstring, [ :pointer, :string, :int ], :pointer
 
     attach_function :lua_rawgeti, [ :pointer, :int, :int ], :void
 

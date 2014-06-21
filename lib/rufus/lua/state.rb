@@ -199,7 +199,10 @@ module Rufus::Lua
 
         when TNIL then nil
 
-        when TSTRING then Lib.lua_tolstring(@pointer, pos, nil)
+        when TSTRING then
+          len = Lib.lua_objlen(@pointer, pos)
+          Lib.lua_tolstring(@pointer, pos, nil).read_string(len)
+
         when TBOOLEAN then (Lib.lua_toboolean(@pointer, pos) == 1)
         when TNUMBER then Lib.lua_tonumber(@pointer, pos)
 
@@ -253,6 +256,7 @@ module Rufus::Lua
         when Float then Lib.lua_pushnumber(@pointer, o)
 
         when String then Lib.lua_pushstring(@pointer, o)
+        #when String then Lib.lua_pushlstring(@pointer, o, o.unpack('C*').size)
         when Symbol then Lib.lua_pushstring(@pointer, o.to_s)
 
         when Hash then stack_push_hash(o)
@@ -361,7 +365,7 @@ module Rufus::Lua
       #   the error handler function.
       # LUA_ERRERR: error while running the error handler function.
 
-      s = Lib.lua_tolstring(@pointer, -1, nil)
+      s = Lib.lua_tolstring(@pointer, -1, nil).read_string
       Lib.lua_settop(@pointer, -2)
 
       fail LuaError.new(kind, err, s)

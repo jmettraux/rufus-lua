@@ -13,6 +13,7 @@
   list of lib to load (fix by Matthew Nielsen - https://github.com/xunker)
 - enhanced Rufus::Lua::LuaError by adding file and line - based on
   a suggestion by Nathanael Jones)
+- read back Lua strings containing \0 bytes (thanks Nathanael Jones)
 
 
 == rufus-lua - 1.1.0    released 2009/09/30
