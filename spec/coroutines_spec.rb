@@ -46,6 +46,20 @@ describe Rufus::Lua::State do
       expect(@s['co'].resume(7)).to eq [ true, 7.0 ]
       expect(@s['co'].resume()).to eq [ true, 7.0 ]
     end
+
+    it 'can be resumed from Ruby (and is not averse to \0 bytes)' do
+
+      @s.eval(%{
+        co = coroutine.create(function (x)
+          while true do
+            coroutine.yield(x)
+          end
+        end)
+      })
+      s = [ 0, 64, 0, 0, 65, 0 ].pack('c*')
+      expect(@s['co'].resume(s)).to eq [ true, s ]
+      expect(@s['co'].resume()).to eq [ true, s ]
+    end
   end
 end
 
