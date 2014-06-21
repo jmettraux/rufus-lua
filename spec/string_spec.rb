@@ -30,7 +30,7 @@ describe 'lua strings' do
 
     it 'are not truncated when passed from Ruby to Lua and back' do
 
-      pending "Ruby FFI doesn't allow it"
+      #pending "Ruby FFI doesn't allow it"
 
       s = [ 65, 66, 0, 67, 68 ].pack('c*')
 

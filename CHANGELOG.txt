@@ -12,6 +12,7 @@
 - fix panic error when creating new Rufus::Lua::State with specific
   list of lib to load (fix by Matthew Nielsen - https://github.com/xunker)
 - read back Lua strings containing \0 bytes (thanks Nathanael Jones)
+- let Ruby strings containing \0 bytes go to the Lua side freely (thanks NJ)
 - enhanced Rufus::Lua::LuaError by adding filename and lineno - based on
   a suggestion by Nathanael Jones)
 - enhanced Rufus::Lua::State#eval by adding optional 'filename' and 'lineno'

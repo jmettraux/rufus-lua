@@ -116,7 +116,7 @@ module Lua
     attach_function :lua_pushinteger, [ :pointer, :int ], :pointer
     attach_function :lua_pushnumber, [ :pointer, :double ], :pointer
     attach_function :lua_pushstring, [ :pointer, :string ], :pointer
-    attach_function :lua_pushlstring, [ :pointer, :string, :int ], :pointer
+    attach_function :lua_pushlstring, [ :pointer, :pointer, :int ], :pointer
 
     attach_function :lua_rawgeti, [ :pointer, :int, :int ], :void
 
