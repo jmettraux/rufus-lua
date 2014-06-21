@@ -11,9 +11,11 @@
 - set `ffi_lib_flags(:lazy, :global)` before loading Lua (thanks Nathanael)
 - fix panic error when creating new Rufus::Lua::State with specific
   list of lib to load (fix by Matthew Nielsen - https://github.com/xunker)
-- enhanced Rufus::Lua::LuaError by adding file and line - based on
-  a suggestion by Nathanael Jones)
 - read back Lua strings containing \0 bytes (thanks Nathanael Jones)
+- enhanced Rufus::Lua::LuaError by adding filename and lineno - based on
+  a suggestion by Nathanael Jones)
+- enhanced Rufus::Lua::State#eval by adding optional 'filename' and 'lineno'
+  arguments (like Kernel.eval) (hint by Nathanael Jones)
 
 
 == rufus-lua - 1.1.0    released 2009/09/30

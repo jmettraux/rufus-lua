@@ -77,23 +77,23 @@ module Rufus::Lua
     #
     def fetch_library_method(s)
 
-      if m = @pointer.__lib_method_cache[s]
-        m
-      else
-        @pointer.__lib_method_cache[s] = loadstring_and_call("return #{s}")
-      end
+      m = @pointer.__lib_method_cache[s]
+      return m if m
+
+      @pointer.__lib_method_cache[s] =
+        loadstring_and_call("return #{s}", nil, nil, nil)
     end
 
     # This method holds the 'eval' mechanism.
     #
-    def loadstring_and_call(s)
+    def loadstring_and_call(s, binding, filename, lineno)
 
       bottom = stack_top
 
       err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
-      fail_if_error('eval:compile', err)
+      fail_if_error('eval:compile', err, binding, filename, lineno)
 
-      pcall(bottom, 0) # arg_count is set to 0
+      pcall(bottom, 0, binding, filename, lineno) # arg_count is set to 0
     end
 
     # Returns a string representation of the state's stack.
@@ -295,14 +295,14 @@ module Rufus::Lua
     #
     # Will raise an error in case of failure.
     #
-    def pcall(stack_bottom, arg_count)
+    def pcall(stack_bottom, arg_count, binding, filename, lineno)
 
       #err = Lib.lua_pcall(@pointer, 0, 1, 0)
         # when there's only 1 return value, use LUA_MULTRET (-1) the
         # rest of the time
 
       err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, 0)
-      fail_if_error('eval:pcall', err)
+      fail_if_error('eval:pcall', err, binding, filename, lineno)
 
       return_result(stack_bottom)
     end
@@ -313,7 +313,7 @@ module Rufus::Lua
     #
     #def do_resume(stack_bottom, arg_count)
     #  err = Lib.lua_resume(@pointer, arg_count)
-    #  fail_if_error('eval:resume', err)
+    #  fail_if_error('eval:resume', err, nil, nil, nil)
     #  return_result(stack_bottom)
     #end
     #++
@@ -321,7 +321,7 @@ module Rufus::Lua
     # This method will raise an error with err > 0, else it will immediately
     # return.
     #
-    def fail_if_error(kind, err)
+    def fail_if_error(kind, err, binding, filename, lineno)
 
       return if err < 1
 
@@ -335,7 +335,7 @@ module Rufus::Lua
       s = Lib.lua_tolstring(@pointer, -1, nil).read_string
       Lib.lua_settop(@pointer, -2)
 
-      fail LuaError.new(kind, err, s)
+      fail LuaError.new(kind, err, s, binding, filename, lineno)
     end
 
     # Given the name of a Lua global variable, will return its value (or nil
@@ -394,9 +394,9 @@ module Rufus::Lua
 
     # Evaluates a piece (string) of Lua code within the state.
     #
-    def eval(s)
+    def eval(s, binding=nil, filename=nil, lineno=nil)
 
-      loadstring_and_call(s)
+      loadstring_and_call(s, binding, filename, lineno)
     end
 
     # Returns a value set at the 'global' level in the state.

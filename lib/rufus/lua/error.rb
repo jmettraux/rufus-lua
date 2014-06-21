@@ -30,33 +30,57 @@ module Rufus::Lua
   #
   class LuaError < RuntimeError
 
-    attr_reader :kind, :errcode, :msg, :file, :line
+    attr_reader :kind, :errcode, :msg
+    attr_reader :binding, :filename, :lineno
 
-    def initialize(kind, errcode, msg)
+    attr_reader :original_backtrace
+
+    def initialize(kind, errcode, msg, binding, filename, lineno)
+
+      super("#{kind} : '#{msg}' (#{errcode})")
 
       @kind = kind
       @errcode = errcode
       @msg = msg
-      @file, @line = determine_file_and_line
 
-      super(
-        "#{@kind} : '#{@msg}' (#{@errcode}) #{File.basename(@file)}:#{@line}")
+      @binding = binding
+      @filename = filename
+      @lineno = lineno
     end
 
-    protected
+    def filename
+
+      return @filename if @filename
+
+      m = CALLER_REX.match(backtrace.first || '')
+      return m ? m[1] : nil
+    end
+
+    def lineno
+
+      return @lineno if @lineno
+
+      m = CALLER_REX.match(backtrace.first || '')
+      return m ? m[2].to_i : -1
+    end
+
+    def set_backtrace(trace)
+
+      @original_backtrace = trace
+
+      trace =
+        trace.select { |line|
+          m = CALLER_REX.match(line)
+          ( ! m) || File.dirname(m[1]) != DIR
+        }
+
+      trace.insert(0, "#{@filename}:#{@lineno}:") if @filename
+
+      super(trace)
+    end
 
     CALLER_REX = /^(.+):(\d+):/
     DIR = File.dirname(__FILE__)
-
-    def determine_file_and_line
-
-      caller.each do |line|
-        m = CALLER_REX.match(line)
-        return [ m[1], m[2].to_i ] if m && File.dirname(m[1]) != DIR
-      end
-
-      [ '', -1 ]
-    end
   end
 end
 
