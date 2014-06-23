@@ -64,7 +64,11 @@ describe Rufus::Lua::State do
     # compressed version of the spec proposed by Nathanael Jones
     # in https://github.com/nathanaeljones/rufus-lua/commit/179184aS
     #
+    # for https://github.com/jmettraux/rufus-lua/issues/19
+    #
     it 'yields the right value' do
+
+      pending 'yield across callback no worky on Lua 5.1.x'
 
       @s.function :host_function do
         'success'
