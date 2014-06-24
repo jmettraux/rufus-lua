@@ -35,18 +35,31 @@ http://www.lua.org/
 On Debian GNU/Linux, I do
 
 ```
-  sudo apt-get install liblua5.1-0
+sudo apt-get install liblua5.1-0
 ```
 
-If your system's package manager doesn't have some version (5.1.x) of Lua around, jump to "compiling liblua.dylib" below.
+If your system's package manager doesn't have some version (5.1.x) of Lua around, jump to [compiling liblua.dylib](#compiling-libluadylib) below.
+
+Rufus-lua will look for library in a [list of know places](https://github.com/jmettraux/rufus-lua/blob/9ddf26cde9f4a73115032504ad7f7eb688849b73/lib/rufus/lua/lib.rb#L38-L50).
+
+If it doesn't find the Lua dynamic library or if it picks the wrong one, it's OK to set the `LUA_LIB` environment variable. For example:
+
+```bash
+LUA_LIB=~/mystuff/lualib.5.1.4.so ruby myluacode.rb
+```
+or
+```bash
+export LUA_LIB=~/mystuff/lualib.5.1.4.so
+# ...
+ruby myluacode.rb
+```
+
 
 
 ## using rufus-lua
 
-If you don't have liblua.dylib on your system, scroll until "compiling liblua.dylib" to learn how to get it.
-
 ```
-  gem install rufus-lua
+gem install rufus-lua
 ```
 
 or add to your Gemfile:
@@ -58,90 +71,90 @@ or add to your Gemfile:
 then
 
 ```ruby
-  require 'rufus/lua'
+require 'rufus/lua'
 
-  s = Rufus::Lua::State.new
+s = Rufus::Lua::State.new
 
-  puts s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
-    #
-    # => "Hello from Lua"
+puts s.eval("return table.concat({ 'hello', 'from', 'Lua' }, ' ')")
+  #
+  # => "Hello from Lua"
 
-  s.close
+s.close
 ```
 
 
 ### binding Ruby code as Lua functions
 
 ```ruby
-  require 'rufus/lua'
+require 'rufus/lua'
 
-  s = Rufus::Lua::State.new
+s = Rufus::Lua::State.new
 
-  s.function 'key_up' do |table|
-    table.inject({}) do |h, (k, v)|
-      h[k.to_s.upcase] = v
-    end
+s.function 'key_up' do |table|
+  table.inject({}) do |h, (k, v)|
+    h[k.to_s.upcase] = v
   end
+end
 
-  p s.eval(%{
-    local table = { CoW = 2, pigs = 3, DUCKS = 'none' }
-    return key_up(table) -- calling Ruby from Lua...
-  }).to_h
-    # => { 'COW' => 2.0, 'DUCKS => 'none', 'PIGS' => 3.0 }
+p s.eval(%{
+  local table = { CoW = 2, pigs = 3, DUCKS = 'none' }
+  return key_up(table) -- calling Ruby from Lua...
+}).to_h
+  # => { 'COW' => 2.0, 'DUCKS => 'none', 'PIGS' => 3.0 }
 
-  s.close
+s.close
 ```
 
 
-It's OK to bind a function inside of a table (library) :
+It's OK to bind a function inside of a table (library):
 
 ```ruby
-  require 'rufus/lua'
+require 'rufus/lua'
 
-  s = Rufus::Lua::State.new
+s = Rufus::Lua::State.new
 
-  s.eval("rubies = {}")
-  s.function 'add' do |x, y|
-    x + y
-  end
+s.eval("rubies = {}")
+s.function 'add' do |x, y|
+  x + y
+end
 
-  s.eval("rubies.add(1, 2)")
-    # => 3.0
+s.eval("rubies.add(1, 2)")
+  # => 3.0
 
-  s.close
+s.close
 ```
 
 
-You can omit the table definition (only 1 level allowed here though) :
+You can omit the table definition (only 1 level allowed here though):
 
 ```ruby
-  require 'rufus/lua'
+require 'rufus/lua'
 
-  s = Rufus::Lua::State.new
+s = Rufus::Lua::State.new
 
-  s.function 'rubies.add' do |x, y|
-    x + y
-  end
+s.function 'rubies.add' do |x, y|
+  x + y
+end
 
-  s.eval("rubies.add(1, 2)")
-    # => 3.0
+s.eval("rubies.add(1, 2)")
+  # => 3.0
 
-  s.close
+s.close
 ```
 
 
-The specs contain more examples :
+The specs contain more examples:
 
 https://github.com/jmettraux/rufus-lua/tree/master/spec/
 
 
 ## compiling liblua.dylib
 
-original instructions by Adrian Perez at :
+original instructions by Adrian Perez at:
 
 http://lua-users.org/lists/lua-l/2006-09/msg00894.html
 
-get the source at
+get the source at:
 
 http://www.lua.org/ftp/lua-5.1.4.tar.gz
 
@@ -152,7 +165,13 @@ tar xzvf lua-5.1.4.tar.gz
 cd lua-5.1.4
 ```
 
-modify the file src/Makefile as per http://lua-users.org/lists/lua-l/2006-09/msg00894.html
+Modify the file `src/Makefile` as per http://lua-users.org/lists/lua-l/2006-09/msg00894.html
+
+It's mostly about adding that rule to the `src/Makefile`:
+```make
+liblua.dylib: $(CORE_O) $(LIB_O)
+	$(CC) -dynamiclib -o $@ $^ $(LIBS)
+```
 
 ```
 make
@@ -161,6 +180,15 @@ make -C src liblua.dylib
 sudo cp src/liblua.dylib /usr/local/lib/
 
 sudo make macosx install
+```
+
+I tend to copy the lib with
+
+```
+sudo cp src/liblua.dylib /usr/local/lib/liblua.5.1.4.dylib
+
+# instead of
+#sudo cp src/liblua.dylib /usr/local/lib/
 ```
 
 
