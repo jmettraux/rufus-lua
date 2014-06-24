@@ -173,6 +173,7 @@ liblua.dylib: $(CORE_O) $(LIB_O)
 	$(CC) -dynamiclib -o $@ $^ $(LIBS)
 ```
 
+Here's how to build the library file and deploy it:
 ```
 make
 make macosx # or make linux ...
