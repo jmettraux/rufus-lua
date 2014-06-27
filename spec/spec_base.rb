@@ -6,5 +6,5 @@
 #
 
 require 'fileutils'
-require 'rufus/lua'
+require 'rufus-lua'
 

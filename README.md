@@ -71,7 +71,7 @@ or add to your Gemfile:
 then
 
 ```ruby
-require 'rufus/lua'
+require 'rufus-lua'
 
 s = Rufus::Lua::State.new
 
@@ -86,7 +86,7 @@ s.close
 ### binding Ruby code as Lua functions
 
 ```ruby
-require 'rufus/lua'
+require 'rufus-lua'
 
 s = Rufus::Lua::State.new
 
@@ -109,7 +109,7 @@ s.close
 It's OK to bind a function inside of a table (library):
 
 ```ruby
-require 'rufus/lua'
+require 'rufus-lua'
 
 s = Rufus::Lua::State.new
 
@@ -128,7 +128,7 @@ s.close
 You can omit the table definition (only 1 level allowed here though):
 
 ```ruby
-require 'rufus/lua'
+require 'rufus-lua'
 
 s = Rufus::Lua::State.new
 
