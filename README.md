@@ -148,6 +148,25 @@ The specs contain more examples:
 https://github.com/jmettraux/rufus-lua/tree/master/spec/
 
 
+### eval(code[, binding[, filename[, lineno ]]])
+
+The examples so far have shown `Rufus::Lua::State#eval` being used with a single argument, a piece of code.
+
+But this rufus-lua eval mimics the Ruby `eval` and lets one specify binding, filename and lineno.
+
+(TODO) Binding hasn't yet been implemented. It'll probaby be with `setfenv` but nothing sure yet. Stick a `nil` to it for now.
+
+The string of Lua code may come from wild places, it may help to flag it with arbitrary filename and lineno.
+
+```ruby
+require 'rufus-lua'
+
+lua = Rufus::Lua::State.new
+
+lua.eval('print("hello")', nil, 'myluastuff/hello.lua', 77)
+```
+
+
 ## compiling liblua.dylib
 
 original instructions by Adrian Perez at:
