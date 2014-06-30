@@ -2,7 +2,7 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 1.1.1    not yet released
+== rufus-lua - 1.1.1    released 2014/07/01
 
 - move from bacon to rspec
 - remove double VERSION (Nathanael Jones - https://github.com/nathanaeljones)
