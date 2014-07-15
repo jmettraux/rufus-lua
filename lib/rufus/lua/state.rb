@@ -222,8 +222,8 @@ module Rufus::Lua
         when Fixnum then Lib.lua_pushinteger(@pointer, o)
         when Float then Lib.lua_pushnumber(@pointer, o)
 
-        when String then Lib.lua_pushlstring(@pointer, o, o.unpack('C*').size)
-        when Symbol then Lib.lua_pushstring(@pointer, o.to_s)
+        when String then Lib.lua_pushlstring(@pointer, o, o.bytesize)
+        when Symbol then Lib.lua_pushlstring(@pointer, o.to_s, o.to_s.bytesize)
 
         when Hash then stack_push_hash(o)
         when Array then stack_push_array(o)
