@@ -42,7 +42,7 @@ describe 'lua strings' do
       expect(f.call(s).to_h).to eq({ 's' => s, 'l' => 8.0 })
     end
 
-    it 'symbols with null characters are not truncated when passed from Ruby to Lua and back' do
+    it 'accept symbols containing the \0 character' do
 
       s = [ 65, 66, 0, 67, 0, 0, 68, 0 ].pack('c*').to_sym
 
