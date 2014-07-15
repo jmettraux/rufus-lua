@@ -110,6 +110,30 @@ describe Rufus::Lua::State do
       expect(r).to eq([ true])
       expect(run_count).to eq(2)
     end
+
+    it 'executes a ruby function (with arguments) within a coroutine' do
+
+      run_count = 0
+      last_argument = nil
+
+      @s.function :host_function do |arg|
+        run_count += 1
+        last_argument = arg
+      end
+      r = @s.eval(%{
+        function routine()
+          host_function("hi")
+          coroutine.yield()
+        end
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        return { a, b }
+      }).to_ruby
+
+      expect(r).to eq([ true])
+      expect(run_count).to eq(1)
+      expect(last_argument).to eq("hi")
+    end
   end
 end
 
