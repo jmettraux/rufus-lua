@@ -347,6 +347,15 @@ module Rufus::Lua
     end
   end
 
+  class LightState
+    include StateMixin
+    def initialize(pointer)
+      @pointer = pointer
+    
+      @callbacks = []
+    end
+  end
+
   #
   # A Lua state, wraps a Lua runtime.
   #
@@ -468,30 +477,31 @@ module Rufus::Lua
 
       callback = Proc.new do |state|
 
+        s = LightState.new(state)
+        #raise "Passed state mismatch (#{state.inspect} vs #{@pointer})" if state != @pointer
         args = []
 
         loop do
 
-          break if stack_top == 0 # never touch stack[0] !!
+          break if s.stack_top == 0 # never touch stack[0] !!
 
-          arg = stack_fetch
+          arg = s.stack_fetch
           break if arg.class == Rufus::Lua::Function
 
           args.unshift(arg)
 
-          stack_unstack unless args.first.is_a?(Rufus::Lua::Table)
+          s.stack_unstack unless args.first.is_a?(Rufus::Lua::Table)
         end
 
         while args.size < block.arity
           args << nil
         end
 
-        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } \
-          if to_ruby
-
+        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } if to_ruby
+          
         result = block.call(*args)
 
-        stack_push(result)
+        s.stack_push(result)
 
         1
       end

@@ -68,8 +68,6 @@ describe Rufus::Lua::State do
     #
     it 'yields the right value' do
 
-      pending 'yield across callback no worky on Lua 5.1.x'
-
       @s.function :host_function do
         'success'
       end
@@ -114,11 +112,12 @@ describe Rufus::Lua::State do
     it 'executes a ruby function (with arguments) within a coroutine' do
 
       run_count = 0
-      last_argument = nil
+      last_arguments = nil
 
-      @s.function :host_function do |arg|
+      @s.function :host_function, {to_ruby: true} do |*args|
         run_count += 1
-        last_argument = arg
+        last_arguments = args
+        0
       end
       r = @s.eval(%{
         function routine()
@@ -132,7 +131,7 @@ describe Rufus::Lua::State do
 
       expect(r).to eq([ true])
       expect(run_count).to eq(1)
-      expect(last_argument).to eq("hi")
+      expect(last_arguments).to eq(["hi"])
     end
   end
 end
