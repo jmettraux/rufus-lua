@@ -216,7 +216,7 @@ sudo cp src/liblua.dylib /usr/local/lib/liblua.5.1.4.dylib
 
 ## tested with
 
-ruby 1.8.7p72, ruby 1.9.1p0, jruby 1.2.0
+ruby 1.9.1p0, jruby 1.2.0
 jruby 1.1.6 has an issue with errors raised inside of Ruby functions (callbacks)
 
 ruby-ffi 0.4.0 and 0.5.0
