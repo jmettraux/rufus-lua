@@ -85,6 +85,31 @@ describe Rufus::Lua::State do
 
       expect(r).to eq([ true, 'success' ])
     end
+
+
+    it 'executes a ruby function within a coroutine' do
+
+      run_count = 0
+
+      @s.function :host_function do
+        run_count += 1
+      end
+      r = @s.eval(%{
+        function routine()
+          host_function()
+          coroutine.yield()
+          host_function()
+          coroutine.yield()
+        end
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        a, b = coroutine.resume(co)
+        return { a, b }
+      }).to_ruby
+
+      expect(r).to eq([ true])
+      expect(run_count).to eq(2)
+    end
   end
 end
 
