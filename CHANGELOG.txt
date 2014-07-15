@@ -2,6 +2,11 @@
 = rufus-lua CHANGELOG.txt
 
 
+== rufus-lua - 1.1.2    not yet released
+
+- accept Ruby symbols containing \0 character (Nathanel Jones)
+
+
 == rufus-lua - 1.1.1    released 2014/07/01
 
 - move from bacon to rspec
