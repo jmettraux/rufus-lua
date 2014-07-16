@@ -347,11 +347,12 @@ module Rufus::Lua
     end
   end
 
-  class LightState
+  class CallbackState
     include StateMixin
+
     def initialize(pointer)
+
       @pointer = pointer
-    
       @callbacks = []
     end
   end
@@ -477,8 +478,7 @@ module Rufus::Lua
 
       callback = Proc.new do |state|
 
-        s = LightState.new(state)
-        #raise "Passed state mismatch (#{state.inspect} vs #{@pointer})" if state != @pointer
+        s = CallbackState.new(state)
         args = []
 
         loop do
@@ -497,8 +497,9 @@ module Rufus::Lua
           args << nil
         end
 
-        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } if to_ruby
-          
+        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } \
+          if to_ruby
+
         result = block.call(*args)
 
         s.stack_push(result)

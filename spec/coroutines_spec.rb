@@ -74,7 +74,6 @@ describe Rufus::Lua::State do
       r = @s.eval(%{
         function routine()
           coroutine.yield(host_function())
-          --coroutine.yield("success") -- that works :-(
         end
         co = coroutine.create(routine)
         a, b = coroutine.resume(co)
@@ -83,7 +82,6 @@ describe Rufus::Lua::State do
 
       expect(r).to eq([ true, 'success' ])
     end
-
 
     it 'executes a ruby function within a coroutine' do
 
@@ -114,7 +112,7 @@ describe Rufus::Lua::State do
       run_count = 0
       last_arguments = nil
 
-      @s.function :host_function, {to_ruby: true} do |*args|
+      @s.function :host_function, { :to_ruby => true } do |*args|
         run_count += 1
         last_arguments = args
         0
@@ -129,9 +127,9 @@ describe Rufus::Lua::State do
         return { a, b }
       }).to_ruby
 
-      expect(r).to eq([ true])
+      expect(r).to eq([ true ])
       expect(run_count).to eq(1)
-      expect(last_arguments).to eq(["hi"])
+      expect(last_arguments).to eq([ "hi" ])
     end
   end
 end

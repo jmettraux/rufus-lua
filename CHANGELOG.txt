@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.2    not yet released
 
+- wrap Ruby callbacks in CallbackState (Nathanael Jones)
 - accept Ruby symbols containing \0 character (Nathanel Jones)
 
 
