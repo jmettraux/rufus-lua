@@ -68,8 +68,6 @@ describe Rufus::Lua::State do
     #
     it 'yields the right value' do
 
-      pending 'yield across callback no worky on Lua 5.1.x'
-
       @s.function :host_function do
         'success'
       end
@@ -84,6 +82,56 @@ describe Rufus::Lua::State do
       }).to_ruby
 
       expect(r).to eq([ true, 'success' ])
+    end
+
+
+    it 'executes a ruby function within a coroutine' do
+
+      run_count = 0
+
+      @s.function :host_function do
+        run_count += 1
+      end
+      r = @s.eval(%{
+        function routine()
+          host_function()
+          coroutine.yield()
+          host_function()
+          coroutine.yield()
+        end
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        a, b = coroutine.resume(co)
+        return { a, b }
+      }).to_ruby
+
+      expect(r).to eq([ true])
+      expect(run_count).to eq(2)
+    end
+
+    it 'executes a ruby function (with arguments) within a coroutine' do
+
+      run_count = 0
+      last_arguments = nil
+
+      @s.function :host_function, {to_ruby: true} do |*args|
+        run_count += 1
+        last_arguments = args
+        0
+      end
+      r = @s.eval(%{
+        function routine()
+          host_function("hi")
+          coroutine.yield()
+        end
+        co = coroutine.create(routine)
+        a, b = coroutine.resume(co)
+        return { a, b }
+      }).to_ruby
+
+      expect(r).to eq([ true])
+      expect(run_count).to eq(1)
+      expect(last_arguments).to eq(["hi"])
     end
   end
 end
