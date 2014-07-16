@@ -92,6 +92,10 @@ describe Rufus::Lua::State do
       rescue Rufus::Lua::LuaError => le
       end
 
+      expect(le.kind).to eq('eval:pcall')
+      expect(le.msg).to eq('[string "/nada/virtual.lua:63"]:1: 77')
+      expect(le.errcode).to eq(2)
+
       expect(le.filename).to eq('/nada/virtual.lua')
       expect(le.lineno).to eq(63)
 

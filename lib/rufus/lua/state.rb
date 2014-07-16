@@ -89,8 +89,9 @@ module Rufus::Lua
     def loadstring_and_call(s, binding, filename, lineno)
 
       bottom = stack_top
+      chunk = filename ? "#{filename}:#{lineno}" : 'line'
 
-      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), 'line')
+      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), chunk)
       fail_if_error('eval:compile', err, binding, filename, lineno)
 
       pcall(bottom, 0, binding, filename, lineno) # arg_count is set to 0
