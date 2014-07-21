@@ -70,7 +70,28 @@ describe Rufus::Lua::State do
     it 'returns multiple values' do
 
       expect(@s.eval('return 1, 2')).to eq [ 1.0, 2.0 ]
-      expect(@s.eval('return 1, 2, {}')).to start_with 1.0, 2.0
+    end
+
+    it 'returns multiple values (tables included)' do
+
+      r = @s.eval('return 1, 2, {}')
+
+      expect(r.class).to eq Array
+      expect(r[0, 2]).to eq [ 1.0, 2.0 ]
+      expect(r[2].class).to eq Rufus::Lua::Table
+      expect(r[2].size).to eq 0
+    end
+
+    it 'returns multiple values (tables included) (take 2)' do
+
+      r = @s.eval('return { "hello", "world" }, 2, { 3 }')
+
+      expect(r[0].class).to eq Rufus::Lua::Table
+      expect(r[0][1]).to eq 'hello'
+      expect(r[0][2]).to eq 'world'
+      expect(r[1]).to eq 2.0
+      expect(r[2].class).to eq Rufus::Lua::Table
+      expect(r[2][1]).to eq 3.0
     end
 
     it 'returns false' do
