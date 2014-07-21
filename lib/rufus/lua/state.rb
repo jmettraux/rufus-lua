@@ -189,10 +189,8 @@ module Rufus::Lua
     def stack_pop
 
       r = stack_fetch
-      if r.class == Rufus::Lua::Table
-      else
-        stack_unstack
-      end
+      stack_unstack if r.class != Rufus::Lua::Table
+
       r
     end
 
