@@ -104,6 +104,17 @@ describe Rufus::Lua::State do
       expect(@s.eval('return true')).to eq true
     end
 
+    it 'returns tables' do
+
+      r = @s.eval('return { "hello", "world", 2 }')
+
+      expect(r.class).to eq Rufus::Lua::Table
+      expect(r[0]).to eq nil
+      expect(r[1]).to eq 'hello'
+      expect(r[2]).to eq 'world'
+      expect(r[3]).to eq 2.0
+    end
+
     it 'accepts a binding optional argument'
 
     it 'accepts a filename and a lineno optional arguments' do
