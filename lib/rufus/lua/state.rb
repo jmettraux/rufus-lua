@@ -190,9 +190,9 @@ module Rufus::Lua
 
       r = stack_fetch
       if r.class == Rufus::Lua::Table
-      else  
+      else
         stack_unstack
-      end   
+      end
       r
     end
 
