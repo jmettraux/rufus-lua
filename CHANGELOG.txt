@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.2    not yet released
 
+- fix unstack issue when returning table (https://github.com/lywaterman)
 - use "{filename}:#{lineno}" as eval chunk name (suggested by Nathanael Jones)
 - wrap Ruby callbacks in CallbackState (Nathanael Jones)
 - accept Ruby symbols containing \0 character (Nathanel Jones)
