@@ -70,6 +70,7 @@ describe Rufus::Lua::State do
     it 'returns multiple values' do
 
       expect(@s.eval('return 1, 2')).to eq [ 1.0, 2.0 ]
+	  expect(@s.eval('return 1, 2, {}')).to start_with 1.0, 2.0
     end
 
     it 'returns false' do
