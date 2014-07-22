@@ -302,7 +302,7 @@ module Rufus::Lua
         # when there's only 1 return value, use LUA_MULTRET (-1) the
         # rest of the time
 
-      err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, 0)
+      err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, @error_handler)
       fail_if_error('eval:pcall', err, binding, filename, lineno)
 
       return_result(stack_bottom)
@@ -401,6 +401,29 @@ module Rufus::Lua
       # garbage collection (Scott).
 
       @callbacks = []
+
+      @error_handler = 0
+    end
+
+    def set_error_handler(lua_code)
+
+      if lua_code == nil
+        @error_handler = 0
+        return
+      end
+
+      lua_code = 'return ' + lua_code \
+        unless lua_code.match(/^return[\s\(]/)
+
+      m = caller[0].match(/([^\\\/]+):(\d+)/)
+      chunk, filename, lineno = m[0, 3]
+
+      err = Lib.luaL_loadbuffer(
+        @pointer, lua_code, Lib.strlen(lua_code), chunk)
+      fail_if_error(
+        'eval:compile:error_handler', err, nil, filename, lineno)
+
+      @error_handler = stack_top
     end
 
     # Evaluates a piece (string) of Lua code within the state.
