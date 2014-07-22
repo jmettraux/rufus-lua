@@ -19,7 +19,7 @@ describe 'State and error handler' do
 
   describe '#set_error_handler' do
 
-    it 'flips burgers' do
+    it 'registers a function as error handler' do
 
       #@s.send(:print_stack)
 
@@ -36,9 +36,25 @@ describe 'State and error handler' do
           error("in f")
         end
       })
-      s = @s.eval('f()')
+      begin
+        @s.eval('f()')
+      rescue Rufus::Lua::LuaError => le
+        p le
+      rescue Exception => ex
+        p ex
+      end
 
-      #p s
+      #@s.send(:print_stack)
+    end
+
+    context 'when called with nil' do
+
+      it 'removes the error handler'
+    end
+
+    context 'in case of sub-state invocation' do
+
+      it 'uses the parent state error handler'
     end
   end
 
