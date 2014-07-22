@@ -202,7 +202,7 @@ module Rufus::Lua
       new_top = 0 if new_top < 0
         #
         # there are no safeguard in Lua, setting top to -2 work well
-        # when the stack is crowed, but it has bad side effects when the
+        # when the stack is crowded, but it has bad side effects when the
         # stack is empty... Now safeguarding by ourselves.
 
       Lib.lua_settop(@pointer, new_top)
