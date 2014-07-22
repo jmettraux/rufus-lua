@@ -326,13 +326,6 @@ module Rufus::Lua
 
       return if err < 1
 
-      # TODO :
-      #
-      # LUA_ERRRUN: a runtime error.
-      # LUA_ERRMEM: memory allocation error. For such errors, Lua does not call
-      #   the error handler function.
-      # LUA_ERRERR: error while running the error handler function.
-
       s = Lib.lua_tolstring(@pointer, -1, nil).read_string
       Lib.lua_settop(@pointer, -2)
 
@@ -356,6 +349,7 @@ module Rufus::Lua
 
       @pointer = pointer
       @callbacks = []
+      @error_handler = 0
     end
   end
 

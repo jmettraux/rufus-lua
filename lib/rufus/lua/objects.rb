@@ -42,6 +42,7 @@ module Rufus::Lua
       @pointer = pointer
       @ref = Lib.luaL_ref(@pointer, LUA_REGISTRYINDEX)
         # this pops the object out of the stack !
+      @error_handler = 0
     end
 
     # Frees the reference to this object

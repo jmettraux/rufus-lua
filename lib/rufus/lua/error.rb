@@ -25,6 +25,10 @@
 
 module Rufus::Lua
 
+  # error codes from 0 to 5
+  #
+  LUA_ERRS = %w[ 0 LUA_YIELD LUA_ERRRUN LUA_ERRSYNTAX LUA_ERRMEM LUA_ERRERR ]
+
   #
   # An error class for rufus-lua.
   #
@@ -37,7 +41,7 @@ module Rufus::Lua
 
     def initialize(kind, errcode, msg, binding, filename, lineno)
 
-      super("#{kind} : '#{msg}' (#{errcode})")
+      super("#{kind} : '#{msg}' (#{errcode} #{LUA_ERRS[errcode]})")
 
       @kind = kind
       @errcode = errcode

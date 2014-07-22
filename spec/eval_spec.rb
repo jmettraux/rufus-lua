@@ -150,8 +150,11 @@ describe Rufus::Lua::State do
         expect(le.msg).to eq('[string "line"]:1: 77')
         expect(le.errcode).to eq(2)
 
+        expect(le.message).to eq(
+          "eval:pcall : '[string \"line\"]:1: 77' (2 LUA_ERRRUN)")
+
         expect(le.filename).to eq(__FILE__)
-        expect(le.lineno).to eq(__LINE__ - 9)
+        expect(le.lineno).to eq(__LINE__ - 12)
 
         expect(le.original_backtrace.first).to match(/\/lua\/state\.rb:/)
         expect(le.backtrace.first).to match(/\/eval_spec\.rb:/)
