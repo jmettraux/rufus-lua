@@ -86,15 +86,15 @@ module Rufus::Lua
 
     # This method holds the 'eval' mechanism.
     #
-    def loadstring_and_call(s, binding, filename, lineno)
+    def loadstring_and_call(s, bndng, filename, lineno)
 
       bottom = stack_top
       chunk = filename ? "#{filename}:#{lineno}" : 'line'
 
       err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), chunk)
-      fail_if_error('eval:compile', err, binding, filename, lineno)
+      fail_if_error('eval:compile', err, bndng, filename, lineno)
 
-      pcall(bottom, 0, binding, filename, lineno) # arg_count is set to 0
+      pcall(bottom, 0, bndng, filename, lineno) # arg_count is set to 0
     end
 
     # Returns a string representation of the state's stack.
@@ -317,14 +317,14 @@ module Rufus::Lua
     #
     # Will raise an error in case of failure.
     #
-    def pcall(stack_bottom, arg_count, binding, filename, lineno)
+    def pcall(stack_bottom, arg_count, bndng, filename, lineno)
 
       #err = Lib.lua_pcall(@pointer, 0, 1, 0)
         # When there's only 1 return value.
         # Use LUA_MULTRET (-1) the rest of the time
 
       err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, @error_handler)
-      fail_if_error('eval:pcall', err, binding, filename, lineno)
+      fail_if_error('eval:pcall', err, bndng, filename, lineno)
 
       return_result(stack_bottom)
     end
@@ -343,14 +343,14 @@ module Rufus::Lua
     # This method will raise an error with err > 0, else it will immediately
     # return.
     #
-    def fail_if_error(kind, err, binding, filename, lineno)
+    def fail_if_error(kind, err, bndng, filename, lineno)
 
       return if err < 1
 
       s = Lib.lua_tolstring(@pointer, -1, nil).read_string
       Lib.lua_settop(@pointer, -2)
 
-      fail LuaError.new(kind, err, s, binding, filename, lineno)
+      fail LuaError.new(kind, err, s, bndng, filename, lineno)
     end
 
     # Given the name of a Lua global variable, will return its value (or nil
@@ -454,9 +454,9 @@ module Rufus::Lua
 
     # Evaluates a piece (string) of Lua code within the state.
     #
-    def eval(s, binding=nil, filename=nil, lineno=nil)
+    def eval(s, bndng=nil, filename=nil, lineno=nil)
 
-      loadstring_and_call(s, binding, filename, lineno)
+      loadstring_and_call(s, bndng, filename, lineno)
     end
 
     # Returns a value set at the 'global' level in the state.

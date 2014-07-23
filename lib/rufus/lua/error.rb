@@ -35,11 +35,11 @@ module Rufus::Lua
   class LuaError < RuntimeError
 
     attr_reader :kind, :errcode, :msg
-    attr_reader :binding, :filename, :lineno
+    attr_reader :bndng, :filename, :lineno
 
     attr_reader :original_backtrace
 
-    def initialize(kind, errcode, msg, binding, filename, lineno)
+    def initialize(kind, errcode, msg, bndng, filename, lineno)
 
       super("#{kind} : '#{msg}' (#{errcode} #{LUA_ERRS[errcode]})")
 
@@ -47,7 +47,7 @@ module Rufus::Lua
       @errcode = errcode
       @msg = msg
 
-      @binding = binding
+      @bndng = bndng
       @filename = filename
       @lineno = lineno
     end
