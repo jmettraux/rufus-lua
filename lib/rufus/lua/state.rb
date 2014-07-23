@@ -299,8 +299,8 @@ module Rufus::Lua
     def pcall(stack_bottom, arg_count, binding, filename, lineno)
 
       #err = Lib.lua_pcall(@pointer, 0, 1, 0)
-        # when there's only 1 return value, use LUA_MULTRET (-1) the
-        # rest of the time
+        # When there's only 1 return value.
+        # Use LUA_MULTRET (-1) the rest of the time
 
       err = Lib.lua_pcall(@pointer, arg_count, LUA_MULTRET, @error_handler)
       fail_if_error('eval:pcall', err, binding, filename, lineno)
