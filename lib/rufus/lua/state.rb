@@ -278,10 +278,14 @@ module Rufus::Lua
       Lib.lua_getfield(@pointer, -1, name)
     end
 
+    # Loads a path (for example "debug.traceback") on top of the stack.
+    #
     def stack_load_path(path)
 
       ps = path.split('.')
+
       stack_load_global(ps.shift)
+
       while ps.first
         stack_load_field(ps.shift)
         Lib.lua_remove(@pointer, -2)
