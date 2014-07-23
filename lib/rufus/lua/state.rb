@@ -271,6 +271,23 @@ module Rufus::Lua
       Lib.lua_getfield(@pointer, LUA_GLOBALSINDEX, name)
     end
 
+    # Loads a field of the table currently on the top of the stack
+    #
+    def stack_load_field(name)
+
+      Lib.lua_getfield(@pointer, -1, name)
+    end
+
+    def stack_load_path(path)
+
+      ps = path.split('.')
+      stack_load_global(ps.shift)
+      while ps.first
+        stack_load_field(ps.shift)
+        Lib.lua_remove(@pointer, -2)
+      end
+    end
+
     # Loads the Lua object registered with the given ref on top of the stack
     #
     def stack_load_ref(ref)
@@ -406,17 +423,28 @@ module Rufus::Lua
         return
       end
 
-      lua_code = 'return ' + lua_code \
-        unless lua_code.match(/^return[\s\(]/)
+      #lua_code = 'return ' + lua_code \
+      #  unless lua_code.match(/^return[\s\(]/)
+      #m = caller[0].match(/([^\\\/]+):(\d+)/)
+      #chunk, filename, lineno = m[0, 3]
+      #err = Lib.luaL_loadbuffer(
+      #  @pointer, lua_code, Lib.strlen(lua_code), chunk)
+      #fail_if_error(
+      #  'eval:compile:error_handler', err, nil, filename, lineno)
+      #@error_handler = stack_top
 
-      m = caller[0].match(/([^\\\/]+):(\d+)/)
-      chunk, filename, lineno = m[0, 3]
+      #lua_getglobal(L, "debug");
+      #lua_getfield(L, -1, "traceback");
+      #lua_remove(L, -2);
+      #int errindex = -p_iArgCount - 2;
+      #lua_insert(L, errindex);
+      #int error = lua_pcall(L, p_iArgCount, return_amount, errindex);
 
-      err = Lib.luaL_loadbuffer(
-        @pointer, lua_code, Lib.strlen(lua_code), chunk)
-      fail_if_error(
-        'eval:compile:error_handler', err, nil, filename, lineno)
-
+      #stack_load_global('debug')
+      #stack_load_field('traceback')
+      #Lib.lua_remove(@pointer, -2)
+      stack_load_path('debug.traceback')
+      #print_stack
       @error_handler = stack_top
     end
 

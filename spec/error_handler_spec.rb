@@ -35,13 +35,13 @@ describe 'State and error handler' do
         function f ()
           error("in f")
         end
-      })
+      }, nil, 'mystuff.lua', 77)
       begin
-        @s.eval('f()')
+        @s.eval('f()', nil, 'mymain.lua', 88)
       rescue Rufus::Lua::LuaError => le
         p le
-      rescue Exception => ex
-        p ex
+      #rescue Exception => ex
+      #  p ex
       end
 
       #@s.send(:print_stack)
