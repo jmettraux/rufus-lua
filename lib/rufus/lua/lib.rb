@@ -105,6 +105,9 @@ module Lua
     attach_function :lua_getfield, [ :pointer, :int, :string ], :pointer
     attach_function :lua_gettable, [ :pointer, :int ], :void
 
+    #attach_function :lua_getglobal, [ :pointer, :string ], :void
+      # pushes onto the stack the global value with the given name
+
     attach_function :lua_createtable, [ :pointer, :int, :int ], :void
     #attach_function :lua_newtable, [ :pointer ], :void
     attach_function :lua_settable, [ :pointer, :int ], :void
@@ -117,6 +120,15 @@ module Lua
     attach_function :lua_pushnumber, [ :pointer, :double ], :pointer
     attach_function :lua_pushstring, [ :pointer, :string ], :pointer
     attach_function :lua_pushlstring, [ :pointer, :pointer, :int ], :pointer
+
+    #attach_function :lua_pushvalue, [ :pointer, :int ], :void
+      # pushes a copy of the value at the given index to the top of the stack
+    #attach_function :lua_remove, [ :pointer, :int ], :void
+      # removes the value at the given stack index, shifting down all elts above
+    #attach_function :lua_insert, [ :pointer, :int ], :void
+      # moves the top elt to the given index, shifting up all elts above
+    #attach_function :lua_replace, [ :pointer, :int ], :void
+      # pops the top elt and override the elt at given index with it
 
     attach_function :lua_rawgeti, [ :pointer, :int, :int ], :void
 
