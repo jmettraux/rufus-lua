@@ -17,7 +17,7 @@ describe 'State and error handler' do
     @s.close
   end
 
-  describe '#set_error_handler' do
+  describe '#set_error_handler(lua_code)' do
 
     it 'registers a function as error handler' do
 
@@ -49,9 +49,29 @@ stack traceback:
       }.strip)
     end
 
-    context 'when called with nil' do
+    it 'set the error handler in a permanent way' do
 
-      it 'removes the error handler'
+      le = nil
+
+      @s.set_error_handler(%{
+        function (e)
+          return 'something went wrong: ' .. string.gmatch(e, ": (.+)$")()
+        end
+      });
+
+      begin
+        @s.eval('error("a")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('something went wrong: a')
+
+      begin
+        @s.eval('error("b")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('something went wrong: b')
     end
 
     context 'in case of sub-state invocation' do
