@@ -147,11 +147,11 @@ describe Rufus::Lua::State do
     it 'raise exceptions (Ruby -> Lua -> Ruby and back)' do
 
       @s.function :do_fail do
-        raise "fail!"
+        raise 'fail!'
       end
 
       expect(lambda {
-        @s.eval("return do_fail()")
+        @s.eval('return do_fail()')
       }).to raise_error(RuntimeError)
     end
 

@@ -27,7 +27,7 @@ describe 'State and error handler' do
         function (e)
           return e .. '\\n' .. debug.traceback()
         end
-      });
+      })
 
       @s.eval(%{
         function f ()
@@ -57,7 +57,7 @@ stack traceback:
         function (e)
           return 'something went wrong: ' .. string.gmatch(e, ": (.+)$")()
         end
-      });
+      })
 
       begin
         @s.eval('error("a")')
@@ -74,9 +74,27 @@ stack traceback:
       expect(le.msg).to eq('something went wrong: b')
     end
 
-    context 'in case of sub-state invocation' do
+    context 'CallbackState' do
 
-      it 'uses the parent state error handler'
+      # Setting an error handler on the calling state or even directly
+      # on the CallbackState doesn't have any effect.
+      # Any error handler seems bypassed.
+
+      it 'bypasses any error handler' do
+
+        e = nil
+
+        @s.set_error_handler(%{
+          function (e) return 'bad: ' .. string.gmatch(e, ": (.+)$")() end
+        })
+        f = @s.function(:do_fail) { fail('in style') }
+        begin
+          @s.eval('do_fail()')
+        rescue Exception => e
+        end
+
+        expect(e.class).to eq(RuntimeError)
+      end
     end
   end
 
@@ -113,6 +131,11 @@ stack traceback:
     it 'provides a merged Ruby then Lua backtrace' # really?
   end
 
+  describe '#set_error_handler(some_ruby)' do
+
+    it 'sets a Ruby callback as handler'
+  end
+
   describe '#set_error_handler(nil)' do
 
     it 'unsets the current error handler' do
@@ -125,7 +148,7 @@ stack traceback:
         function (e)
           return 'something went wrong: ' .. string.gmatch(e, ": (.+)$")()
         end
-      });
+      })
 
       begin
         @s.eval('error("a")')
