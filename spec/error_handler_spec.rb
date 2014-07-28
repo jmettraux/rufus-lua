@@ -88,6 +88,11 @@ stack traceback:
     end
   end
 
+  describe '#set_error_handler(:backtrace)' do
+
+    it 'provides a merged Ruby then Lua backtrace' # really?
+  end
+
   describe '#set_error_handler(nil)' do
 
     it 'unsets the current error handler'
