@@ -433,32 +433,13 @@ module Rufus::Lua
 
       else
 
-        # TODO
+        lua_code = lua_code.strip
+        lua_code = 'return ' + lua_code unless lua_code.match(/^return\s+/)
+
+        r = self.eval(lua_code)
+        r.send(:load_onto_stack)
+        @error_handler = stack_top
       end
-
-      #lua_code = 'return ' + lua_code \
-      #  unless lua_code.match(/^return[\s\(]/)
-      #m = caller[0].match(/([^\\\/]+):(\d+)/)
-      #chunk, filename, lineno = m[0, 3]
-      #err = Lib.luaL_loadbuffer(
-      #  @pointer, lua_code, Lib.strlen(lua_code), chunk)
-      #fail_if_error(
-      #  'eval:compile:error_handler', err, nil, filename, lineno)
-      #@error_handler = stack_top
-
-      #lua_getglobal(L, "debug");
-      #lua_getfield(L, -1, "traceback");
-      #lua_remove(L, -2);
-      #int errindex = -p_iArgCount - 2;
-      #lua_insert(L, errindex);
-      #int error = lua_pcall(L, p_iArgCount, return_amount, errindex);
-
-      ##stack_load_global('debug')
-      ##stack_load_field('traceback')
-      ##Lib.lua_remove(@pointer, -2)
-      #stack_load_path('debug.traceback')
-      ##print_stack
-      #@error_handler = stack_top
     end
 
     # Evaluates a piece (string) of Lua code within the state.

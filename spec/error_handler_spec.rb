@@ -21,15 +21,13 @@ describe 'State and error handler' do
 
     it 'registers a function as error handler' do
 
-      #@s.send(:print_stack)
+      le = nil
 
       @s.set_error_handler(%{
         function (e)
-          return "error " .. e
+          return e .. '\\n' .. debug.traceback()
         end
       });
-
-      #@s.send(:print_stack)
 
       @s.eval(%{
         function f ()
@@ -39,14 +37,16 @@ describe 'State and error handler' do
       begin
         @s.eval('f()', nil, 'mymain.lua', 88)
       rescue Rufus::Lua::LuaError => le
-        #p le
-        puts le.msg
-        puts le.message
-      #rescue Exception => ex
-      #  p ex
       end
 
-      #@s.send(:print_stack)
+      expect(le.message).to eq(%{
+eval:pcall : '[string "mystuff.lua:77"]:3: in f
+stack traceback:
+	[string "line"]:2: in function <[string "line"]:1>
+	[C]: in function 'error'
+	[string "mystuff.lua:77"]:3: in function 'f'
+	[string "mymain.lua:88"]:1: in main chunk' (2 LUA_ERRRUN)
+      }.strip)
     end
 
     context 'when called with nil' do
