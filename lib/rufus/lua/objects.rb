@@ -287,7 +287,7 @@ module Rufus::Lua
       h = self.to_h
 
       pure && h.keys.find { |k| not [ Float ].include?(k.class) } &&
-        raise("cannot turn hash into array, some keys are not numbers")
+        fail('cannot turn hash into array, some keys are not numbers')
 
       a_keys = (1..objlen).to_a.collect { |k| k.to_f }
       keys = a_keys + (h.keys - a_keys)

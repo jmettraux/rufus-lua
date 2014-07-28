@@ -513,7 +513,7 @@ module Rufus::Lua
     #
     def function(name, opts={}, &block)
 
-      raise 'please pass a block for the body of the function' unless block
+      fail 'please pass a block for the body of the function' unless block
 
       to_ruby = opts[:to_ruby]
 
@@ -590,7 +590,7 @@ module Rufus::Lua
     #
     def close
 
-      raise "State already closed" unless @pointer
+      fail 'State already closed' unless @pointer
       Lib.lua_close(@pointer)
       @pointer = nil
     end
@@ -599,7 +599,7 @@ module Rufus::Lua
     #
     def gc_count
 
-      raise "State got closed, cannot proceed" unless @pointer
+      fail 'State got closed, cannot proceed' unless @pointer
       Lib.lua_gc(@pointer, LUA_GCCOUNT, 0)
     end
 
@@ -607,7 +607,7 @@ module Rufus::Lua
     #
     def gc_collect!
 
-      raise "State got closed, cannot proceed" unless @pointer
+      fail 'State got closed, cannot proceed' unless @pointer
       Lib.lua_gc(@pointer, LUA_GCCOLLECT, 0)
     end
 
@@ -615,7 +615,7 @@ module Rufus::Lua
     #
     def gc_stop
 
-      raise "State got closed, cannot proceed" unless @pointer
+      fail 'State got closed, cannot proceed' unless @pointer
       Lib.lua_gc(@pointer, LUA_GCSTOP, 0)
     end
 
@@ -623,7 +623,7 @@ module Rufus::Lua
     #
     def gc_resume
 
-      raise "State got closed, cannot proceed" unless @pointer
+      fail 'State got closed, cannot proceed' unless @pointer
       Lib.lua_gc(@pointer, LUA_GCRESTART, 0)
     end
 
