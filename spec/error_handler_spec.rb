@@ -115,7 +115,36 @@ stack traceback:
 
   describe '#set_error_handler(nil)' do
 
-    it 'unsets the current error handler'
+    it 'unsets the current error handler' do
+
+      le = nil
+
+      # set
+
+      @s.set_error_handler(%{
+        function (e)
+          return 'something went wrong: ' .. string.gmatch(e, ": (.+)$")()
+        end
+      });
+
+      begin
+        @s.eval('error("a")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('something went wrong: a')
+
+      # unset
+
+      @s.set_error_handler(nil)
+
+      begin
+        @s.eval('error("b")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('[string "line"]:1: b')
+    end
   end
 end
 
