@@ -39,7 +39,9 @@ describe 'State and error handler' do
       begin
         @s.eval('f()', nil, 'mymain.lua', 88)
       rescue Rufus::Lua::LuaError => le
-        p le
+        #p le
+        puts le.msg
+        puts le.message
       #rescue Exception => ex
       #  p ex
       end
@@ -58,9 +60,37 @@ describe 'State and error handler' do
     end
   end
 
-  describe '#set_traceback_error_handler' do
+  describe '#set_error_handler(:traceback)' do
 
-    it 'sets a vanilla Debug.traceback() error handler'
+    it 'sets a vanilla debug.traceback() error handler' do
+
+      le = nil
+
+      @s.set_error_handler(:traceback)
+
+      @s.eval(%{
+        function f ()
+          error("in f")
+        end
+      }, nil, 'mystuff.lua', 77)
+      begin
+        @s.eval('f()', nil, 'mymain.lua', 88)
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.message).to eq(%{
+eval:pcall : '[string "mystuff.lua:77"]:3: in f
+stack traceback:
+	[C]: in function 'error'
+	[string "mystuff.lua:77"]:3: in function 'f'
+	[string "mymain.lua:88"]:1: in main chunk' (2 LUA_ERRRUN)
+      }.strip)
+    end
+  end
+
+  describe '#set_error_handler(nil)' do
+
+    it 'unsets the current error handler'
   end
 end
 

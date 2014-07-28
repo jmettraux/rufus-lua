@@ -423,8 +423,17 @@ module Rufus::Lua
     def set_error_handler(lua_code)
 
       if lua_code == nil
+
         @error_handler = 0
-        return
+
+      elsif lua_code == :traceback
+
+        stack_load_path('debug.traceback')
+        @error_handler = stack_top
+
+      else
+
+        # TODO
       end
 
       #lua_code = 'return ' + lua_code \
@@ -444,12 +453,12 @@ module Rufus::Lua
       #lua_insert(L, errindex);
       #int error = lua_pcall(L, p_iArgCount, return_amount, errindex);
 
-      #stack_load_global('debug')
-      #stack_load_field('traceback')
-      #Lib.lua_remove(@pointer, -2)
-      stack_load_path('debug.traceback')
-      #print_stack
-      @error_handler = stack_top
+      ##stack_load_global('debug')
+      ##stack_load_field('traceback')
+      ##Lib.lua_remove(@pointer, -2)
+      #stack_load_path('debug.traceback')
+      ##print_stack
+      #@error_handler = stack_top
     end
 
     # Evaluates a piece (string) of Lua code within the state.
