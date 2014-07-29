@@ -420,9 +420,15 @@ module Rufus::Lua
       @error_handler = 0
     end
 
-    def set_error_handler(lua_code)
+    def set_error_handler(lua_code=nil, &block)
 
-      if lua_code == nil
+      if lua_code == nil && block
+
+        function('_ruby_error_handler', &block)
+        stack_load_path('_ruby_error_handler')
+        @error_handler = stack_top
+
+      elsif lua_code == nil
 
         Lib.lua_remove(@pointer, @error_handler) if @error_handler > 0
         @error_handler = 0

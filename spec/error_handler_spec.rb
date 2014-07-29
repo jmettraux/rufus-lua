@@ -134,9 +134,23 @@ stack traceback:
       # does it make any sense?
   end
 
-  describe '#set_error_handler(some_ruby)' do
+  describe '#set_error_handler(&ruby_block)' do
 
-    it 'sets a Ruby callback as handler'
+    it 'sets a Ruby callback as handler' do
+
+      le = nil
+
+      @s.set_error_handler do |msg|
+        ([ msg.split.last ] * 3).join(' ')
+      end
+
+      begin
+        @s.eval('error("tora")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('tora tora tora')
+    end
   end
 
   describe '#set_error_handler(nil)' do
