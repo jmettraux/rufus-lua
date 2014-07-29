@@ -51,7 +51,7 @@ stack traceback:
       expect(@s.send(:stack_top)).to eq(1)
     end
 
-    it 'set the error handler in a permanent way' do
+    it 'sets the error handler in a permanent way' do
 
       le = nil
 
@@ -82,7 +82,7 @@ stack traceback:
       # on the CallbackState doesn't have any effect.
       # Any error handler seems bypassed.
 
-      it 'bypasses any error handler' do
+      it 'has no effect' do
 
         e = nil
 
@@ -130,7 +130,8 @@ stack traceback:
 
   describe '#set_error_handler(:backtrace)' do
 
-    it 'provides a merged Ruby then Lua backtrace' # really?
+    it 'sets a special handler that provides a merged Ruby then Lua backtrace'
+      # does it make any sense?
   end
 
   describe '#set_error_handler(some_ruby)' do
