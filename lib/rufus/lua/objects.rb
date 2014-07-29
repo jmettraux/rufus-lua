@@ -61,7 +61,7 @@ module Rufus::Lua
     #
     def load_onto_stack
 
-      fail RuntimeError.new(
+      raise RuntimeError.new(
         "#{self.class} got freed, cannot re-access it directly"
       ) unless @ref
 
