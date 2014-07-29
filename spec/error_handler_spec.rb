@@ -47,6 +47,8 @@ stack traceback:
 	[string "mystuff.lua:77"]:3: in function 'f'
 	[string "mymain.lua:88"]:1: in main chunk' (2 LUA_ERRRUN)
       }.strip)
+
+      expect(@s.send(:stack_top)).to eq(1)
     end
 
     it 'set the error handler in a permanent way' do
@@ -167,6 +169,7 @@ stack traceback:
       end
 
       expect(le.msg).to eq('[string "line"]:1: b')
+      expect(@s.send(:stack_top)).to eq(0)
     end
   end
 end

@@ -424,6 +424,7 @@ module Rufus::Lua
 
       if lua_code == nil
 
+        Lib.lua_remove(@pointer, @error_handler) if @error_handler > 0
         @error_handler = 0
 
       elsif lua_code == :traceback
