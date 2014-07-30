@@ -187,5 +187,36 @@ stack traceback:
       expect(@s.send(:stack_top)).to eq(0)
     end
   end
+
+  describe '#set_error_handler(x)' do
+
+    it 'pops the previous handler from the stack' do
+
+      le = nil
+
+      expect(@s.send(:stack_top)).to eq(0)
+
+      @s.set_error_handler(%{ function (e) return "a" end })
+      #@s.set_error_handler(:traceback)
+      #@s.set_error_handler do |msg| return msg * 2; end
+
+      #@s.send(:print_stack)
+
+      expect(@s.send(:stack_top)).to eq(1)
+
+      @s.set_error_handler(%{ function (e) return "b" end })
+
+      #@s.send(:print_stack)
+
+      expect(@s.send(:stack_top)).to eq(1)
+
+      begin
+        @s.eval('error("Z")')
+      rescue Rufus::Lua::LuaError => le
+      end
+
+      expect(le.msg).to eq('b')
+    end
+  end
 end
 
