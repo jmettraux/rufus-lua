@@ -168,6 +168,87 @@ lua = Rufus::Lua::State.new
 lua.eval('print("hello")', nil, 'myluastuff/hello.lua', 77)
 ```
 
+### set_error_handler
+
+`set_error_handler` gives a little bit of control on how error messages are prepared when errors occur in the Lua interpreter.
+
+Here are set of examples for each of the possible error handler kind: Lua code, Ruby block, `:traceback`.
+
+```ruby
+require 'rufus-lua'
+
+lua = Rufus::Lua::State.new
+
+#
+# no error handler
+
+begin
+  lua.eval('error("ouch!")')
+rescue => e
+  puts(e)
+end
+  # --> eval:pcall : '[string "line"]:1: ouch!' (2 LUA_ERRRUN)
+
+#
+# Lua error handler
+
+lua.set_error_handler(%{
+  function (msg)
+    return 'something went wrong: ' .. string.gmatch(msg, ": (.+)$")()
+  end
+})
+
+begin
+  lua.eval('error("ouch!")')
+rescue => e
+  puts(e)
+end
+  # --> eval:pcall : 'something went wrong: ouch!' (2 LUA_ERRRUN)
+
+#
+# Ruby block error handler
+
+lua.set_error_handler do |msg|
+  ([ msg.split.last ] * 3).join(' ')
+end
+
+begin
+  lua.eval('error("ouch!")')
+rescue => e
+  puts(e)
+end
+  # --> eval:pcall : 'ouch! ouch! ouch!' (2 LUA_ERRRUN)
+
+#
+# prepackaged :traceback handler
+
+lua.set_error_handler(:traceback)
+
+begin
+  lua.eval('error("ouch!")')
+rescue => e
+  puts(e)
+end
+  # -->
+  #   eval:pcall : '[string "line"]:1: ouch!
+  #   stack traceback:
+  #   	[C]: in function 'error'
+  #   	[string "line"]:1: in main chunk' (2 LUA_ERRRUN)
+
+#
+# unset the error handler
+
+lua.set_error_handler(nil)
+
+begin
+  lua.eval('error("ouch!")')
+rescue => e
+  puts(e)
+end
+  # --> eval:pcall : '[string "line"]:1: ouch!' (2 LUA_ERRRUN)
+  # (back to default)
+```
+
 
 ## compiling liblua.dylib
 

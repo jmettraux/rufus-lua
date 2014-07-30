@@ -4,10 +4,11 @@
 
 == rufus-lua - 1.1.2    not yet released
 
+- add #set_error_handler (based on an initial request by Nathanael Jones)
 - fix unstack issue when returning table (https://github.com/lywaterman)
 - use "{filename}:#{lineno}" as eval chunk name (suggested by Nathanael Jones)
 - wrap Ruby callbacks in CallbackState (Nathanael Jones)
-- accept Ruby symbols containing \0 character (Nathanel Jones)
+- accept Ruby symbols containing \0 character (Nathanael Jones)
 
 
 == rufus-lua - 1.1.1    released 2014/07/01
