@@ -52,6 +52,19 @@ describe Rufus::Lua::State do
       expect(message).to eq 'obandegozaimasu'
     end
 
+    it 'works with function arguments' do
+
+      message = nil
+
+      @s.function :exec do |fun|
+        message = fun.call()
+      end
+
+      @s.eval("exec(function() return 'foobar' end)")
+
+      expect(message).to eq 'foobar'
+    end
+
     it 'binds functions inside of Lua tables' do
 
       @s.eval('lib = {}')

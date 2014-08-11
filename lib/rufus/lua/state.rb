@@ -534,11 +534,10 @@ module Rufus::Lua
           break if s.stack_top == 0 # never touch stack[0] !!
 
           arg = s.stack_fetch
-          break if arg.class == Rufus::Lua::Function
 
           args.unshift(arg)
 
-          s.stack_unstack unless args.first.is_a?(Rufus::Lua::Table)
+          s.stack_unstack unless args.first.is_a?(Rufus::Lua::Ref)
         end
 
         while args.size < block.arity
