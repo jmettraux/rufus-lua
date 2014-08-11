@@ -11,8 +11,10 @@ Scott Persinger  https://github.com/scottpersinger
 
 == contributors
 
+Gian Perrone     https://github.com/quidrex
 Matthew Nielsen  https://github.com/xunker
 Nathanael Jones  https://github.com/nathanaeljones
+
 
 == inspiration
 
