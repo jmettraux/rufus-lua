@@ -16,6 +16,10 @@ Matthew Nielsen  https://github.com/xunker
 Nathanael Jones  https://github.com/nathanaeljones
 
 
+== feedback
+
+Stas Ukolov  https://github.com/ukoloff
+
 == inspiration
 
   http://rubyluabridge.rubyforge.org/

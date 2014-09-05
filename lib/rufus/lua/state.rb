@@ -91,7 +91,7 @@ module Rufus::Lua
       bottom = stack_top
       chunk = filename ? "#{filename}:#{lineno}" : 'line'
 
-      err = Lib.luaL_loadbuffer(@pointer, s, Lib.strlen(s), chunk)
+      err = Lib.luaL_loadbuffer(@pointer, s, s.length, chunk)
       fail_if_error('eval:compile', err, bndng, filename, lineno)
 
       pcall(bottom, 0, bndng, filename, lineno) # arg_count is set to 0

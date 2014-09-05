@@ -77,8 +77,6 @@ module Lua
     #
     # attach functions
 
-    attach_function :strlen, [ :string ], :int
-
     attach_function :lua_close, [ :pointer ], :void
 
     attach_function :luaL_openlibs, [ :pointer ], :void
