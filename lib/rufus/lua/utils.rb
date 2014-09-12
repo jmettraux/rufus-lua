@@ -48,6 +48,7 @@ module Rufus::Lua
       when Float then o.to_s
       when TrueClass then o.to_s
       when FalseClass then o.to_s
+      when NilClass then 'nil'
 
       when Hash then to_lua_table_s(o)
       when Array then to_lua_table_s(o)
