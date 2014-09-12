@@ -2,7 +2,7 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 1.1.2    not yet released
+== rufus-lua - 1.1.2    released 2014/09/13
 
 - properly turn Ruby nils into Lua nils (Christopher Saunders)
 - get rid of Lib.strlen (as suggested by Stas Ukolov)
