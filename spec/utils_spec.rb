@@ -31,6 +31,14 @@ describe Rufus::Lua do
         '{ ["a"] = "A", ["b"] = 2 }'
       )
     end
+
+    it 'turns Ruby NilClass into Lua nil representation' do
+      expect(Rufus::Lua.to_lua_s(
+        {'a' => nil}
+      )).to eq(
+        '{ ["a"] = nil }'
+      )
+    end
   end
 end
 
