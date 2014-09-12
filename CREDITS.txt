@@ -11,7 +11,8 @@ Scott Persinger  https://github.com/scottpersinger
 
 == contributors
 
-Gian Perrone     https://github.com/quidrex
+Christopher Saunders  https://github.com/csaunders
+Gian Perrone  https://github.com/quidrex
 Matthew Nielsen  https://github.com/xunker
 Nathanael Jones  https://github.com/nathanaeljones
 
@@ -19,6 +20,7 @@ Nathanael Jones  https://github.com/nathanaeljones
 == feedback
 
 Stas Ukolov  https://github.com/ukoloff
+
 
 == inspiration
 

@@ -4,6 +4,7 @@
 
 == rufus-lua - 1.1.2    not yet released
 
+- properly turn Ruby nils into Lua nils (Christopher Saunders)
 - get rid of Lib.strlen (as suggested by Stas Ukolov)
 - let Ruby callbacks accept Lua functions as arguments (Gian Perrone)
 - add #set_error_handler (based on an initial request by Nathanael Jones)

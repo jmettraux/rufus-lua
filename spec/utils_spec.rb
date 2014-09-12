@@ -33,6 +33,7 @@ describe Rufus::Lua do
     end
 
     it 'turns Ruby NilClass into Lua nil representation' do
+
       expect(Rufus::Lua.to_lua_s(
         {'a' => nil}
       )).to eq(
