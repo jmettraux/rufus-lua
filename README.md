@@ -40,7 +40,7 @@ On Debian GNU/Linux, I do
 sudo apt-get install liblua5.1-0
 ```
 
-If your system's package manager doesn't have some version (5.1.x) of Lua around, jump to [compiling liblua.dylib](#compiling-libluadylib) below.
+If your system's package manager doesn't have some version (5.1.x) of Lua around, jump to [compiling liblua.dylib](#compiling-libluadylib-osx) below or look at the [LuaBinaries solution](#lua-binaries-gnulinux) for GNU/Linux.
 
 Rufus-lua will look for library in a [list of know places](https://github.com/jmettraux/rufus-lua/blob/9ddf26cde9f4a73115032504ad7f7eb688849b73/lib/rufus/lua/lib.rb#L38-L50).
 
