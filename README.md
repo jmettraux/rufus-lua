@@ -250,7 +250,7 @@ end
 ```
 
 
-## compiling liblua.dylib
+## compiling liblua.dylib (OSX)
 
 original instructions by Adrian Perez at:
 
@@ -278,7 +278,7 @@ liblua.dylib: $(CORE_O) $(LIB_O)
 Here's how to build the library file and deploy it:
 ```
 make
-make macosx # or make linux ...
+make macosx
 make -C src liblua.dylib
 sudo cp src/liblua.dylib /usr/local/lib/
 
@@ -293,6 +293,10 @@ sudo cp src/liblua.dylib /usr/local/lib/liblua.5.1.4.dylib
 # instead of
 #sudo cp src/liblua.dylib /usr/local/lib/
 ```
+
+## lua binaries (GNU/Linux)
+
+Hat tip to [Micka33](https://github.com/Micka33) for pointing to [LuaBinaries](http://luabinaries.sourceforge.net/download.html) in [issue #34](https://github.com/jmettraux/rufus-lua/issues/34)
 
 
 ## tested with
