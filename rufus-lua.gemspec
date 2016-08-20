@@ -28,7 +28,6 @@ ruby-ffi based bridge from Ruby to Lua
 
   s.add_dependency 'ffi', '~> 1.9'
 
-  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 2.13.0'
 
   s.require_path = 'lib'
