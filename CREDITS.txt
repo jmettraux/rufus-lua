@@ -11,6 +11,7 @@ Scott Persinger  https://github.com/scottpersinger
 
 == contributors
 
+Andri Möll  https://github.com/moll
 Christopher Saunders  https://github.com/csaunders
 Gian Perrone  https://github.com/quidrex
 Matthew Nielsen  https://github.com/xunker

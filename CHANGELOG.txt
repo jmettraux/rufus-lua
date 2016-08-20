@@ -4,6 +4,8 @@
 
 == rufus-lua - 1.1.3    not yet released
 
+- respect non-ascii eval input sources (Andri Möll)
+
 
 == rufus-lua - 1.1.2    released 2014/09/13
 

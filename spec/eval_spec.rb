@@ -1,3 +1,4 @@
+# encoding: UTF-8
 
 #
 # Specifying rufus-lua
@@ -158,6 +159,20 @@ describe Rufus::Lua::State do
 
         expect(le.original_backtrace.first).to match(/\/lua\/state\.rb:/)
         expect(le.backtrace.first).to match(/\/eval_spec\.rb:/)
+      end
+    end
+
+    context 'and unicode input' do
+
+      it 'does not truncate the input' do
+
+        @s.eval('a = "ほりもり"')
+
+        a = @s['a']
+        expect(a.encoding.to_s).to eq('ASCII-8BIT')
+
+        a.force_encoding('UTF-8')
+        expect(a).to eq('ほりもり')
       end
     end
   end
