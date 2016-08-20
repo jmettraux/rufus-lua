@@ -1,7 +1,7 @@
 
 # rufus-lua
 
-[![Gem Version](https://badge.fury.io/rb/rufus-lua.png)](http://badge.fury.io/rb/rufus-lua)
+[![Gem Version](https://badge.fury.io/rb/rufus-lua.svg)](http://badge.fury.io/rb/rufus-lua)
 
 Lua embedded in Ruby, via Ruby FFI.
 
