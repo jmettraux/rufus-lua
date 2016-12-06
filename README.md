@@ -5,7 +5,7 @@
 
 Lua embedded in Ruby, via Ruby FFI.
 
-(Lua 5.1.x only, sorry).
+(Lua 5.1.x only, [no luajit](https://github.com/jmettraux/rufus-lua/issues/37) out of the box).
 
 
 ## Lua
