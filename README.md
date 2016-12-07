@@ -158,7 +158,7 @@ But this rufus-lua eval mimics the Ruby `eval` and lets one specify binding, fil
 
 (TODO) Binding hasn't yet been implemented. It'll probaby be with `setfenv` but nothing sure yet. Stick a `nil` to it for now.
 
-The string of Lua code may come from wild places, it may help to flag it with arbitrary filename and lineno.
+The string of Lua code may come from wild places, it may help to flag it with an arbitrary filename and a lineno.
 
 ```ruby
 require 'rufus-lua'
