@@ -1,5 +1,19 @@
-# .gitignore
 
-.rspec
+*.swp
+.vimrc
+.viminfo
+
 pkg/
+
+.ruby-version
+#.rspec
+
+.errors
+.rspec.out
+.bxsinfo.yaml
+.bxsenvs.yaml
+
+.todo.md
+
+Gemfile.lock
 
