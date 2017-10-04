@@ -83,15 +83,16 @@ module Rufus::Lua
 
         type, tname = stack_type_at(i)
 
-        val = if type == TSTRING
-          "\"#{stack_fetch(i)}\""
-        elsif SIMPLE_TYPES.include?(type)
-          stack_fetch(i).to_s
-        elsif type == TTABLE
-          "(# is #{Lib.lua_objlen(@pointer, i)})"
-        else
-          ''
-        end
+        val =
+          if type == TSTRING
+            "\"#{stack_fetch(i)}\""
+          elsif SIMPLE_TYPES.include?(type)
+            stack_fetch(i).to_s
+          elsif type == TTABLE
+            "(# is #{Lib.lua_objlen(@pointer, i)})"
+          else
+            ''
+          end
 
         a << "#{i} : #{tname} (#{type}) #{val}"
         a
@@ -140,23 +141,23 @@ module Rufus::Lua
 
       case type
 
-        when TNIL then nil
+      when TNIL then nil
 
-        when TSTRING then
-          len = FFI::MemoryPointer.new(:size_t)
-          ptr = Lib.lua_tolstring(@pointer, pos, len)
-          ptr.read_string(len.read_long)
+      when TSTRING then
+        len = FFI::MemoryPointer.new(:size_t)
+        ptr = Lib.lua_tolstring(@pointer, pos, len)
+        ptr.read_string(len.read_long)
 
-        when TBOOLEAN then (Lib.lua_toboolean(@pointer, pos) == 1)
-        when TNUMBER then Lib.lua_tonumber(@pointer, pos)
+      when TBOOLEAN then (Lib.lua_toboolean(@pointer, pos) == 1)
+      when TNUMBER then Lib.lua_tonumber(@pointer, pos)
 
-        when TTABLE then Table.new(@pointer)
-          # warning : this pops up the item from the stack !
+      when TTABLE then Table.new(@pointer)
+        # warning : this pops up the item from the stack !
 
-        when TFUNCTION then Function.new(@pointer)
-        when TTHREAD then Coroutine.new(@pointer)
+      when TFUNCTION then Function.new(@pointer)
+      when TTHREAD then Coroutine.new(@pointer)
 
-        else tname
+      else tname
       end
     end
 
@@ -192,23 +193,23 @@ module Rufus::Lua
 
       case o
 
-        when NilClass then Lib.lua_pushnil(@pointer)
+      when NilClass then Lib.lua_pushnil(@pointer)
 
-        when TrueClass then Lib.lua_pushboolean(@pointer, 1)
-        when FalseClass then Lib.lua_pushboolean(@pointer, 0)
+      when TrueClass then Lib.lua_pushboolean(@pointer, 1)
+      when FalseClass then Lib.lua_pushboolean(@pointer, 0)
 
-        when Fixnum then Lib.lua_pushinteger(@pointer, o)
-        when Float then Lib.lua_pushnumber(@pointer, o)
+      when Fixnum then Lib.lua_pushinteger(@pointer, o)
+      when Float then Lib.lua_pushnumber(@pointer, o)
 
-        when String then Lib.lua_pushlstring(@pointer, o, o.bytesize)
-        when Symbol then Lib.lua_pushlstring(@pointer, o.to_s, o.to_s.bytesize)
+      when String then Lib.lua_pushlstring(@pointer, o, o.bytesize)
+      when Symbol then Lib.lua_pushlstring(@pointer, o.to_s, o.to_s.bytesize)
 
-        when Hash then stack_push_hash(o)
-        when Array then stack_push_array(o)
+      when Hash then stack_push_hash(o)
+      when Array then stack_push_array(o)
 
-        else raise(
-          ArgumentError.new(
-            "don't know how to pass Ruby instance of #{o.class} to Lua"))
+      else raise(
+        ArgumentError.new(
+          "don't know how to pass Ruby instance of #{o.class} to Lua"))
       end
     end
 
@@ -500,66 +501,66 @@ module Rufus::Lua
 
       to_ruby = opts[:to_ruby]
 
-      callback = Proc.new do |state|
+      callback =
+        Proc.new do |state|
 
-        s = CallbackState.new(state)
-        args = []
+          s = CallbackState.new(state)
+          args = []
 
-        loop do
+          loop do
 
-          break if s.stack_top == 0 # never touch stack[0] !!
+            break if s.stack_top == 0 # never touch stack[0] !!
 
-          arg = s.stack_fetch
+            arg = s.stack_fetch
 
-          args.unshift(arg)
+            args.unshift(arg)
 
-          s.stack_unstack unless args.first.is_a?(Rufus::Lua::Ref)
+            s.stack_unstack unless args.first.is_a?(Rufus::Lua::Ref)
+          end
+
+          while args.size < block.arity
+            args << nil
+          end
+
+          args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } \
+            if to_ruby
+
+          s.stack_push(block.call(*args))
+
+          1
         end
-
-        while args.size < block.arity
-          args << nil
-        end
-
-        args = args.collect { |a| a.respond_to?(:to_ruby) ? a.to_ruby : a } \
-          if to_ruby
-
-        result = block.call(*args)
-
-        s.stack_push(result)
-
-        1
-      end
 
       @callbacks << callback
         # preserving the callback from garbage collection
 
       name = name.to_s
 
-      name, index = if ri = name.rindex('.')
-        #
-        # bind in the given table
+      name, index =
+        if ri = name.rindex('.')
+          #
+          # bind in the given table
 
-        table_name = name[0..ri-1]
+          table_name = name[0..ri-1]
 
-        t = self.eval("return #{table_name}") rescue nil
+          t = self.eval("return #{table_name}") rescue nil
 
-        raise ArgumentError.new(
-          "won't create automatically nested tables"
-        ) if (not t) and table_name.index('.')
+          raise ArgumentError.new(
+            "won't create automatically nested tables"
+          ) if (not t) and table_name.index('.')
 
-        t = self.eval("#{table_name} = {}; return #{table_name}") \
-          unless t
+          t = self.eval("#{table_name} = {}; return #{table_name}") \
+            unless t
 
-        t.send(:load_onto_stack)
+          t.send(:load_onto_stack)
 
-        [ name[ri+1..-1], -2 ]
+          [ name[ri+1..-1], -2 ]
 
-      else
-        #
-        # bind function at the global level
+        else
+          #
+          # bind function at the global level
 
-        [ name, LUA_GLOBALSINDEX ]
-      end
+          [ name, LUA_GLOBALSINDEX ]
+        end
 
       Lib.lua_pushcclosure(@pointer, callback, 0)
       Lib.lua_setfield(@pointer, index, name)
