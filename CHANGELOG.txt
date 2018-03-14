@@ -2,7 +2,7 @@
 = rufus-lua CHANGELOG.txt
 
 
-== rufus-lua - 1.1.4    not yet released
+== rufus-lua - 1.1.4    released 2018/03/15
 
 - Replace deprecated Fixnum by Integer, gh-40
 
