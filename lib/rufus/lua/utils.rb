@@ -19,20 +19,20 @@ module Rufus::Lua
 
     case o
 
-      when String then o.inspect
-      when Fixnum then o.to_s
-      when Float then o.to_s
-      when TrueClass then o.to_s
-      when FalseClass then o.to_s
-      when NilClass then 'nil'
+    when String then o.inspect
+    when Integer then o.to_s
+    when Float then o.to_s
+    when TrueClass then o.to_s
+    when FalseClass then o.to_s
+    when NilClass then 'nil'
 
-      when Hash then to_lua_table_s(o)
-      when Array then to_lua_table_s(o)
+    when Hash then to_lua_table_s(o)
+    when Array then to_lua_table_s(o)
 
-      else raise(
-        ArgumentError.new(
-          "don't how to turning into a Lua string representation "+
-          "Ruby instances of class '#{o.class}'"))
+    else fail(
+      ArgumentError.new(
+        "don't how to turning into a Lua string representation "+
+        "Ruby instances of class '#{o.class}'"))
     end
   end
 

@@ -20,6 +20,7 @@ Nathanael Jones  https://github.com/nathanaeljones
 
 == feedback
 
+Chad Simmons  https://github.com/polpak, gh-40
 Stas Ukolov  https://github.com/ukoloff
 
 

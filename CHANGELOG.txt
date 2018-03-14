@@ -2,6 +2,11 @@
 = rufus-lua CHANGELOG.txt
 
 
+== rufus-lua - 1.1.4    not yet released
+
+- Replace deprecated Fixnum by Integer, gh-40
+
+
 == rufus-lua - 1.1.3    released 2016/08/21
 
 - respect non-ascii eval input sources (Andri Möll)
