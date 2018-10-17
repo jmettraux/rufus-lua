@@ -271,7 +271,7 @@ Modify the file `src/Makefile` as per http://lua-users.org/lists/lua-l/2006-09/m
 
 It's mostly about adding that rule to the `src/Makefile`:
 ```make
-liblua.dylib: $(CORE_O) $(LIB_O)
+liblua51.dylib: $(CORE_O) $(LIB_O)
 	$(CC) -dynamiclib -o $@ $^ $(LIBS)
 ```
 
@@ -279,8 +279,8 @@ Here's how to build the library file and deploy it:
 ```
 make
 make macosx
-make -C src liblua.dylib
-sudo cp src/liblua.dylib /usr/local/lib/
+make -C src liblua51.dylib
+sudo cp src/liblua51.dylib /usr/local/lib/
 
 sudo make macosx install
 ```
