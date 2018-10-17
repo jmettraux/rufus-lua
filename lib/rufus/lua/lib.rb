@@ -12,18 +12,14 @@ module Lua
     # locate the dynamic library
 
     paths =
-      ENV['LUA_LIB'] ||
         # developer points to the right lib
-      (
-        Dir.glob('/usr/lib/liblua*.so') +
-        Dir.glob('/usr/lib/*/liblua*.so') +
-        Dir.glob('/usr/local/lib/liblua*.so') +
-        Dir.glob('/opt/local/lib/liblua*.so') +
-        Dir.glob('/usr/lib/liblua*.dylib') +
-        Dir.glob('/usr/local/lib/liblua*.dylib') +
-        Dir.glob('/opt/local/lib/liblua*.dylib')
-      )
+      ENV['LUA_LIB'] ||
         # or else we attempt to find it from potential locations
+      %w[ /usr/lib /usr/*/lib /opt/local/lib ]
+        .product(%w[ liblua5.1.* liblua5.1* liblua51* liblua5* ])
+        .collect { |a| File.join(*a) }
+        .product(%w[ .so .so* .dylib ])
+        .inject([]) { |a, e| a.concat(Dir.glob(e.join(''))) }
 
     begin
 

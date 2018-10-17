@@ -16,6 +16,7 @@ describe Rufus::Lua::Lib do
 
       path =
         Array(
+          [ ENV['LUA_LIB'] ].compact +
           Dir.glob('/usr/lib/liblua*.so') +
           Dir.glob('/usr/lib/*/liblua*.so') +
           Dir.glob('/usr/local/lib/liblua*.so') +
