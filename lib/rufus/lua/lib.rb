@@ -11,26 +11,16 @@ module Lua
     #
     # locate the dynamic library
 
-    paths =
-        # developer points to the right lib
-      ENV['LUA_LIB'] ||
-        # or else we attempt to find it from potential locations
-      %w[ /usr/lib /usr/*/lib /opt/local/lib ]
-        .product(%w[ liblua5.1.* liblua5.1* liblua51* liblua5* ])
-        .collect { |a| File.join(*a) }
-        .product(%w[ .so .so* .dylib ])
-        .inject([]) { |a, e| a.concat(Dir.glob(e.join(''))) }
-
     begin
 
       ffi_lib_flags(:lazy, :global)
 
-      ffi_lib(paths)
+      ffi_lib(ENV['LUA_LIB'] || 'liblua5.1')
 
     rescue LoadError => le
 
       fail RuntimeError.new(
-        "Didn't find the Lua dynamic library on your system. " +
+        "Didn't find the Lua dynamic library (liblua5.1.*) on your system. " +
         "Set LUA_LIB in your environment if have that library or " +
         "go to https://github.com/jmettraux/rufus-lua to learn how to " +
         "get it. (paths: #{paths.inspect})"

@@ -14,19 +14,7 @@ describe Rufus::Lua::Lib do
 
     it 'returns the Lua lib being used' do
 
-      path =
-        Array(
-          [ ENV['LUA_LIB'] ].compact +
-          Dir.glob('/usr/lib/liblua*.so') +
-          Dir.glob('/usr/lib/*/liblua*.so') +
-          Dir.glob('/usr/local/lib/liblua*.so') +
-          Dir.glob('/opt/local/lib/liblua*.so') +
-          Dir.glob('/usr/lib/liblua*.dylib') +
-          Dir.glob('/usr/local/lib/liblua*.dylib') +
-          Dir.glob('/opt/local/lib/liblua*.dylib')
-        ).first
-
-      expect(Rufus::Lua::Lib.path).to eq path
+      expect(Rufus::Lua::Lib.path).to match(/liblua/)
     end
   end
 end
