@@ -11,20 +11,34 @@ module Lua
     #
     # locate the dynamic library
 
+    ffi_lib_flags(:lazy, :global)
+
     begin
 
-      ffi_lib_flags(:lazy, :global)
+      # first attempt
 
       ffi_lib(ENV['LUA_LIB'] || 'liblua5.1')
 
-    rescue LoadError => le
+    rescue LoadError => le0
 
-      fail RuntimeError.new(
-        "Didn't find the Lua dynamic library (liblua5.1.*) on your system. " +
-        "Set LUA_LIB in your environment if have that library or " +
-        "go to https://github.com/jmettraux/rufus-lua to learn how to " +
-        "get it. (paths: #{paths.inspect})"
-      )
+      paths =
+        %w[ /usr/lib/*/liblua5.1.*so* ]
+          .inject([]) { |a, e| a.concat(Dir.glob(e)) }
+
+      begin
+
+        # second attempt
+
+        ffi_lib(paths)
+
+      rescue LoadError => le1
+
+        fail RuntimeError.new(
+          "Didn't find the Lua dynamic library (liblua5.1.*) on your system. " +
+          "Set LUA_LIB in your environment if have that library or " +
+          "go to https://github.com/jmettraux/rufus-lua to learn how to " +
+          "get it.")
+      end
     end
 
     # Rufus::Lua::Lib.path returns the path to the library used.
