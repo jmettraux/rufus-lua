@@ -2,6 +2,12 @@
 = rufus-lua CHANGELOG.txt
 
 
+== rufus-lua - 1.1.5    released 2019/10/19
+
+- trust LUA_LIB or FFI.ffi_libs to find 'liblua5.1' else
+  glob only /usr/lib/*/liblua5.1.*so* (Andri Möll)
+
+
 == rufus-lua - 1.1.4    released 2018/03/15
 
 - Replace deprecated Fixnum by Integer, gh-40
