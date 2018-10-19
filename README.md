@@ -34,6 +34,8 @@ http://www.lua.org/
 
 ## getting Lua on your system
 
+### Debian GNU/Linux
+
 On Debian GNU/Linux, I do
 
 ```
@@ -55,6 +57,16 @@ export LUA_LIB=~/mystuff/lualib.5.1.4.so
 # ...
 ruby myluacode.rb
 ```
+
+### OSX
+
+As of 2018-10-19, this [Homebrew](https://brew.sh/) command will install Lua and its .dylib on OSX:
+
+```bash
+brew install lua@5.1
+```
+
+### Windows
 
 On Windows try using [rufus-lua-win](https://github.com/ukoloff/rufus-lua-win) gem.
 
