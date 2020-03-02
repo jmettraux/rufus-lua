@@ -92,7 +92,7 @@ describe Rufus::Lua::State do
     end
   end
 
-  describe 'calling a Ruby function from Lua' do
+  context 'calling a Ruby function from Lua' do
 
     it 'may return a single value' do
 
@@ -155,17 +155,6 @@ describe Rufus::Lua::State do
       )).to eq(
         'alice, bob, charly'
       )
-    end
-
-    it 'raise exceptions (Ruby -> Lua -> Ruby and back)' do
-
-      @s.function :do_fail do
-        raise 'fail!'
-      end
-
-      expect(lambda {
-        @s.eval('return do_fail()')
-      }).to raise_error(RuntimeError)
     end
 
     it 'counts the animals correctly' do
@@ -289,6 +278,45 @@ describe Rufus::Lua::State do
       end
 
       expect(@s.instance_variable_get(:@callbacks).size).to eq 1
+    end
+  end
+
+  context 'Ruby functions and exceptions' do
+
+    it 'raises exceptions (Ruby -> Lua -> Ruby and back)' do
+
+      @s.function :do_fail do
+        raise 'fail!'
+      end
+
+      expect {
+        @s.eval('return do_fail()')
+      }.to raise_error(RuntimeError)
+    end
+
+    it 'raises exceptions (Ruby -> Lua -> Ruby and back)' do
+
+      @s.function :do_fail do
+        raise 'fail!'
+      end
+
+      expect {
+        @s.eval('do_fail()')
+      }.to raise_error(RuntimeError)
+    end
+
+    it 'raises exceptions (gh-42)' do
+
+      @s.function :no_fail do
+        1
+      end
+      @s.function :do_fail do
+        raise 'fail!'
+      end
+
+      expect {
+        @s.eval('do_fail(); no_fail()')
+      }.to raise_error(RuntimeError)
     end
   end
 end
