@@ -11,6 +11,7 @@ Scott Persinger  https://github.com/scottpersinger
 
 == contributors
 
+Ashie Takuro  https://github.com/ashie
 Andri Möll  https://github.com/moll
 Christopher Saunders  https://github.com/csaunders
 Gian Perrone  https://github.com/quidrex
