@@ -107,6 +107,7 @@ s = Rufus::Lua::State.new
 s.function 'key_up' do |table|
   table.inject({}) do |h, (k, v)|
     h[k.to_s.upcase] = v
+    h
   end
 end
 
@@ -128,11 +129,11 @@ require 'rufus-lua'
 s = Rufus::Lua::State.new
 
 s.eval("rubies = {}")
-s.function 'add' do |x, y|
+s.function 'rubies.add' do |x, y|
   x + y
 end
 
-s.eval("rubies.add(1, 2)")
+p s.eval("return rubies.add(1, 2)")
   # => 3.0
 
 s.close
@@ -150,7 +151,7 @@ s.function 'rubies.add' do |x, y|
   x + y
 end
 
-s.eval("rubies.add(1, 2)")
+p s.eval("return rubies.add(1, 2)")
   # => 3.0
 
 s.close
